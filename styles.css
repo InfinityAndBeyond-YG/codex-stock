@@ -234,13 +234,13 @@ button {
 }
 
 .compact-panel-head {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .inline-donut {
-  margin-top: 28px;
-  padding-top: 24px;
-  padding-bottom: 18px;
+  margin-top: 36px;
+  padding-top: 30px;
+  padding-bottom: 26px;
   border-top: 1px solid var(--line-soft);
 }
 
@@ -251,7 +251,7 @@ button {
 .donut-wrap {
   display: grid;
   place-items: center;
-  padding: 30px 18px 28px;
+  padding: 40px 24px 36px;
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(246, 249, 252, 0.95), rgba(238, 244, 250, 0.85));
 }

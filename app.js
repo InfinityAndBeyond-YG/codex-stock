@@ -213,13 +213,15 @@ function renderSummaryCard() {
 function renderAllocationPanel() {
   const segments = getAllocationSegments();
   const totalAsset = getCurrentScopeTotalAssetValue();
+  const allocationDescription = getAllocationDescription();
   const paletteSegments = segments.map((segment, index) => ({
     ...segment,
     color: segment.color || colorScale[index % colorScale.length],
   }));
 
   dom.allocationTitle.textContent = getAllocationTitle();
-  dom.allocationDescription.textContent = getAllocationDescription();
+  dom.allocationDescription.textContent = allocationDescription;
+  dom.allocationDescription.hidden = !allocationDescription;
   dom.donutModeLabel.textContent = getDonutModeLabel();
   dom.donutCenterValue.textContent = formatCurrency(totalAsset);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
@@ -396,7 +398,7 @@ function getAllocationDescription() {
     return "주식별에서는 전체 자산 기준으로 각 종목의 퍼센트를 보게 됩니다.";
   }
 
-  return "전체 보기에서는 현금 통화부터 보여주고, 그다음 국내주식과 해외주식을 비율 순서로 보여줍니다.";
+  return "";
 }
 
 function getDonutModeLabel() {
