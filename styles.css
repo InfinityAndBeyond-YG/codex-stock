@@ -84,7 +84,16 @@ button {
   margin-bottom: 16px;
 }
 
-.eyebrow,
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 30px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 700;
+  line-height: 1;
+}
+
 .section-kicker {
   margin: 0 0 10px;
   font-size: 0.78rem;
