@@ -117,6 +117,14 @@ const percentBadgeDecimalFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 1,
 });
 
+const currencyNameMap = {
+  KRW: "원화",
+  USD: "달러",
+  JPY: "엔화",
+  CNY: "위안화",
+  EUR: "유로",
+};
+
 const dom = {};
 
 const uiState = {
@@ -310,9 +318,9 @@ function getOverallAllocationSegments() {
 
   const cashSegments = Array.from(currencyCashMap.entries())
     .map(([currency, value], index) => ({
-      label: `${currency} 현금`,
+      label: formatCashCurrencyLabel(currency),
       value,
-      meta: `${currency} 통화 기준 현금`,
+      meta: `${formatCashCurrencyLabel(currency)} 기준 현금`,
       type: "cash",
       color: index === 0 ? "#0c72de" : "#77b6ff",
     }))
@@ -725,4 +733,10 @@ function getReadableTextColor(hexColor) {
   const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
 
   return brightness > 160 ? "#153052" : "#ffffff";
+}
+
+function formatCashCurrencyLabel(currency) {
+  const code = `${currency || ""}`.toLowerCase();
+  const currencyName = currencyNameMap[currency] || currency;
+  return `${code} ${currencyName}`;
 }
