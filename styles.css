@@ -250,10 +250,9 @@ button {
 
 .donut-wrap {
   display: grid;
-  grid-template-columns: minmax(238px, 270px) minmax(0, 188px);
-  justify-content: center;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 176px);
   align-items: center;
-  gap: 18px;
+  gap: 12px;
   width: min(100%, 540px);
   margin: 0 auto;
   padding: 36px 22px 32px;
@@ -264,6 +263,7 @@ button {
 .donut-chart {
   position: relative;
   width: min(100%, 264px);
+  justify-self: center;
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
@@ -339,7 +339,7 @@ button {
 
 .donut-legend {
   display: grid;
-  width: min(100%, 188px);
+  width: min(100%, 176px);
   gap: 8px;
   align-content: center;
   justify-self: start;
