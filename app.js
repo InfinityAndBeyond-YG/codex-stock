@@ -202,7 +202,6 @@ function renderSummaryCard() {
     dom.cashCurrencyList.innerHTML = `
       <div class="cash-summary-row">
         <div>
-          <span class="cash-currency-label">총 원화 평가</span>
           <strong class="cash-currency-amount">${formatCurrency(cashAsset)}</strong>
         </div>
         <strong class="cash-currency-percent">${formatPercent(cashRatio)}%</strong>
