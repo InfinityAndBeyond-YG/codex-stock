@@ -133,7 +133,6 @@ function cacheDom() {
     "donutModeLabel",
     "donutCenterValue",
     "donutCenterMeta",
-    "allocationLegend",
     "modeSwitch",
     "selectorTitle",
     "selectorDescription",
@@ -204,7 +203,6 @@ function renderAllocationPanel() {
   dom.donutCenterValue.textContent = formatCurrency(totalAsset);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
   dom.donutChart.style.background = buildConicGradient(paletteSegments, totalAsset);
-  dom.allocationLegend.innerHTML = paletteSegments.map((segment) => renderLegendItem(segment, totalAsset)).join("");
 }
 
 function renderSelectorPanel() {
@@ -426,25 +424,6 @@ function getDonutCenterMeta() {
   }
 
   return "통화 + 국내/해외 기준";
-}
-
-function renderLegendItem(segment, totalAsset) {
-  return `
-    <article class="legend-item">
-      <div class="legend-left">
-        <span class="legend-dot" style="background:${segment.color}"></span>
-        <div class="legend-label">
-          <strong>${segment.label}</strong>
-          <span class="legend-meta">${segment.meta}</span>
-        </div>
-      </div>
-      <div class="legend-right">
-        ${segment.tag ? `<span class="legend-tag ${segment.tag === "해외" ? "tag-orange" : "tag-teal"}">${segment.tag}</span>` : ""}
-        <strong class="legend-value">${formatPercent(totalAsset ? (segment.value / totalAsset) * 100 : 0)}%</strong>
-        <span class="legend-meta">${formatCurrency(segment.value)}</span>
-      </div>
-    </article>
-  `;
 }
 
 function getSelectorTitle() {
