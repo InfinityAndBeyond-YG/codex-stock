@@ -736,7 +736,7 @@ function getReadableTextColor(hexColor) {
 }
 
 function formatCashCurrencyLabel(currency) {
-  const code = `${currency || ""}`.toLowerCase();
+  const code = `${currency || ""}`.toUpperCase();
   const currencyName = currencyNameMap[currency] || currency;
   return `${code} ${currencyName}`;
 }
