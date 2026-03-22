@@ -195,7 +195,7 @@ function renderSummaryCard() {
   }
 
   if (dom.cashKrwPercent) {
-    dom.cashKrwPercent.textContent = `현금 비중 ${formatPercent(cashRatio)}%`;
+    dom.cashKrwPercent.textContent = `${formatPercent(cashRatio)}%`;
   }
 
   if (dom.cashCurrencyList) {
@@ -204,7 +204,7 @@ function renderSummaryCard() {
         <div>
           <strong class="cash-currency-amount">${formatCurrency(cashAsset)}</strong>
         </div>
-        <strong class="cash-currency-percent">현금 비중 ${formatPercent(cashRatio)}%</strong>
+        <strong class="cash-currency-percent">${formatPercent(cashRatio)}%</strong>
       </div>
     `;
   }

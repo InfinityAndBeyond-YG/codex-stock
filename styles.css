@@ -182,6 +182,17 @@ button {
   text-align: left;
 }
 
+.metric-inline-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.metric-inline-row .avg-value {
+  margin: 10px 0 0;
+}
+
 .summary-meta,
 .selector-label span {
   display: block;
@@ -193,7 +204,12 @@ button {
 .summary-meta,
 .selector-value {
   color: var(--text-soft);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
+}
+
+.metric-inline-row .summary-meta {
+  padding-bottom: 3px;
+  white-space: nowrap;
 }
 
 .panel-head,
