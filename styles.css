@@ -94,19 +94,12 @@ button {
   font-weight: 700;
 }
 
-.page-header h1,
 .panel h2,
 .selector-copy strong,
 .blueprint-card strong {
   margin: 0;
   color: var(--text-strong);
   font-family: "Plus Jakarta Sans", sans-serif;
-}
-
-.page-header h1 {
-  font-size: clamp(1.6rem, 2.3vw, 2.45rem);
-  letter-spacing: -0.04em;
-  line-height: 1.05;
 }
 
 .page-note,
