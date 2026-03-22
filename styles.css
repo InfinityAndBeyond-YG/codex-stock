@@ -212,6 +212,7 @@ button {
   margin-left: auto;
   padding-bottom: 3px;
   text-align: right;
+  transform: translate(-2px, -1px);
   white-space: nowrap;
 }
 
