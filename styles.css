@@ -96,7 +96,7 @@ button {
 
 .section-kicker {
   margin: 0 0 10px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--blue);
@@ -124,7 +124,7 @@ button {
   max-width: 30ch;
   margin: 0;
   line-height: 1.55;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   text-align: right;
 }
 
@@ -163,7 +163,7 @@ button {
 .avg-panel h2,
 .right-stage h2,
 .blueprint-panel h2 {
-  font-size: 1.12rem;
+  font-size: 1rem;
   letter-spacing: -0.03em;
 }
 
@@ -172,7 +172,7 @@ button {
   margin: 10px 0 8px;
   font-family: "Plus Jakarta Sans", sans-serif;
   color: var(--text-strong);
-  font-size: clamp(1.8rem, 3.1vw, 2.8rem);
+  font-size: clamp(1.55rem, 2.5vw, 2.35rem);
   line-height: 1;
   letter-spacing: -0.05em;
 }
@@ -183,8 +183,8 @@ button {
 }
 
 .submetric-card {
-  padding: 14px;
-  border-radius: 20px;
+  padding: 12px;
+  border-radius: 18px;
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
   border: 1px solid var(--line-soft);
 }
@@ -192,7 +192,7 @@ button {
 .submetric-card span,
 .selector-label span {
   display: block;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   color: var(--text-soft);
 }
 
@@ -201,7 +201,7 @@ button {
   display: block;
   margin-top: 6px;
   color: var(--text-strong);
-  font-size: 1rem;
+  font-size: 0.92rem;
 }
 
 .panel-head,
@@ -268,7 +268,7 @@ button {
 }
 
 .donut-mode {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--blue);
@@ -280,7 +280,7 @@ button {
   margin: 6px 0 4px;
   color: var(--text-strong);
   font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.22rem;
+  font-size: 1.08rem;
   line-height: 1.15;
 }
 
@@ -325,12 +325,12 @@ button {
 .selector-label strong {
   display: block;
   color: var(--text-strong);
-  font-size: 1rem;
+  font-size: 0.92rem;
 }
 
 .selector-meta {
   margin-top: 4px;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
 }
 
 .right-stage {
@@ -350,9 +350,10 @@ button {
   background: #ffffff;
   color: var(--text-body);
   border-radius: 999px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   cursor: pointer;
   font-weight: 700;
+  font-size: 0.88rem;
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
@@ -370,14 +371,14 @@ button {
 
 .selector-copy strong {
   display: block;
-  font-size: 1.05rem;
+  font-size: 0.96rem;
   letter-spacing: -0.03em;
 }
 
 .selector-copy p {
   margin: 6px 0 0;
   line-height: 1.55;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
 }
 
 .selector-item {

@@ -124,7 +124,6 @@ function init() {
 function cacheDom() {
   [
     "avgCostValue",
-    "avgCostContext",
     "totalAssetValue",
     "cashRatioValue",
     "allocationTitle",
@@ -181,12 +180,10 @@ function renderModeChips() {
 function renderSummaryCard() {
   const totalAsset = getCurrentScopeTotalAssetValue();
   const cashAsset = getCurrentScopeCashValue();
-  const averageCost = getSummaryAverageCostValue();
 
-  dom.avgCostValue.textContent = formatCurrency(averageCost);
-  dom.totalAssetValue.textContent = formatCurrency(totalAsset);
+  dom.avgCostValue.textContent = formatCurrency(totalAsset);
+  dom.totalAssetValue.textContent = formatCurrency(cashAsset);
   dom.cashRatioValue.textContent = `${formatPercent(totalAsset ? (cashAsset / totalAsset) * 100 : 0)}%`;
-  dom.avgCostContext.textContent = getSummaryContextText();
 }
 
 function renderAllocationPanel() {
@@ -248,30 +245,6 @@ function getTotalCashValue() {
 
 function getTotalHoldingValue() {
   return portfolioData.holdings.reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0);
-}
-
-function getSummaryAverageCostValue() {
-  if (uiState.mode === "accounts") {
-    return getAccountHoldings(uiState.selectedAccountId).reduce(
-      (sum, holding) => sum + getHoldingCostInKrw(holding),
-      0
-    );
-  }
-
-  return portfolioData.holdings.reduce((sum, holding) => sum + getHoldingCostInKrw(holding), 0);
-}
-
-function getSummaryContextText() {
-  if (uiState.mode === "accounts") {
-    const account = getAccountById(uiState.selectedAccountId);
-    return `${account.name} 기준으로 보유 종목의 평단 원가를 위에 두었습니다.`;
-  }
-
-  if (uiState.mode === "stocks") {
-    return "전체 자산에서 각 주식 종목이 차지하는 비율 구조를 보는 기준 금액입니다.";
-  }
-
-  return "전체 보유 종목 기준 평단 원가를 가장 왼쪽 위에 두는 구조입니다.";
 }
 
 function getAllocationSegments() {
