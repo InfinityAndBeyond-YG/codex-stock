@@ -99,14 +99,6 @@ const colorScale = [
   "#bd6a2c",
 ];
 
-const cashCurrencyConfig = [
-  { code: "KRW", label: "원화" },
-  { code: "USD", label: "USD" },
-  { code: "JPY", label: "엔화" },
-  { code: "CNY", label: "중국통화" },
-  { code: "EUR", label: "유로" },
-];
-
 const currencyFormatter = new Intl.NumberFormat("ko-KR", {
   style: "currency",
   currency: "KRW",
@@ -135,7 +127,8 @@ function init() {
 function cacheDom() {
   [
     "avgCostValue",
-    "cashCurrencyList",
+    "cashKrwValue",
+    "cashKrwPercent",
     "allocationTitle",
     "allocationDescription",
     "donutChart",
@@ -189,18 +182,11 @@ function renderModeChips() {
 
 function renderSummaryCard() {
   const totalAsset = getCurrentScopeTotalAssetValue();
+  const cashAsset = getCurrentScopeCashValue();
 
   dom.avgCostValue.textContent = formatCurrency(totalAsset);
-  dom.cashCurrencyList.innerHTML = getCurrentScopeCashCurrencyBreakdown(totalAsset)
-    .map(
-      (item) => `
-        <div class="cash-currency-row">
-          <span class="cash-currency-label">${item.label}</span>
-          <strong class="cash-currency-percent">${formatPercent(item.ratio)}%</strong>
-        </div>
-      `
-    )
-    .join("");
+  dom.cashKrwValue.textContent = formatCurrency(cashAsset);
+  dom.cashKrwPercent.textContent = `${formatPercent(totalAsset ? (cashAsset / totalAsset) * 100 : 0)}%`;
 }
 
 function renderAllocationPanel() {
@@ -248,25 +234,12 @@ function getCurrentScopeTotalAssetValue() {
   return getTotalAssetValue();
 }
 
-function getCurrentScopeCashCurrencyBreakdown(totalAsset) {
-  const scopedAccounts =
-    uiState.mode === "accounts"
-      ? portfolioData.accounts.filter((account) => account.id === uiState.selectedAccountId)
-      : portfolioData.accounts;
+function getCurrentScopeCashValue() {
+  if (uiState.mode === "accounts") {
+    return getAccountCashValue(uiState.selectedAccountId);
+  }
 
-  return cashCurrencyConfig.map((currency) => {
-    const value = scopedAccounts.reduce((sum, account) => {
-      const currencyValue = account.cashBalances
-        .filter((balance) => balance.currency === currency.code)
-        .reduce((currencySum, balance) => currencySum + convertToKrw(balance.amount, balance.currency), 0);
-      return sum + currencyValue;
-    }, 0);
-
-    return {
-      ...currency,
-      ratio: totalAsset ? (value / totalAsset) * 100 : 0,
-    };
-  });
+  return getTotalCashValue();
 }
 
 function getTotalCashValue() {

@@ -196,28 +196,25 @@ button {
   color: var(--text-soft);
 }
 
-.cash-currency-list {
-  display: grid;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.cash-currency-row {
+.cash-summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--line-soft);
-}
-
-.cash-currency-row:last-child {
-  border-bottom: 0;
+  gap: 16px;
+  margin-top: 10px;
 }
 
 .cash-currency-label {
-  color: var(--text-body);
-  font-size: 0.84rem;
+  display: block;
+  color: var(--text-soft);
+  font-size: 0.72rem;
+}
+
+.cash-currency-amount {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-strong);
+  font-size: 0.92rem;
 }
 
 .cash-currency-percent,
