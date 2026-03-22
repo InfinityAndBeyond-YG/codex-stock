@@ -129,7 +129,7 @@ const dom = {};
 
 const uiState = {
   mode: "overall",
-  selectedOverallScope: "cash",
+  selectedOverallScope: "overview",
   selectedAccountId: portfolioData.accounts[0].id,
 };
 
@@ -172,6 +172,9 @@ function bindEvents() {
     }
 
     uiState.mode = button.dataset.mode;
+    if (uiState.mode === "overall") {
+      uiState.selectedOverallScope = "overview";
+    }
     render();
   });
 
@@ -316,6 +319,10 @@ function getAllocationSegments() {
 }
 
 function getOverallAllocationSegments() {
+  if (uiState.selectedOverallScope === "overview") {
+    return getOverallOverviewSegments();
+  }
+
   if (uiState.selectedOverallScope === "domestic") {
     return getMarketAllocationSegments("국내주식");
   }
@@ -325,6 +332,13 @@ function getOverallAllocationSegments() {
   }
 
   return getCashAllocationSegments();
+}
+
+function getOverallOverviewSegments() {
+  return [
+    ...getCashAllocationSegments(),
+    ...getGroupedStockSegments(),
+  ];
 }
 
 function getCashAllocationSegments() {
@@ -347,6 +361,25 @@ function getCashAllocationSegments() {
     .sort((left, right) => right.value - left.value);
 
   return cashSegments;
+}
+
+function getGroupedStockSegments() {
+  return [
+    {
+      label: "국내주식",
+      value: getHoldingsByMarket("국내주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
+      meta: "전체 자산 기준 국내주식",
+      type: "stock",
+      color: "#18a088",
+    },
+    {
+      label: "해외주식",
+      value: getHoldingsByMarket("해외주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
+      meta: "전체 자산 기준 해외주식",
+      type: "stock",
+      color: "#ef8a26",
+    },
+  ].filter((segment) => segment.value > 0);
 }
 
 function getMarketAllocationSegments(market) {
@@ -437,6 +470,10 @@ function getAllocationTitle() {
     return "전체 자산에서 주식 종목별 비율";
   }
 
+  if (uiState.selectedOverallScope === "overview") {
+    return "전체 자산 비율";
+  }
+
   if (uiState.selectedOverallScope === "domestic") {
     return "국내주식 비율";
   }
@@ -469,6 +506,10 @@ function getDonutModeLabel() {
     return "주식별";
   }
 
+  if (uiState.selectedOverallScope === "overview") {
+    return "전체 보기";
+  }
+
   if (uiState.selectedOverallScope === "domestic") {
     return "국내주식";
   }
@@ -487,6 +528,10 @@ function getDonutCenterMeta() {
 
   if (uiState.mode === "stocks") {
     return "전체 자산 대비 종목별";
+  }
+
+  if (uiState.selectedOverallScope === "overview") {
+    return "통화 + 국내/해외 기준";
   }
 
   if (uiState.selectedOverallScope === "domestic") {
