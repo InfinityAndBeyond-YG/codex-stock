@@ -156,7 +156,7 @@ button {
 .avg-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 28px;
   align-items: stretch;
 }
 
@@ -177,25 +177,21 @@ button {
   letter-spacing: -0.05em;
 }
 
-.summary-metric-card {
-  height: 100%;
-  padding: 18px 18px 16px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
-  border: 1px solid var(--line-soft);
+.summary-metric-block {
+  min-width: 0;
   text-align: left;
 }
 
 .summary-meta,
 .selector-label span {
   display: block;
+  margin: 0;
   font-size: 0.72rem;
   color: var(--text-soft);
 }
 
 .summary-meta,
 .selector-value {
-  margin: 0;
   color: var(--text-soft);
   font-size: 0.76rem;
 }
@@ -489,6 +485,7 @@ button {
 
   .avg-layout {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .page-note {
