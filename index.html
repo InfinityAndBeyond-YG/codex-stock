@@ -34,20 +34,16 @@
       <main class="stage-grid">
         <section class="left-stage">
           <article class="panel avg-panel">
-            <p class="section-kicker">Top Left</p>
+            <p class="section-kicker">자산 요약</p>
             <div class="avg-layout">
               <div>
                 <h2>총 평가 자산</h2>
                 <strong id="avgCostValue" class="avg-value">-</strong>
               </div>
               <div class="avg-submetrics">
-                <div class="submetric-card">
-                  <span>현금 금액</span>
-                  <strong id="totalAssetValue">-</strong>
-                </div>
-                <div class="submetric-card">
-                  <span>현금 비중</span>
-                  <strong id="cashRatioValue">-</strong>
+                <div class="cash-breakdown-card">
+                  <span class="cash-breakdown-title">현금 자산</span>
+                  <div id="cashCurrencyList" class="cash-currency-list"></div>
                 </div>
               </div>
             </div>
@@ -55,7 +51,7 @@
             <div class="inline-donut">
               <div class="panel-head compact-panel-head">
                 <div>
-                  <p class="section-kicker">Left Graph</p>
+                  <p class="section-kicker">자산 비율</p>
                   <h2 id="allocationTitle">전체 자산 비율</h2>
                 </div>
                 <p id="allocationDescription" class="section-caption">-</p>
