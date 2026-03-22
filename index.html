@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Flow</title>
+    <meta
+      name="description"
+      content="계좌별·종목별 포트폴리오 흐름과 월별 자산 추이를 한눈에 보는 Stock Flow 대시보드"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"
+    ></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Stock Flow</p>
+          <h1>내 자산의 흐름을 계좌별, 종목별로 깔끔하게 보는 포트폴리오 보드</h1>
+          <p class="hero-text">
+            입력이나 스크린샷 인식 결과가 들어오면 총 평가자산, 월별 자산 흐름,
+            평균 단가 변화가 즉시 다시 계산됩니다.
+          </p>
+          <div class="hero-actions">
+            <button id="focusUploaderButton" class="button button-primary">
+              스크린샷으로 불러오기
+            </button>
+            <button id="resetDemoButton" class="button button-secondary">
+              데모 데이터 초기화
+            </button>
+          </div>
+        </div>
+        <div class="hero-metrics">
+          <article class="metric-card metric-highlight">
+            <p class="metric-label">총 평가 자산</p>
+            <strong id="summaryTotalAsset" class="metric-value">-</strong>
+            <span id="summaryUpdatedAt" class="metric-footnote">-</span>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">주식 평가 금액</p>
+            <strong id="summaryEquityValue" class="metric-value">-</strong>
+            <span id="summaryEquityMix" class="metric-footnote">-</span>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">평가 손익</p>
+            <strong id="summaryProfitLoss" class="metric-value">-</strong>
+            <span id="summaryProfitRate" class="metric-footnote">-</span>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">전월 대비 흐름</p>
+            <strong id="summaryMonthlyDelta" class="metric-value">-</strong>
+            <span id="summaryCashValue" class="metric-footnote">-</span>
+          </article>
+        </div>
+      </header>
+
+      <main class="main-grid">
+        <section class="panel board-panel">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Portfolio Board</p>
+              <h2>현재 보유 현황</h2>
+            </div>
+            <div class="toolbar-actions">
+              <label class="field compact-field">
+                <span>보기 기준</span>
+                <select id="viewModeSelect">
+                  <option value="holdings">종목</option>
+                  <option value="accounts">계좌</option>
+                </select>
+              </label>
+              <label class="field compact-field">
+                <span>검색</span>
+                <input
+                  id="searchInput"
+                  type="search"
+                  placeholder="종목명, 계좌명 검색"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+          </div>
+          <div id="accountFilters" class="filter-row"></div>
+          <div id="portfolioBoard" class="board-grid"></div>
+        </section>
+
+        <aside class="panel detail-panel">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Deep Dive</p>
+              <h2>선택 상세</h2>
+            </div>
+          </div>
+          <div id="detailPanelContent" class="detail-content"></div>
+        </aside>
+
+        <section class="panel chart-panel">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Monthly Flow</p>
+              <h2>월별 계좌 자산 흐름</h2>
+            </div>
+            <p id="assetFlowCaption" class="section-caption"></p>
+          </div>
+          <div id="assetFlowChart" class="bar-chart"></div>
+        </section>
+
+        <section class="panel chart-panel">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Average Cost</p>
+              <h2>평단 대비 평가 변화</h2>
+            </div>
+            <p id="averageCostCaption" class="section-caption"></p>
+          </div>
+          <div id="averageCostChart" class="dual-bar-chart"></div>
+        </section>
+
+        <section id="uploaderSection" class="panel uploader-panel">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Auto Import</p>
+              <h2>은행·증권사 스크린샷 업로드</h2>
+            </div>
+            <p class="section-caption">
+              OCR로 종목, 수량, 평단, 매수/매도 내역을 추출한 뒤 한 번에 반영할 수
+              있습니다.
+            </p>
+          </div>
+
+          <div class="upload-layout">
+            <label for="screenshotInput" class="upload-dropzone">
+              <input id="screenshotInput" type="file" accept="image/*" hidden />
+              <div class="upload-icon">+</div>
+              <strong>스크린샷 선택</strong>
+              <span>휴대폰 캡처나 은행 앱 화면 이미지를 올리면 됩니다.</span>
+              <small>예: 삼성전자 12주 평단 71,000원 / 2026-03-20 NAVER 매수 2주 210,000원</small>
+            </label>
+
+            <div class="ocr-side">
+              <div class="status-card">
+                <div class="status-head">
+                  <h3>OCR 진행 상태</h3>
+                  <span id="ocrProgressLabel" class="status-pill">대기 중</span>
+                </div>
+                <div class="progress-track">
+                  <div id="ocrProgressBar" class="progress-fill"></div>
+                </div>
+                <p id="ocrStatusText" class="status-text">
+                  이미지를 올리면 텍스트를 읽고 자동 분류를 시작합니다.
+                </p>
+              </div>
+              <div class="preview-card">
+                <div class="preview-head">
+                  <h3>인식 미리보기</h3>
+                  <button id="clearImportButton" class="button button-ghost" type="button">
+                    비우기
+                  </button>
+                </div>
+                <div id="imagePreview" class="image-preview image-empty">
+                  업로드한 이미지가 여기에 표시됩니다.
+                </div>
+                <pre id="ocrTextPreview" class="ocr-preview">아직 인식된 텍스트가 없습니다.</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-head">
+            <h3>자동 인식 결과</h3>
+            <button id="applyOcrButton" class="button button-primary" type="button" disabled>
+              인식 결과 반영
+            </button>
+          </div>
+          <div id="ocrResults" class="ocr-results"></div>
+
+          <div class="manual-block">
+            <div class="section-header inline-header">
+              <div>
+                <p class="section-kicker">Quick Add</p>
+                <h2>수동 거래 입력</h2>
+              </div>
+              <p class="section-caption">
+                스크린샷 인식이 애매할 때는 거래 한 건만 바로 추가할 수 있습니다.
+              </p>
+            </div>
+            <form id="manualTransactionForm" class="manual-form">
+              <label class="field">
+                <span>계좌</span>
+                <select id="manualAccountSelect" name="accountId"></select>
+              </label>
+              <label class="field">
+                <span>종목명</span>
+                <input name="name" type="text" placeholder="예: 삼성전자" required />
+              </label>
+              <label class="field">
+                <span>구분</span>
+                <select name="type">
+                  <option value="buy">매수</option>
+                  <option value="sell">매도</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>수량</span>
+                <input name="shares" type="number" min="1" step="1" required />
+              </label>
+              <label class="field">
+                <span>가격</span>
+                <input name="price" type="number" min="0" step="1" required />
+              </label>
+              <label class="field">
+                <span>거래일</span>
+                <input name="date" type="date" required />
+              </label>
+              <button class="button button-secondary" type="submit">거래 추가</button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
