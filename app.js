@@ -109,6 +109,14 @@ const percentFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 1,
 });
 
+const percentBadgeIntegerFormatter = new Intl.NumberFormat("ko-KR", {
+  maximumFractionDigits: 0,
+});
+
+const percentBadgeDecimalFormatter = new Intl.NumberFormat("ko-KR", {
+  maximumFractionDigits: 1,
+});
+
 const dom = {};
 
 const uiState = {
@@ -134,7 +142,7 @@ function cacheDom() {
     "allocationDescription",
     "donutChart",
     "donutModeLabel",
-    "donutCenterPercent",
+    "donutPercentLayer",
     "donutCenterValue",
     "donutCenterMeta",
     "donutLegend",
@@ -225,10 +233,12 @@ function renderAllocationPanel() {
   dom.allocationDescription.textContent = allocationDescription;
   dom.allocationDescription.hidden = !allocationDescription;
   dom.donutModeLabel.textContent = getDonutModeLabel();
-  dom.donutCenterPercent.textContent = getDonutCenterPercent(paletteSegments, totalAsset);
   dom.donutCenterValue.textContent = formatCurrency(totalAsset);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
   dom.donutChart.style.background = buildConicGradient(paletteSegments, totalAsset);
+  dom.donutPercentLayer.innerHTML = getDonutPercentBadges(paletteSegments, totalAsset)
+    .map((badge) => renderDonutPercentBadge(badge))
+    .join("");
   dom.donutLegend.innerHTML = paletteSegments.map((segment) => renderDonutLegendItem(segment)).join("");
 }
 
@@ -429,15 +439,6 @@ function getDonutCenterMeta() {
   return "통화 + 국내/해외 기준";
 }
 
-function getDonutCenterPercent(segments, totalAsset) {
-  const leadSegment = segments.find((segment) => segment.value > 0);
-  if (!leadSegment || totalAsset <= 0) {
-    return "0%";
-  }
-
-  return `${formatPercent((leadSegment.value / totalAsset) * 100)}%`;
-}
-
 function getSelectorTitle() {
   if (uiState.mode === "accounts") {
     return "계좌별 보기";
@@ -580,6 +581,45 @@ function renderDonutLegendItem(segment) {
   `;
 }
 
+function getDonutPercentBadges(segments, totalAsset) {
+  if (!segments.length || totalAsset <= 0) {
+    return [];
+  }
+
+  let currentAngle = 0;
+  return segments
+    .filter((segment) => segment.value > 0)
+    .map((segment) => {
+      const angle = (segment.value / totalAsset) * 360;
+      const midpoint = currentAngle + angle / 2;
+      currentAngle += angle;
+
+      const radians = ((midpoint - 90) * Math.PI) / 180;
+      const radius = 39;
+
+      return {
+        label: segment.label,
+        percent: formatDonutBadgePercent((segment.value / totalAsset) * 100),
+        color: segment.color,
+        textColor: getReadableTextColor(segment.color),
+        x: 50 + Math.cos(radians) * radius,
+        y: 50 + Math.sin(radians) * radius,
+      };
+    });
+}
+
+function renderDonutPercentBadge(badge) {
+  return `
+    <span
+      class="donut-percent-badge"
+      style="--badge-x:${badge.x}%; --badge-y:${badge.y}%; --badge-bg:${badge.color}; --badge-color:${badge.textColor};"
+      title="${badge.label} ${badge.percent}"
+    >
+      ${badge.percent}
+    </span>
+  `;
+}
+
 function renderStaticSelectorItem(item) {
   return `
     <article class="selector-item">
@@ -662,4 +702,27 @@ function formatCurrency(value) {
 
 function formatPercent(value) {
   return percentFormatter.format(Number(value || 0));
+}
+
+function formatDonutBadgePercent(value) {
+  const numericValue = Number(value || 0);
+  if (numericValue >= 10) {
+    return `${percentBadgeIntegerFormatter.format(numericValue)}%`;
+  }
+
+  return `${percentBadgeDecimalFormatter.format(numericValue)}%`;
+}
+
+function getReadableTextColor(hexColor) {
+  const normalized = `${hexColor || ""}`.replace("#", "");
+  if (normalized.length !== 6) {
+    return "#ffffff";
+  }
+
+  const red = parseInt(normalized.slice(0, 2), 16);
+  const green = parseInt(normalized.slice(2, 4), 16);
+  const blue = parseInt(normalized.slice(4, 6), 16);
+  const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
+
+  return brightness > 160 ? "#153052" : "#ffffff";
 }

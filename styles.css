@@ -245,25 +245,25 @@ button {
 }
 
 .donut-layout {
-  display: grid;
-  grid-template-columns: minmax(250px, 304px) fit-content(220px);
-  justify-content: center;
-  gap: 18px;
-  align-items: center;
+  display: block;
 }
 
 .donut-wrap {
   display: grid;
-  place-items: center;
-  width: min(100%, 304px);
-  padding: 40px 24px 36px;
+  grid-template-columns: minmax(238px, 270px) minmax(0, 188px);
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: min(100%, 540px);
+  margin: 0 auto;
+  padding: 36px 22px 32px;
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(246, 249, 252, 0.95), rgba(238, 244, 250, 0.85));
 }
 
 .donut-chart {
   position: relative;
-  width: min(100%, 270px);
+  width: min(100%, 264px);
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
@@ -305,21 +305,30 @@ button {
   line-height: 1.15;
 }
 
-.donut-center-percent {
+.donut-percent-layer {
   position: absolute;
-  top: 16%;
-  left: 50%;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.donut-percent-badge {
+  position: absolute;
+  top: var(--badge-y);
+  left: var(--badge-x);
   z-index: 2;
   display: block;
-  padding: 4px 8px;
+  padding: 3px 7px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--text-strong);
-  font-size: 0.68rem;
+  background: var(--badge-bg);
+  color: var(--badge-color);
+  font-size: 0.62rem;
   font-weight: 700;
   line-height: 1;
   transform: translate(-50%, -50%);
-  box-shadow: 0 6px 18px rgba(23, 43, 77, 0.1);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 6px 18px rgba(23, 43, 77, 0.12);
 }
 
 .donut-center-meta {
@@ -330,8 +339,8 @@ button {
 
 .donut-legend {
   display: grid;
-  width: min(100%, 210px);
-  gap: 10px;
+  width: min(100%, 188px);
+  gap: 8px;
   align-content: center;
   justify-self: start;
 }
@@ -340,7 +349,7 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -352,21 +361,21 @@ button {
 }
 
 .donut-legend-swatch {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 2px;
   flex: 0 0 auto;
 }
 
 .donut-legend-label {
   color: var(--text-body);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   min-width: 0;
 }
 
 .donut-legend-value {
   color: var(--text-strong);
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-family: "Plus Jakarta Sans", sans-serif;
   white-space: nowrap;
 }
@@ -584,8 +593,7 @@ button {
   }
 
   .donut-layout {
-    grid-template-columns: 1fr;
-    gap: 18px;
+    display: block;
   }
 
   .page-note {
@@ -617,6 +625,22 @@ button {
 
   .donut-hole {
     width: 62%;
+  }
+
+  .donut-wrap {
+    grid-template-columns: 1fr;
+    width: min(100%, 360px);
+    gap: 16px;
+    padding: 28px 18px 24px;
+  }
+
+  .donut-chart {
+    width: min(100%, 252px);
+  }
+
+  .donut-legend {
+    width: 100%;
+    justify-self: stretch;
   }
 
   .donut-legend-item {
