@@ -619,7 +619,7 @@ function renderAccountSelectorItem(item) {
 
 function renderStockSelectorItem(item) {
   return `
-    <article class="selector-item">
+    <article class="selector-item selector-item-readonly">
       <div class="selector-left">
         <span class="selector-dot" style="background:${item.color}"></span>
         <div class="selector-label">
@@ -628,7 +628,6 @@ function renderStockSelectorItem(item) {
         </div>
       </div>
       <div class="selector-right">
-        <span class="selector-tag ${item.tag === "해외" ? "tag-orange" : "tag-teal"}">${item.tag}</span>
         <strong class="selector-value">${formatPercent(item.ratio)}%</strong>
         <span class="selector-meta">${formatCurrency(item.value)}</span>
       </div>

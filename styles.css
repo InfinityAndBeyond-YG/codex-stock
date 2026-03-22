@@ -477,6 +477,14 @@ button {
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
+.selector-item-readonly {
+  cursor: default;
+}
+
+.selector-item-readonly:hover {
+  transform: none;
+}
+
 .selector-item.active {
   border-color: rgba(12, 114, 222, 0.24);
   box-shadow: var(--shadow-focus);
