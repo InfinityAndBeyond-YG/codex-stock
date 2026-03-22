@@ -129,6 +129,7 @@ function cacheDom() {
     "avgCostValue",
     "cashKrwValue",
     "cashKrwPercent",
+    "cashCurrencyList",
     "allocationTitle",
     "allocationDescription",
     "donutChart",
@@ -183,10 +184,31 @@ function renderModeChips() {
 function renderSummaryCard() {
   const totalAsset = getCurrentScopeTotalAssetValue();
   const cashAsset = getCurrentScopeCashValue();
+  const cashRatio = totalAsset ? (cashAsset / totalAsset) * 100 : 0;
 
-  dom.avgCostValue.textContent = formatCurrency(totalAsset);
-  dom.cashKrwValue.textContent = formatCurrency(cashAsset);
-  dom.cashKrwPercent.textContent = `${formatPercent(totalAsset ? (cashAsset / totalAsset) * 100 : 0)}%`;
+  if (dom.avgCostValue) {
+    dom.avgCostValue.textContent = formatCurrency(totalAsset);
+  }
+
+  if (dom.cashKrwValue) {
+    dom.cashKrwValue.textContent = formatCurrency(cashAsset);
+  }
+
+  if (dom.cashKrwPercent) {
+    dom.cashKrwPercent.textContent = `${formatPercent(cashRatio)}%`;
+  }
+
+  if (dom.cashCurrencyList) {
+    dom.cashCurrencyList.innerHTML = `
+      <div class="cash-summary-row">
+        <div>
+          <span class="cash-currency-label">총 원화 평가</span>
+          <strong class="cash-currency-amount">${formatCurrency(cashAsset)}</strong>
+        </div>
+        <strong class="cash-currency-percent">${formatPercent(cashRatio)}%</strong>
+      </div>
+    `;
+  }
 }
 
 function renderAllocationPanel() {
