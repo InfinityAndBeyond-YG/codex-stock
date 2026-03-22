@@ -129,6 +129,7 @@ const dom = {};
 
 const uiState = {
   mode: "overall",
+  selectedOverallScope: "cash",
   selectedAccountId: portfolioData.accounts[0].id,
 };
 
@@ -175,6 +176,13 @@ function bindEvents() {
   });
 
   dom.selectorList.addEventListener("click", (event) => {
+    const overallButton = event.target.closest("[data-overall-scope]");
+    if (overallButton) {
+      uiState.selectedOverallScope = overallButton.dataset.overallScope;
+      render();
+      return;
+    }
+
     const accountButton = event.target.closest("[data-account-id]");
     if (!accountButton) {
       return;
@@ -230,7 +238,7 @@ function renderSummaryCard() {
 
 function renderAllocationPanel() {
   const segments = getAllocationSegments();
-  const totalAsset = getCurrentScopeTotalAssetValue();
+  const allocationTotal = segments.reduce((sum, segment) => sum + segment.value, 0);
   const allocationDescription = getAllocationDescription();
   const paletteSegments = segments.map((segment, index) => ({
     ...segment,
@@ -241,10 +249,10 @@ function renderAllocationPanel() {
   dom.allocationDescription.textContent = allocationDescription;
   dom.allocationDescription.hidden = !allocationDescription;
   dom.donutModeLabel.textContent = getDonutModeLabel();
-  dom.donutCenterValue.textContent = formatCurrency(totalAsset);
+  dom.donutCenterValue.textContent = formatCurrency(allocationTotal);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
-  dom.donutChart.style.background = buildConicGradient(paletteSegments, totalAsset);
-  dom.donutPercentLayer.innerHTML = getDonutPercentBadges(paletteSegments, totalAsset)
+  dom.donutChart.style.background = buildConicGradient(paletteSegments, allocationTotal);
+  dom.donutPercentLayer.innerHTML = getDonutPercentBadges(paletteSegments, allocationTotal)
     .map((badge) => renderDonutPercentBadge(badge))
     .join("");
   dom.donutLegend.innerHTML = paletteSegments.map((segment) => renderDonutLegendItem(segment)).join("");
@@ -308,6 +316,18 @@ function getAllocationSegments() {
 }
 
 function getOverallAllocationSegments() {
+  if (uiState.selectedOverallScope === "domestic") {
+    return getMarketAllocationSegments("국내주식");
+  }
+
+  if (uiState.selectedOverallScope === "foreign") {
+    return getMarketAllocationSegments("해외주식");
+  }
+
+  return getCashAllocationSegments();
+}
+
+function getCashAllocationSegments() {
   const currencyCashMap = new Map();
   portfolioData.accounts.forEach((account) => {
     account.cashBalances.forEach((cash) => {
@@ -326,25 +346,34 @@ function getOverallAllocationSegments() {
     }))
     .sort((left, right) => right.value - left.value);
 
-  const stockSegments = [
-    {
-      label: "국내주식",
-      value: getHoldingsByMarket("국내주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
-      meta: "전체 자산에서 국내 종목 비중",
-      type: "stock",
-      color: "#18a088",
-    },
-    {
-      label: "해외주식",
-      value: getHoldingsByMarket("해외주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
-      meta: "전체 자산에서 해외 종목 비중",
-      type: "stock",
-      color: "#ef8a26",
-    },
-  ].filter((segment) => segment.value > 0);
+  return cashSegments;
+}
 
-  stockSegments.sort((left, right) => right.value - left.value);
-  return [...cashSegments, ...stockSegments];
+function getMarketAllocationSegments(market) {
+  const aggregatedSegments = new Map();
+  portfolioData.holdings
+    .filter((holding) => holding.market === market)
+    .forEach((holding) => {
+      const current = aggregatedSegments.get(holding.name) || {
+        label: holding.name,
+        value: 0,
+        meta: `${market} 종목`,
+      };
+
+      aggregatedSegments.set(holding.name, {
+        ...current,
+        value: current.value + getHoldingValueInKrw(holding),
+      });
+    });
+
+  return Array.from(aggregatedSegments.values())
+    .map((segment, index) => ({
+      ...segment,
+      type: "stock",
+      color: colorScale[(index + 1) % colorScale.length],
+      tag: market === "해외주식" ? "해외" : "국내",
+    }))
+    .sort((left, right) => right.value - left.value);
 }
 
 function getAccountAllocationSegments(accountId) {
@@ -408,7 +437,15 @@ function getAllocationTitle() {
     return "전체 자산에서 주식 종목별 비율";
   }
 
-  return "전체 자산 비율";
+  if (uiState.selectedOverallScope === "domestic") {
+    return "국내주식 비율";
+  }
+
+  if (uiState.selectedOverallScope === "foreign") {
+    return "해외주식 비율";
+  }
+
+  return "현금 자산 비율";
 }
 
 function getAllocationDescription() {
@@ -432,7 +469,15 @@ function getDonutModeLabel() {
     return "주식별";
   }
 
-  return "전체 보기";
+  if (uiState.selectedOverallScope === "domestic") {
+    return "국내주식";
+  }
+
+  if (uiState.selectedOverallScope === "foreign") {
+    return "해외주식";
+  }
+
+  return "현금 자산";
 }
 
 function getDonutCenterMeta() {
@@ -444,7 +489,15 @@ function getDonutCenterMeta() {
     return "전체 자산 대비 종목별";
   }
 
-  return "통화 + 국내/해외 기준";
+  if (uiState.selectedOverallScope === "domestic") {
+    return "국내주식 총 평가 기준";
+  }
+
+  if (uiState.selectedOverallScope === "foreign") {
+    return "해외주식 총 평가 기준";
+  }
+
+  return "전체 현금 기준 통화별";
 }
 
 function getSelectorTitle() {
@@ -468,7 +521,7 @@ function getSelectorDescription() {
     return "전체 자산 기준으로 각 주식 종목 퍼센트를 오른쪽 목록과 왼쪽 그래프에서 같이 확인합니다.";
   }
 
-  return "현금 통화와 국내/해외 주식 비율을 먼저 한 번에 보는 기본 구조입니다.";
+  return "오른쪽 항목을 누르면 왼쪽 원그래프가 현금, 국내주식, 해외주식 기준으로 바뀝니다.";
 }
 
 function getAccountSelectionItems() {
@@ -511,31 +564,37 @@ function getOverallSelectorItems() {
 
   return [
     {
+      id: "cash",
       label: "현금 자산",
-      meta: "먼저 보이도록 가장 위에 둔 기준",
+      meta: "통화별 비율 보기",
       value: cashValue,
       ratio: totalAsset ? (cashValue / totalAsset) * 100 : 0,
       color: "#0c72de",
       tagClass: "tag-blue",
       tag: "현금",
+      active: uiState.selectedOverallScope === "cash",
     },
     {
+      id: "domestic",
       label: "국내주식",
-      meta: "국내 종목을 한 덩어리로 본 구조",
+      meta: "국내 종목별 비율 보기",
       value: domesticValue,
       ratio: totalAsset ? (domesticValue / totalAsset) * 100 : 0,
       color: "#18a088",
       tagClass: "tag-teal",
       tag: "국내",
+      active: uiState.selectedOverallScope === "domestic",
     },
     {
+      id: "foreign",
       label: "해외주식",
-      meta: "해외 종목을 한 덩어리로 본 구조",
+      meta: "해외 종목별 비율 보기",
       value: foreignValue,
       ratio: totalAsset ? (foreignValue / totalAsset) * 100 : 0,
       color: "#ef8a26",
       tagClass: "tag-orange",
       tag: "해외",
+      active: uiState.selectedOverallScope === "foreign",
     },
   ];
 }
@@ -630,7 +689,7 @@ function renderDonutPercentBadge(badge) {
 
 function renderStaticSelectorItem(item) {
   return `
-    <article class="selector-item">
+    <article class="selector-item ${item.active ? "active" : ""}" data-overall-scope="${item.id}">
       <div class="selector-left">
         <span class="selector-dot" style="background:${item.color}"></span>
         <div class="selector-label">
