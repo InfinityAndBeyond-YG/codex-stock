@@ -134,8 +134,10 @@ function cacheDom() {
     "allocationDescription",
     "donutChart",
     "donutModeLabel",
+    "donutCenterPercent",
     "donutCenterValue",
     "donutCenterMeta",
+    "donutLegend",
     "modeSwitch",
     "selectorTitle",
     "selectorDescription",
@@ -223,9 +225,11 @@ function renderAllocationPanel() {
   dom.allocationDescription.textContent = allocationDescription;
   dom.allocationDescription.hidden = !allocationDescription;
   dom.donutModeLabel.textContent = getDonutModeLabel();
+  dom.donutCenterPercent.textContent = getDonutCenterPercent(paletteSegments, totalAsset);
   dom.donutCenterValue.textContent = formatCurrency(totalAsset);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
   dom.donutChart.style.background = buildConicGradient(paletteSegments, totalAsset);
+  dom.donutLegend.innerHTML = paletteSegments.map((segment) => renderDonutLegendItem(segment)).join("");
 }
 
 function renderSelectorPanel() {
@@ -425,6 +429,15 @@ function getDonutCenterMeta() {
   return "통화 + 국내/해외 기준";
 }
 
+function getDonutCenterPercent(segments, totalAsset) {
+  const leadSegment = segments.find((segment) => segment.value > 0);
+  if (!leadSegment || totalAsset <= 0) {
+    return "0%";
+  }
+
+  return `${formatPercent((leadSegment.value / totalAsset) * 100)}%`;
+}
+
 function getSelectorTitle() {
   if (uiState.mode === "accounts") {
     return "계좌별 보기";
@@ -552,6 +565,18 @@ function renderStockSelectorItem(item) {
         <span class="selector-meta">${formatCurrency(item.value)}</span>
       </div>
     </article>
+  `;
+}
+
+function renderDonutLegendItem(segment) {
+  return `
+    <div class="donut-legend-item">
+      <div class="donut-legend-left">
+        <span class="donut-legend-swatch" style="background:${segment.color}"></span>
+        <span class="donut-legend-label">${segment.label}</span>
+      </div>
+      <strong class="donut-legend-value">${formatCurrency(segment.value)}</strong>
+    </div>
   `;
 }
 
