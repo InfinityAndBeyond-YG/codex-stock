@@ -73,7 +73,7 @@ button {
   z-index: 1;
   width: min(1320px, calc(100vw - 28px));
   margin: 0 auto;
-  padding: 28px 0 40px;
+  padding: 22px 0 34px;
 }
 
 .page-header {
@@ -81,7 +81,7 @@ button {
   justify-content: space-between;
   align-items: flex-end;
   gap: 18px;
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 
 .eyebrow,
@@ -104,7 +104,7 @@ button {
 }
 
 .page-header h1 {
-  font-size: clamp(2rem, 3vw, 3.2rem);
+  font-size: clamp(1.6rem, 2.3vw, 2.45rem);
   letter-spacing: -0.04em;
   line-height: 1.05;
 }
@@ -121,14 +121,15 @@ button {
 .page-note {
   max-width: 30ch;
   margin: 0;
-  line-height: 1.65;
+  line-height: 1.55;
+  font-size: 0.92rem;
   text-align: right;
 }
 
 .stage-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.7fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.28fr) minmax(300px, 0.72fr);
+  gap: 16px;
 }
 
 .left-stage {
@@ -145,7 +146,6 @@ button {
 }
 
 .avg-panel,
-.donut-panel,
 .right-stage,
 .blueprint-panel {
   padding: 24px;
@@ -153,25 +153,24 @@ button {
 
 .avg-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(220px, 0.95fr);
+  gap: 14px;
   align-items: stretch;
 }
 
 .avg-panel h2,
-.donut-panel h2,
 .right-stage h2,
 .blueprint-panel h2 {
-  font-size: 1.35rem;
+  font-size: 1.12rem;
   letter-spacing: -0.03em;
 }
 
 .avg-value {
   display: block;
-  margin: 12px 0 10px;
+  margin: 10px 0 8px;
   font-family: "Plus Jakarta Sans", sans-serif;
   color: var(--text-strong);
-  font-size: clamp(2.1rem, 4vw, 3.5rem);
+  font-size: clamp(1.8rem, 3.1vw, 2.8rem);
   line-height: 1;
   letter-spacing: -0.05em;
 }
@@ -182,8 +181,8 @@ button {
 }
 
 .submetric-card {
-  padding: 18px;
-  border-radius: 24px;
+  padding: 14px;
+  border-radius: 20px;
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
   border: 1px solid var(--line-soft);
 }
@@ -191,16 +190,16 @@ button {
 .submetric-card span,
 .selector-label span {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   color: var(--text-soft);
 }
 
 .submetric-card strong,
 .selector-value {
   display: block;
-  margin-top: 8px;
+  margin-top: 6px;
   color: var(--text-strong);
-  font-size: 1.18rem;
+  font-size: 1rem;
 }
 
 .panel-head,
@@ -220,6 +219,16 @@ button {
   margin-bottom: 16px;
 }
 
+.compact-panel-head {
+  margin-bottom: 12px;
+}
+
+.inline-donut {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+
 .donut-layout {
   display: block;
 }
@@ -227,13 +236,13 @@ button {
 .donut-wrap {
   display: grid;
   place-items: center;
-  padding: 20px 18px 10px;
-  border-radius: 28px;
+  padding: 14px 14px 6px;
+  border-radius: 24px;
   background: linear-gradient(180deg, rgba(246, 249, 252, 0.95), rgba(238, 244, 250, 0.85));
 }
 
 .donut-chart {
-  width: min(100%, 360px);
+  width: min(100%, 300px);
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
@@ -257,7 +266,7 @@ button {
 }
 
 .donut-mode {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--blue);
@@ -266,10 +275,10 @@ button {
 
 .donut-center-value {
   display: block;
-  margin: 8px 0 6px;
+  margin: 6px 0 4px;
   color: var(--text-strong);
   font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.22rem;
   line-height: 1.15;
 }
 
@@ -359,13 +368,14 @@ button {
 
 .selector-copy strong {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   letter-spacing: -0.03em;
 }
 
 .selector-copy p {
-  margin: 8px 0 0;
-  line-height: 1.7;
+  margin: 6px 0 0;
+  line-height: 1.55;
+  font-size: 0.92rem;
 }
 
 .selector-item {
@@ -414,7 +424,7 @@ button {
 }
 
 .blueprint-panel {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .blueprint-grid {
@@ -422,7 +432,7 @@ button {
 }
 
 .blueprint-card {
-  padding: 22px;
+  padding: 18px;
   border-radius: 24px;
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
   border: 1px dashed rgba(21, 42, 76, 0.14);
@@ -443,13 +453,14 @@ button {
 
 .blueprint-card strong {
   display: block;
-  font-size: 1.08rem;
-  line-height: 1.45;
+  font-size: 0.98rem;
+  line-height: 1.4;
 }
 
 .blueprint-card p {
-  margin: 8px 0 0;
-  line-height: 1.7;
+  margin: 6px 0 0;
+  line-height: 1.55;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 1120px) {
@@ -486,7 +497,6 @@ button {
   }
 
   .avg-panel,
-  .donut-panel,
   .right-stage,
   .blueprint-panel {
     padding: 18px;
