@@ -470,7 +470,7 @@ button {
   right: 0;
   bottom: 22px;
   height: 1px;
-  background: rgba(47, 148, 147, 0.14);
+  background: rgba(111, 143, 190, 0.16);
   pointer-events: none;
 }
 
@@ -501,23 +501,23 @@ button {
   width: 100%;
   min-height: 16px;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #4eb7a8 0%, #1f6f78 100%);
-  box-shadow: 0 10px 18px rgba(31, 111, 120, 0.14);
+  background: linear-gradient(180deg, #6f8fbe 0%, #243b63 100%);
+  box-shadow: 0 10px 18px rgba(36, 59, 99, 0.15);
 }
 
 .history-bar-item:nth-child(3n + 2) .history-bar-fill {
-  background: linear-gradient(180deg, #73cfc1 0%, #2f9493 100%);
-  box-shadow: 0 10px 18px rgba(47, 148, 147, 0.13);
+  background: linear-gradient(180deg, #d9bf8a 0%, #c8a96b 100%);
+  box-shadow: 0 10px 18px rgba(200, 169, 107, 0.18);
 }
 
 .history-bar-item:nth-child(3n) .history-bar-fill {
-  background: linear-gradient(180deg, #b8ddd6 0%, #74b0a5 100%);
-  box-shadow: 0 10px 18px rgba(116, 176, 165, 0.14);
+  background: linear-gradient(180deg, #9bb2d1 0%, #5873a0 100%);
+  box-shadow: 0 10px 18px rgba(88, 115, 160, 0.15);
 }
 
 .history-bar-item.current .history-bar-fill {
-  background: linear-gradient(180deg, #2c8e88 0%, #16565b 100%);
-  box-shadow: 0 12px 20px rgba(22, 86, 91, 0.18);
+  background: linear-gradient(180deg, #3b5a8f 0%, #1a2946 100%);
+  box-shadow: 0 12px 20px rgba(26, 41, 70, 0.19);
 }
 
 .history-bar-label {
