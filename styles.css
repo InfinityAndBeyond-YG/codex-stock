@@ -458,23 +458,23 @@ button {
   width: 100%;
   min-height: 16px;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #4f7ecf 0%, #1f4b99 100%);
-  box-shadow: 0 10px 18px rgba(31, 75, 153, 0.14);
+  background: linear-gradient(180deg, #4eb7a8 0%, #1f6f78 100%);
+  box-shadow: 0 10px 18px rgba(31, 111, 120, 0.14);
 }
 
 .history-bar-item:nth-child(3n + 2) .history-bar-fill {
-  background: linear-gradient(180deg, #7398d8 0%, #355faa 100%);
-  box-shadow: 0 10px 18px rgba(53, 95, 170, 0.13);
+  background: linear-gradient(180deg, #73cfc1 0%, #2f9493 100%);
+  box-shadow: 0 10px 18px rgba(47, 148, 147, 0.13);
 }
 
 .history-bar-item:nth-child(3n) .history-bar-fill {
-  background: linear-gradient(180deg, #c3d1e7 0%, #7f9cc7 100%);
-  box-shadow: 0 10px 18px rgba(127, 156, 199, 0.14);
+  background: linear-gradient(180deg, #b8ddd6 0%, #74b0a5 100%);
+  box-shadow: 0 10px 18px rgba(116, 176, 165, 0.14);
 }
 
 .history-bar-item.current .history-bar-fill {
-  background: linear-gradient(180deg, #365fb0 0%, #1a3670 100%);
-  box-shadow: 0 12px 20px rgba(26, 54, 112, 0.18);
+  background: linear-gradient(180deg, #2c8e88 0%, #16565b 100%);
+  box-shadow: 0 12px 20px rgba(22, 86, 91, 0.18);
 }
 
 .history-bar-label {
