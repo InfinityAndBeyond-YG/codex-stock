@@ -111,16 +111,14 @@ const usdCurrencyFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
-const compactKrwFormatter = new Intl.NumberFormat("ko-KR", {
+const compactUsdFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "KRW",
+  currency: "USD",
   notation: "compact",
   maximumFractionDigits: 1,
 });
 
-const compactUsdFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
+const compactNumberFormatter = new Intl.NumberFormat("en-US", {
   notation: "compact",
   maximumFractionDigits: 1,
 });
@@ -916,7 +914,7 @@ function formatCompactDisplayCurrency(value) {
     return compactUsdFormatter.format(numericValue / portfolioData.exchangeRates.USD);
   }
 
-  return compactKrwFormatter.format(numericValue);
+  return `₩${compactNumberFormatter.format(numericValue)}`;
 }
 
 function formatPercent(value) {
