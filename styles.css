@@ -423,12 +423,24 @@ button {
 }
 
 .history-chart {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(12, minmax(52px, 1fr));
   gap: 12px;
   align-items: end;
   min-width: 720px;
   padding-top: 8px;
+}
+
+.history-chart::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  height: 1px;
+  background: rgba(47, 148, 147, 0.14);
+  pointer-events: none;
 }
 
 .history-bar-item {
@@ -458,23 +470,23 @@ button {
   width: 100%;
   min-height: 16px;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #7f96ad 0%, #40566f 100%);
-  box-shadow: 0 10px 18px rgba(64, 86, 111, 0.14);
+  background: linear-gradient(180deg, #4eb7a8 0%, #1f6f78 100%);
+  box-shadow: 0 10px 18px rgba(31, 111, 120, 0.14);
 }
 
 .history-bar-item:nth-child(3n + 2) .history-bar-fill {
-  background: linear-gradient(180deg, #95a9bc 0%, #5d738b 100%);
-  box-shadow: 0 10px 18px rgba(93, 115, 139, 0.13);
+  background: linear-gradient(180deg, #73cfc1 0%, #2f9493 100%);
+  box-shadow: 0 10px 18px rgba(47, 148, 147, 0.13);
 }
 
 .history-bar-item:nth-child(3n) .history-bar-fill {
-  background: linear-gradient(180deg, #c8d3df 0%, #92a2b4 100%);
-  box-shadow: 0 10px 18px rgba(146, 162, 180, 0.14);
+  background: linear-gradient(180deg, #b8ddd6 0%, #74b0a5 100%);
+  box-shadow: 0 10px 18px rgba(116, 176, 165, 0.14);
 }
 
 .history-bar-item.current .history-bar-fill {
-  background: linear-gradient(180deg, #52677f 0%, #2d3f56 100%);
-  box-shadow: 0 12px 20px rgba(45, 63, 86, 0.18);
+  background: linear-gradient(180deg, #2c8e88 0%, #16565b 100%);
+  box-shadow: 0 12px 20px rgba(22, 86, 91, 0.18);
 }
 
 .history-bar-label {
