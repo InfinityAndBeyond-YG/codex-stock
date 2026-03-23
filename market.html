@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260323-23" />
-    <script defer src="./market.js?v=20260323-02"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260323-24" />
+    <script defer src="./market.js?v=20260323-03"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -69,6 +69,13 @@
               </div>
             </div>
 
+            <div id="chartRangeSwitch" class="chart-range-switch">
+              <button type="button" class="chart-range-chip active" data-chart-range="1D">1일</button>
+              <button type="button" class="chart-range-chip" data-chart-range="1W">1주</button>
+              <button type="button" class="chart-range-chip" data-chart-range="1M">1달</button>
+              <button type="button" class="chart-range-chip" data-chart-range="1Y">1년</button>
+            </div>
+
             <div id="chartDetailStats" class="chart-detail-stats"></div>
 
             <div class="chart-canvas">
@@ -76,7 +83,6 @@
                 <svg id="marketChart" class="market-chart-svg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
                 <div id="chartPriceScale" class="chart-price-scale"></div>
               </div>
-              <div id="chartVolumeBars" class="chart-volume-bars"></div>
               <div id="chartAxisLabels" class="chart-axis-labels"></div>
             </div>
           </div>

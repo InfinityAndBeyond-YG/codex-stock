@@ -147,6 +147,7 @@ const dom = {};
 const state = {
   selectedStockId: null,
   searchQuery: "",
+  chartRange: "1D",
 };
 
 document.addEventListener("DOMContentLoaded", initMarketPage);
@@ -170,10 +171,10 @@ function cacheDom() {
     "chartStockMeta",
     "chartStockPrice",
     "chartStockChange",
+    "chartRangeSwitch",
     "marketChart",
     "chartDetailStats",
     "chartPriceScale",
-    "chartVolumeBars",
     "chartAxisLabels",
     "heroLiveStatus",
   ].forEach((id) => {
@@ -213,6 +214,16 @@ function bindEvents() {
     }
 
     state.selectedStockId = button.dataset.rankingId;
+    renderMarketPage();
+  });
+
+  dom.chartRangeSwitch?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-chart-range]");
+    if (!button) {
+      return;
+    }
+
+    state.chartRange = button.dataset.chartRange;
     renderMarketPage();
   });
 }
@@ -272,7 +283,8 @@ function renderChart() {
     return;
   }
 
-  const chartDetails = getChartDetails(selectedStock);
+  const chartSeries = getChartSeriesByRange(selectedStock, state.chartRange);
+  const chartDetails = getChartDetails(chartSeries);
 
   if (dom.chartStockName) {
     dom.chartStockName.textContent = selectedStock.name;
@@ -280,7 +292,7 @@ function renderChart() {
 
   if (dom.chartStockMeta) {
     const marketLabel = selectedStock.market === "kr" ? "한국주식" : "미국주식";
-    dom.chartStockMeta.textContent = `${selectedStock.ticker} · ${marketLabel} · 거래량 ${formatCompactValue(selectedStock.volume)}`;
+    dom.chartStockMeta.textContent = `${selectedStock.ticker} · ${marketLabel} · ${chartSeries.rangeLabel}`;
   }
 
   if (dom.chartStockPrice) {
@@ -301,7 +313,7 @@ function renderChart() {
     )
     .join("");
 
-  const { linePath, areaPath, points } = buildChartPaths(selectedStock.history);
+  const { linePath, areaPath, points } = buildChartPaths(chartSeries.values);
   const lastPoint = points[points.length - 1];
   dom.marketChart.innerHTML = `
     <defs>
@@ -318,11 +330,14 @@ function renderChart() {
   `;
 
   if (dom.chartAxisLabels) {
-    const labels = selectedStock.market === "kr"
-      ? ["09:00", "11:00", "13:00", "15:30"]
-      : ["09:30", "11:30", "14:00", "16:00"];
+    dom.chartAxisLabels.innerHTML = chartSeries.labels.map((label) => `<span>${label}</span>`).join("");
+  }
 
-    dom.chartAxisLabels.innerHTML = labels.map((label) => `<span>${label}</span>`).join("");
+  if (dom.chartRangeSwitch) {
+    const buttons = dom.chartRangeSwitch.querySelectorAll("[data-chart-range]");
+    buttons.forEach((button) => {
+      button.classList.toggle("active", button.dataset.chartRange === state.chartRange);
+    });
   }
 
   if (dom.chartDetailStats) {
@@ -330,7 +345,7 @@ function renderChart() {
       { label: "시가", value: formatMoney(chartDetails.open, selectedStock.currency) },
       { label: "고가", value: formatMoney(chartDetails.high, selectedStock.currency) },
       { label: "저가", value: formatMoney(chartDetails.low, selectedStock.currency) },
-      { label: "거래량", value: formatCompactValue(chartDetails.volume) },
+      { label: "변동폭", value: formatMoney(chartDetails.range, selectedStock.currency) },
     ]
       .map(
         (item) => `
@@ -346,17 +361,6 @@ function renderChart() {
   if (dom.chartPriceScale) {
     dom.chartPriceScale.innerHTML = chartDetails.priceScale
       .map((value) => `<span>${formatMoney(value, selectedStock.currency)}</span>`)
-      .join("");
-  }
-
-  if (dom.chartVolumeBars) {
-    const maxVolume = Math.max(...chartDetails.volumeSeries, 1);
-    dom.chartVolumeBars.innerHTML = chartDetails.volumeSeries
-      .map((value, index) => {
-        const height = Math.max((value / maxVolume) * 100, 12);
-        const positive = index === 0 ? true : selectedStock.history[index] >= selectedStock.history[index - 1];
-        return `<span class="chart-volume-bar ${positive ? "positive" : "negative"}" style="height:${height}%"></span>`;
-      })
       .join("");
   }
 }
@@ -498,24 +502,19 @@ function buildChartPaths(series) {
   return { linePath, areaPath, points };
 }
 
-function getChartDetails(stock) {
-  const history = stock.history;
+function getChartDetails(chartSeries) {
+  const history = chartSeries.values;
   const open = history[0];
   const high = Math.max(...history);
   const low = Math.min(...history);
   const priceScale = buildPriceScale(low, high);
-  const volumeSeries = history.map((value, index) => {
-    const delta = index === 0 ? 0 : Math.abs(value - history[index - 1]);
-    return Math.round(stock.volume * (0.35 + index * 0.04 + delta / Math.max(value, 1)));
-  });
 
   return {
     open,
     high,
     low,
-    volume: stock.volume,
+    range: high - low,
     priceScale,
-    volumeSeries,
   };
 }
 
@@ -526,6 +525,50 @@ function buildPriceScale(low, high) {
     const ratio = 1 - index / (steps - 1);
     return low + range * ratio;
   });
+}
+
+function getChartSeriesByRange(stock, range) {
+  if (range === "1W") {
+    return {
+      values: buildRangeSeries(stock.price, 5, 0.042, stock.changePercent),
+      labels: ["월", "화", "수", "목", "금"],
+      rangeLabel: "1주 흐름",
+    };
+  }
+
+  if (range === "1M") {
+    return {
+      values: buildRangeSeries(stock.price, 6, 0.085, stock.changePercent),
+      labels: ["1주", "2주", "3주", "4주", "5주", "현재"],
+      rangeLabel: "1달 흐름",
+    };
+  }
+
+  if (range === "1Y") {
+    return {
+      values: buildRangeSeries(stock.price, 12, 0.18, stock.changePercent),
+      labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+      rangeLabel: "1년 흐름",
+    };
+  }
+
+  return {
+    values: stock.history,
+    labels: stock.market === "kr" ? ["09:00", "11:00", "13:00", "15:30"] : ["09:30", "11:30", "14:00", "16:00"],
+    rangeLabel: "1일 흐름",
+  };
+}
+
+function buildRangeSeries(latestPrice, count, spreadRatio, changePercent) {
+  const direction = changePercent >= 0 ? 1 : -1;
+  const baseStart = latestPrice * (1 - spreadRatio * direction);
+
+  return Array.from({ length: count }, (_, index) => {
+    const progress = index / Math.max(count - 1, 1);
+    const wave = Math.sin((index + 1) * 1.35) * latestPrice * spreadRatio * 0.18;
+    const trend = baseStart + (latestPrice - baseStart) * progress;
+    return Math.max(1, trend + wave);
+  }).map((value, index, values) => (index === values.length - 1 ? latestPrice : Number(value.toFixed(2))));
 }
 
 function formatClock(timeZone) {
