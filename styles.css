@@ -84,6 +84,37 @@ button {
   margin-bottom: 16px;
 }
 
+.header-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header-action-button {
+  border: 1px solid rgba(21, 42, 76, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-strong);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-align: center;
+  box-shadow: 0 10px 22px rgba(23, 43, 77, 0.06);
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.header-action-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(12, 114, 222, 0.2);
+  box-shadow: 0 14px 24px rgba(12, 114, 222, 0.12);
+}
+
 .eyebrow {
   margin: 0 0 10px;
   font-size: 30px;
@@ -724,6 +755,11 @@ button {
     text-align: left;
   }
 
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .avg-panel,
   .right-stage,
   .blueprint-panel,
@@ -736,6 +772,10 @@ button {
 @media (max-width: 560px) {
   .mode-chip {
     flex: 1 1 100%;
+  }
+
+  .header-action-button {
+    flex: 1 1 calc(50% - 8px);
   }
 
   .summary-title-row {
