@@ -446,12 +446,13 @@ button {
 }
 
 .history-bar-track {
-  width: 100%;
+  width: min(100%, 34px);
   height: 182px;
   display: flex;
   align-items: flex-end;
-  padding: 5px;
-  border-radius: 20px;
+  margin: 0 auto;
+  padding: 4px;
+  border-radius: 18px;
   background: linear-gradient(180deg, rgba(236, 242, 249, 0.92), rgba(246, 249, 252, 0.96));
   border: 1px solid rgba(21, 42, 76, 0.06);
 }
@@ -459,7 +460,7 @@ button {
 .history-bar-fill {
   width: 100%;
   min-height: 16px;
-  border-radius: 15px;
+  border-radius: 14px;
   background: linear-gradient(180deg, #82bbff 0%, #0c72de 100%);
   box-shadow: 0 14px 22px rgba(12, 114, 222, 0.18);
 }
@@ -769,6 +770,7 @@ button {
   }
 
   .history-bar-track {
+    width: min(100%, 30px);
     height: 160px;
   }
 }
