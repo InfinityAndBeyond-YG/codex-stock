@@ -446,27 +446,35 @@ button {
 }
 
 .history-bar-track {
-  width: min(100%, 34px);
+  width: min(100%, 22px);
   height: 182px;
   display: flex;
   align-items: flex-end;
   margin: 0 auto;
-  padding: 4px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(236, 242, 249, 0.92), rgba(246, 249, 252, 0.96));
-  border: 1px solid rgba(21, 42, 76, 0.06);
+  padding: 0;
 }
 
 .history-bar-fill {
   width: 100%;
   min-height: 16px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #82bbff 0%, #0c72de 100%);
-  box-shadow: 0 14px 22px rgba(12, 114, 222, 0.18);
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, #69adff 0%, #1660ca 100%);
+  box-shadow: 0 10px 18px rgba(22, 96, 202, 0.12);
+}
+
+.history-bar-item:nth-child(3n + 2) .history-bar-fill {
+  background: linear-gradient(180deg, #5fd3cc 0%, #168d86 100%);
+  box-shadow: 0 10px 18px rgba(22, 141, 134, 0.12);
+}
+
+.history-bar-item:nth-child(3n) .history-bar-fill {
+  background: linear-gradient(180deg, #a5bbd8 0%, #667a9d 100%);
+  box-shadow: 0 10px 18px rgba(102, 122, 157, 0.14);
 }
 
 .history-bar-item.current .history-bar-fill {
-  background: linear-gradient(180deg, #4ca8ff 0%, #0958b2 100%);
+  background: linear-gradient(180deg, #2c77eb 0%, #113f8f 100%);
+  box-shadow: 0 12px 20px rgba(17, 63, 143, 0.16);
 }
 
 .history-bar-label {
@@ -770,7 +778,7 @@ button {
   }
 
   .history-bar-track {
-    width: min(100%, 30px);
+    width: min(100%, 18px);
     height: 160px;
   }
 }
