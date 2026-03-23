@@ -175,9 +175,7 @@ function cacheDom() {
     "chartStockChange",
     "marketChart",
     "chartAxisLabels",
-    "krSessionStatus",
-    "usSessionStatus",
-    "marketClockLabel",
+    "heroLiveStatus",
   ].forEach((id) => {
     dom[id] = document.getElementById(id);
   });
@@ -257,25 +255,8 @@ function renderTabs() {
 
 function renderSessionSummary() {
   const session = getMarketSession();
-  const clock = new Intl.DateTimeFormat("ko-KR", {
-    timeZone: "Asia/Seoul",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date());
-
-  if (dom.krSessionStatus) {
-    dom.krSessionStatus.textContent = session.kr.open ? "장중" : "장마감";
-  }
-
-  if (dom.usSessionStatus) {
-    dom.usSessionStatus.textContent = session.us.open ? "장중" : "장마감";
-  }
-
-  if (dom.marketClockLabel) {
-    dom.marketClockLabel.textContent = `${clock} KST`;
+  if (dom.heroLiveStatus) {
+    dom.heroLiveStatus.textContent = getLiveMarketStatusLabel(session);
   }
 
   if (dom.marketSessionNotice) {
@@ -481,6 +462,18 @@ function getSessionNotice(session) {
     : "미국 시장이 닫혀 있어 최근 기준 순위 샘플을 보여줍니다.";
 }
 
+function getLiveMarketStatusLabel(session) {
+  if (session.kr.open) {
+    return `한국 장중 · ${formatClock("Asia/Seoul")} KST`;
+  }
+
+  if (session.us.open) {
+    return `미국 장중 · ${formatClock("America/New_York")} ET`;
+  }
+
+  return `장중 시장 없음 · ${formatClock("Asia/Seoul")} KST`;
+}
+
 function getBoardCaption(session) {
   if (state.activeTab === "favorites") {
     return "즐겨찾기 종목을 거래량 기준으로 다시 정렬했습니다.";
@@ -519,6 +512,15 @@ function buildChartPaths(series) {
   const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(2)} ${height - bottom} L ${points[0].x.toFixed(2)} ${height - bottom} Z`;
 
   return { linePath, areaPath };
+}
+
+function formatClock(timeZone) {
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date());
 }
 
 function formatMoney(value, currency) {

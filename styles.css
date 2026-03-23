@@ -222,6 +222,26 @@ button {
   letter-spacing: -0.06em;
 }
 
+.hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.live-market-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(12, 114, 222, 0.1);
+  color: var(--blue);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .hero-copy {
   margin: 10px 0 0;
   max-width: 56ch;
@@ -1286,6 +1306,10 @@ button {
   .side-panel,
   .hero-panel {
     padding: 18px;
+  }
+
+  .hero-title-row {
+    align-items: flex-start;
   }
 
   .avg-panel,
