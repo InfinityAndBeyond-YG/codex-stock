@@ -163,7 +163,6 @@ function cacheDom() {
   [
     "marketSearchInput",
     "marketSearchResults",
-    "marketSessionNotice",
     "marketBoardTitle",
     "marketBoardCaption",
     "marketRankingList",
@@ -226,10 +225,6 @@ function renderSessionSummary() {
   const session = getMarketSession();
   if (dom.heroLiveStatus) {
     dom.heroLiveStatus.textContent = getLiveMarketStatusLabel(session);
-  }
-
-  if (dom.marketSessionNotice) {
-    dom.marketSessionNotice.textContent = getSessionNotice(session);
   }
 }
 
@@ -398,20 +393,6 @@ function getSessionStateForTimeZone(timeZone, startHour, startMinute, endHour, e
     open: weekdayOpen && totalMinutes >= openMinutes && totalMinutes <= closeMinutes,
     timeZone,
   };
-}
-
-function getSessionNotice(session) {
-  const boardMarket = getBoardMarket(session);
-
-  if (boardMarket === "kr") {
-    return session.kr.open
-      ? "한국 시장 정규장 시간이라 오른쪽 보드는 한국주식 거래량 순위입니다."
-      : "현재 장중 시장이 없어 한국주식 최근 기준 순위를 보여줍니다.";
-  }
-
-  return session.us.open
-    ? "미국 시장 정규장 시간이라 오른쪽 보드는 미국주식 거래량 순위입니다."
-    : "미국 시장이 닫혀 있어 최근 기준 순위를 보여줍니다.";
 }
 
 function getLiveMarketStatusLabel(session) {
