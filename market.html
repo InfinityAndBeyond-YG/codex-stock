@@ -41,66 +41,55 @@
             <span id="heroLiveStatus" class="live-market-pill">-</span>
           </div>
           <p class="hero-copy">
-            한국주식, 미국주식, 즐겨찾기 탭과 종목 검색, 차트 영역, 거래량 순위를 한 화면에서 보는 구조입니다.
+            종목 검색과 실시간 주식 차트를 가장 위에서 바로 보는 구조로 정리했습니다.
           </p>
+          <p id="marketSessionNotice" class="section-caption hero-market-note">-</p>
+
+          <div class="market-controls">
+            <label class="market-search">
+              <span>종목 검색</span>
+              <input
+                id="marketSearchInput"
+                type="search"
+                inputmode="search"
+                placeholder="삼성전자, NVIDIA, Tesla"
+                autocomplete="off"
+              />
+            </label>
+          </div>
+
+          <div id="marketSearchResults" class="market-search-results"></div>
+
+          <div class="live-chart-shell">
+            <div class="chart-summary">
+              <div>
+                <p class="section-kicker">Selected Stock</p>
+                <h2 id="chartStockName">-</h2>
+                <p id="chartStockMeta" class="section-caption">-</p>
+              </div>
+              <div class="chart-price-stack">
+                <strong id="chartStockPrice">-</strong>
+                <span id="chartStockChange" class="change-pill positive">-</span>
+              </div>
+            </div>
+
+            <div class="chart-canvas">
+              <svg id="marketChart" class="market-chart-svg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
+              <div id="chartAxisLabels" class="chart-axis-labels"></div>
+            </div>
+          </div>
         </section>
 
-        <section class="page-grid-two market-page-grid">
-          <article class="panel page-panel market-main-panel">
-            <div class="panel-head">
-              <div>
-                <p class="section-kicker">Search & Chart</p>
-                <h2>주식차트실시간 창</h2>
-              </div>
-              <p id="marketSessionNotice" class="section-caption">-</p>
+        <section class="panel side-panel market-side-panel">
+          <div class="panel-head panel-head-tight">
+            <div>
+              <p class="section-kicker">Volume Board</p>
+              <h2 id="marketBoardTitle">거래량 순위</h2>
             </div>
+            <p id="marketBoardCaption" class="section-caption">-</p>
+          </div>
 
-            <div class="market-controls">
-              <label class="market-search">
-                <span>종목 검색</span>
-                <input
-                  id="marketSearchInput"
-                  type="search"
-                  inputmode="search"
-                  placeholder="삼성전자, NVIDIA, Tesla"
-                  autocomplete="off"
-                />
-              </label>
-            </div>
-
-            <div id="marketSearchResults" class="market-search-results"></div>
-
-            <div class="live-chart-shell">
-              <div class="chart-summary">
-                <div>
-                  <p class="section-kicker">Selected Stock</p>
-                  <h2 id="chartStockName">-</h2>
-                  <p id="chartStockMeta" class="section-caption">-</p>
-                </div>
-                <div class="chart-price-stack">
-                  <strong id="chartStockPrice">-</strong>
-                  <span id="chartStockChange" class="change-pill positive">-</span>
-                </div>
-              </div>
-
-              <div class="chart-canvas">
-                <svg id="marketChart" class="market-chart-svg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
-                <div id="chartAxisLabels" class="chart-axis-labels"></div>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel side-panel market-side-panel">
-            <div class="panel-head panel-head-tight">
-              <div>
-                <p class="section-kicker">Volume Board</p>
-                <h2 id="marketBoardTitle">거래량 순위</h2>
-              </div>
-              <p id="marketBoardCaption" class="section-caption">-</p>
-            </div>
-
-            <div id="marketRankingList" class="market-ranking-list"></div>
-          </article>
+          <div id="marketRankingList" class="market-ranking-list"></div>
         </section>
       </main>
     </div>
