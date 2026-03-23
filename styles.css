@@ -653,18 +653,18 @@ button {
 }
 
 .tag-blue {
-  background: rgba(33, 77, 70, 0.12);
-  color: #214d46;
+  background: rgba(57, 66, 78, 0.12);
+  color: #39424e;
 }
 
 .tag-teal {
-  background: rgba(95, 141, 132, 0.16);
-  color: #3b6760;
+  background: rgba(126, 138, 153, 0.16);
+  color: #55606d;
 }
 
 .tag-orange {
-  background: rgba(182, 139, 90, 0.18);
-  color: #9a744b;
+  background: rgba(208, 191, 168, 0.2);
+  color: #8f7f69;
 }
 
 .tag-rose {
