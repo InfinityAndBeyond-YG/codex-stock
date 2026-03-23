@@ -171,6 +171,9 @@ function cacheDom() {
     "chartStockPrice",
     "chartStockChange",
     "marketChart",
+    "chartDetailStats",
+    "chartPriceScale",
+    "chartVolumeBars",
     "chartAxisLabels",
     "heroLiveStatus",
   ].forEach((id) => {
@@ -269,6 +272,8 @@ function renderChart() {
     return;
   }
 
+  const chartDetails = getChartDetails(selectedStock);
+
   if (dom.chartStockName) {
     dom.chartStockName.textContent = selectedStock.name;
   }
@@ -289,14 +294,15 @@ function renderChart() {
   }
 
   const lineColor = selectedStock.changePercent >= 0 ? "#0c72de" : "#de5967";
-  const gridMarkup = [20, 80, 140, 200]
+  const gridMarkup = [20, 66, 112, 158, 204]
     .map(
       (y) =>
         `<line x1="24" y1="${y}" x2="616" y2="${y}" stroke="rgba(21,42,76,0.08)" stroke-width="1" stroke-dasharray="4 6" />`
     )
     .join("");
 
-  const { linePath, areaPath } = buildChartPaths(selectedStock.history);
+  const { linePath, areaPath, points } = buildChartPaths(selectedStock.history);
+  const lastPoint = points[points.length - 1];
   dom.marketChart.innerHTML = `
     <defs>
       <linearGradient id="chartAreaGradient" x1="0" x2="0" y1="0" y2="1">
@@ -305,8 +311,10 @@ function renderChart() {
       </linearGradient>
     </defs>
     ${gridMarkup}
+    <line x1="24" y1="${lastPoint.y.toFixed(2)}" x2="616" y2="${lastPoint.y.toFixed(2)}" stroke="${lineColor}" stroke-width="1.5" stroke-dasharray="5 5" opacity="0.55"></line>
     <path d="${areaPath}" fill="url(#chartAreaGradient)"></path>
     <path d="${linePath}" fill="none" stroke="${lineColor}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+    <circle cx="${lastPoint.x.toFixed(2)}" cy="${lastPoint.y.toFixed(2)}" r="6" fill="#ffffff" stroke="${lineColor}" stroke-width="3"></circle>
   `;
 
   if (dom.chartAxisLabels) {
@@ -315,6 +323,41 @@ function renderChart() {
       : ["09:30", "11:30", "14:00", "16:00"];
 
     dom.chartAxisLabels.innerHTML = labels.map((label) => `<span>${label}</span>`).join("");
+  }
+
+  if (dom.chartDetailStats) {
+    dom.chartDetailStats.innerHTML = [
+      { label: "시가", value: formatMoney(chartDetails.open, selectedStock.currency) },
+      { label: "고가", value: formatMoney(chartDetails.high, selectedStock.currency) },
+      { label: "저가", value: formatMoney(chartDetails.low, selectedStock.currency) },
+      { label: "거래량", value: formatCompactValue(chartDetails.volume) },
+    ]
+      .map(
+        (item) => `
+          <article class="chart-detail-card">
+            <span>${item.label}</span>
+            <strong>${item.value}</strong>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  if (dom.chartPriceScale) {
+    dom.chartPriceScale.innerHTML = chartDetails.priceScale
+      .map((value) => `<span>${formatMoney(value, selectedStock.currency)}</span>`)
+      .join("");
+  }
+
+  if (dom.chartVolumeBars) {
+    const maxVolume = Math.max(...chartDetails.volumeSeries, 1);
+    dom.chartVolumeBars.innerHTML = chartDetails.volumeSeries
+      .map((value, index) => {
+        const height = Math.max((value / maxVolume) * 100, 12);
+        const positive = index === 0 ? true : selectedStock.history[index] >= selectedStock.history[index - 1];
+        return `<span class="chart-volume-bar ${positive ? "positive" : "negative"}" style="height:${height}%"></span>`;
+      })
+      .join("");
   }
 }
 
@@ -452,7 +495,37 @@ function buildChartPaths(series) {
 
   const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(2)} ${height - bottom} L ${points[0].x.toFixed(2)} ${height - bottom} Z`;
 
-  return { linePath, areaPath };
+  return { linePath, areaPath, points };
+}
+
+function getChartDetails(stock) {
+  const history = stock.history;
+  const open = history[0];
+  const high = Math.max(...history);
+  const low = Math.min(...history);
+  const priceScale = buildPriceScale(low, high);
+  const volumeSeries = history.map((value, index) => {
+    const delta = index === 0 ? 0 : Math.abs(value - history[index - 1]);
+    return Math.round(stock.volume * (0.35 + index * 0.04 + delta / Math.max(value, 1)));
+  });
+
+  return {
+    open,
+    high,
+    low,
+    volume: stock.volume,
+    priceScale,
+    volumeSeries,
+  };
+}
+
+function buildPriceScale(low, high) {
+  const steps = 5;
+  const range = high - low || 1;
+  return Array.from({ length: steps }, (_, index) => {
+    const ratio = 1 - index / (steps - 1);
+    return low + range * ratio;
+  });
 }
 
 function formatClock(timeZone) {
