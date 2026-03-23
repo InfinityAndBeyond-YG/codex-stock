@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주식현재가 | Stock Flow</title>
+    <meta
+      name="description"
+      content="보유 종목과 관심 종목 현재가를 확인하는 Stock Flow 페이지"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260323-22" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-one"></div>
+    <div class="page-glow page-glow-two"></div>
+
+    <div class="app-shell">
+      <header class="page-header">
+        <a href="./index.html" class="eyebrow-link">
+          <p class="eyebrow">Stock Flow</p>
+        </a>
+        <div class="header-actions" aria-label="상단 기능 버튼">
+          <a href="./market.html" class="header-action-button active" aria-current="page">주식현재가</a>
+          <a href="./balance.html" class="header-action-button">주식잔고</a>
+          <a href="./upload.html" class="header-action-button">내 주식 올리기</a>
+        </div>
+      </header>
+
+      <main class="page-stack">
+        <section class="panel hero-panel">
+          <p class="section-kicker">Market Page</p>
+          <h1>주식현재가</h1>
+          <p class="hero-copy">
+            보유 종목과 자주 보는 종목의 현재가를 한 화면에서 확인하는 페이지입니다.
+          </p>
+
+          <div class="quick-stats">
+            <article class="quick-stat-card">
+              <span>보유 종목</span>
+              <strong>6개</strong>
+              <p>국내 3개 · 해외 3개</p>
+            </article>
+            <article class="quick-stat-card">
+              <span>국내 대표</span>
+              <strong>삼성전자</strong>
+              <p>₩74,800</p>
+            </article>
+            <article class="quick-stat-card">
+              <span>해외 대표</span>
+              <strong>NVIDIA</strong>
+              <p>$129.4</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-grid-two">
+          <article class="panel page-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-kicker">Quote Board</p>
+                <h2>현재가 보드</h2>
+              </div>
+              <p class="section-caption">국내, 해외를 한 번에 보는 카드형 레이아웃</p>
+            </div>
+
+            <div class="quote-grid">
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>삼성전자</strong>
+                    <span>국내주식 · KRW</span>
+                  </div>
+                  <span class="change-pill positive">+5.1%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>₩74,800</strong>
+                  <span>거래량 12.8M</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>SK하이닉스</strong>
+                    <span>국내주식 · KRW</span>
+                  </div>
+                  <span class="change-pill positive">+4.2%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>₩181,000</strong>
+                  <span>거래량 3.1M</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>NAVER</strong>
+                    <span>국내주식 · KRW</span>
+                  </div>
+                  <span class="change-pill negative">-1.4%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>₩213,500</strong>
+                  <span>거래량 0.7M</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>NVIDIA</strong>
+                    <span>해외주식 · USD</span>
+                  </div>
+                  <span class="change-pill positive">+2.8%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>$129.4</strong>
+                  <span>프리마켓</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>Apple</strong>
+                    <span>해외주식 · USD</span>
+                  </div>
+                  <span class="change-pill positive">+1.7%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>$214.2</strong>
+                  <span>정규장</span>
+                </div>
+              </article>
+              <article class="quote-card">
+                <div class="quote-head">
+                  <div>
+                    <strong>Tesla</strong>
+                    <span>해외주식 · USD</span>
+                  </div>
+                  <span class="change-pill negative">-0.9%</span>
+                </div>
+                <div class="quote-price-row">
+                  <strong>$242.5</strong>
+                  <span>정규장</span>
+                </div>
+              </article>
+            </div>
+          </article>
+
+          <article class="panel side-panel">
+            <div class="panel-head panel-head-tight">
+              <div>
+                <p class="section-kicker">Focus</p>
+                <h2>체크 포인트</h2>
+              </div>
+            </div>
+
+            <div class="side-list">
+              <article class="side-list-item">
+                <strong>오늘 가장 큰 상승</strong>
+                <p>삼성전자와 SK하이닉스가 국내 비중 종목 상단에 배치됩니다.</p>
+              </article>
+              <article class="side-list-item">
+                <strong>미국 주식 확인</strong>
+                <p>해외 종목은 달러 기준 현재가와 장 상태를 바로 같이 보여줍니다.</p>
+              </article>
+              <article class="side-list-item">
+                <strong>나중에 붙일 기능</strong>
+                <p>실시간 체결가, 전일 대비, 호가창 요약을 이 페이지에 이어서 붙일 수 있습니다.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

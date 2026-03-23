@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주식잔고 | Stock Flow</title>
+    <meta
+      name="description"
+      content="계좌별 주식 잔고와 평가금액을 확인하는 Stock Flow 페이지"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260323-22" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-one"></div>
+    <div class="page-glow page-glow-two"></div>
+
+    <div class="app-shell">
+      <header class="page-header">
+        <a href="./index.html" class="eyebrow-link">
+          <p class="eyebrow">Stock Flow</p>
+        </a>
+        <div class="header-actions" aria-label="상단 기능 버튼">
+          <a href="./market.html" class="header-action-button">주식현재가</a>
+          <a href="./balance.html" class="header-action-button active" aria-current="page">주식잔고</a>
+          <a href="./upload.html" class="header-action-button">내 주식 올리기</a>
+        </div>
+      </header>
+
+      <main class="page-stack">
+        <section class="panel hero-panel">
+          <p class="section-kicker">Balance Page</p>
+          <h1>주식잔고</h1>
+          <p class="hero-copy">
+            계좌별 평가금액과 보유 종목 잔고를 한 번에 보는 페이지입니다.
+          </p>
+
+          <div class="quick-stats">
+            <article class="quick-stat-card">
+              <span>총 평가자산</span>
+              <strong>₩26,713,034</strong>
+              <p>전체 계좌 합산</p>
+            </article>
+            <article class="quick-stat-card">
+              <span>계좌 수</span>
+              <strong>2개</strong>
+              <p>하나 메인 · KB 서브</p>
+            </article>
+            <article class="quick-stat-card">
+              <span>보유 종목</span>
+              <strong>6개</strong>
+              <p>국내 3개 · 해외 3개</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="page-grid-two">
+          <article class="panel page-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-kicker">Account Summary</p>
+                <h2>계좌별 잔고</h2>
+              </div>
+            </div>
+
+            <div class="account-summary-grid">
+              <article class="account-summary-card">
+                <span>하나 메인계좌</span>
+                <strong>₩13,925,418</strong>
+                <p>현금 ₩3,920,600 · 종목 3개</p>
+              </article>
+              <article class="account-summary-card">
+                <span>KB 서브계좌</span>
+                <strong>₩12,787,616</strong>
+                <p>현금 ₩1,957,400 · 종목 3개</p>
+              </article>
+            </div>
+
+            <div class="table-wrap">
+              <table class="stock-table">
+                <thead>
+                  <tr>
+                    <th>종목</th>
+                    <th>계좌</th>
+                    <th>보유수량</th>
+                    <th>평단</th>
+                    <th>현재가</th>
+                    <th>평가금액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>삼성전자</td>
+                    <td>하나</td>
+                    <td>52주</td>
+                    <td>₩71,200</td>
+                    <td>₩74,800</td>
+                    <td>₩3,889,600</td>
+                  </tr>
+                  <tr>
+                    <td>SK하이닉스</td>
+                    <td>하나</td>
+                    <td>16주</td>
+                    <td>₩164,500</td>
+                    <td>₩181,000</td>
+                    <td>₩2,896,000</td>
+                  </tr>
+                  <tr>
+                    <td>NVIDIA</td>
+                    <td>하나</td>
+                    <td>11주</td>
+                    <td>$118.2</td>
+                    <td>$129.4</td>
+                    <td>₩2,092,398</td>
+                  </tr>
+                  <tr>
+                    <td>NAVER</td>
+                    <td>KB</td>
+                    <td>22주</td>
+                    <td>₩198,000</td>
+                    <td>₩213,500</td>
+                    <td>₩4,697,000</td>
+                  </tr>
+                  <tr>
+                    <td>Apple</td>
+                    <td>KB</td>
+                    <td>14주</td>
+                    <td>$201.5</td>
+                    <td>$214.2</td>
+                    <td>₩4,408,404</td>
+                  </tr>
+                  <tr>
+                    <td>Tesla</td>
+                    <td>KB</td>
+                    <td>8주</td>
+                    <td>$228.6</td>
+                    <td>$242.5</td>
+                    <td>₩2,851,800</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel side-panel">
+            <div class="panel-head panel-head-tight">
+              <div>
+                <p class="section-kicker">Note</p>
+                <h2>잔고 포인트</h2>
+              </div>
+            </div>
+
+            <div class="side-list">
+              <article class="side-list-item">
+                <strong>현금과 주식 분리</strong>
+                <p>계좌별 총평가 안에서 현금과 종목 평가금액을 같이 확인할 수 있습니다.</p>
+              </article>
+              <article class="side-list-item">
+                <strong>평단과 현재가 비교</strong>
+                <p>같은 표 안에서 평균단가와 현재가를 붙여서 보는 구조로 잡았습니다.</p>
+              </article>
+              <article class="side-list-item">
+                <strong>다음 단계</strong>
+                <p>실손익, 수익률, 종목 필터, 계좌 토글을 이 페이지에서 이어서 확장할 수 있습니다.</p>
+              </article>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
