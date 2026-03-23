@@ -145,7 +145,6 @@ const percentFormatter = new Intl.NumberFormat("ko-KR", {
 const dom = {};
 
 const state = {
-  activeTab: "kr",
   selectedStockId: null,
   searchQuery: "",
 };
@@ -154,15 +153,14 @@ document.addEventListener("DOMContentLoaded", initMarketPage);
 
 function initMarketPage() {
   cacheDom();
-  state.activeTab = getInitialTab();
-  state.selectedStockId = getStocksByTab(state.activeTab)[0]?.id || marketStocks[0].id;
+  const boardMarket = getBoardMarket(getMarketSession());
+  state.selectedStockId = getStocksByMarket(boardMarket)[0]?.id || marketStocks[0].id;
   bindEvents();
   renderMarketPage();
 }
 
 function cacheDom() {
   [
-    "marketTabs",
     "marketSearchInput",
     "marketSearchResults",
     "marketSessionNotice",
@@ -182,26 +180,6 @@ function cacheDom() {
 }
 
 function bindEvents() {
-  dom.marketTabs?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-market-tab]");
-    if (!button) {
-      return;
-    }
-
-    state.activeTab = button.dataset.marketTab;
-    state.searchQuery = "";
-    if (dom.marketSearchInput) {
-      dom.marketSearchInput.value = "";
-    }
-
-    const firstStock = getStocksByTab(state.activeTab)[0];
-    if (firstStock) {
-      state.selectedStockId = firstStock.id;
-    }
-
-    renderMarketPage();
-  });
-
   dom.marketSearchInput?.addEventListener("input", (event) => {
     state.searchQuery = event.target.value.trim();
     renderMarketPage();
@@ -218,7 +196,6 @@ function bindEvents() {
       return;
     }
 
-    state.activeTab = stock.market;
     state.selectedStockId = stock.id;
     state.searchQuery = stock.name;
     if (dom.marketSearchInput) {
@@ -239,18 +216,10 @@ function bindEvents() {
 }
 
 function renderMarketPage() {
-  renderTabs();
   renderSessionSummary();
   renderSearchResults();
   renderChart();
   renderRankingBoard();
-}
-
-function renderTabs() {
-  const buttons = dom.marketTabs?.querySelectorAll("[data-market-tab]") || [];
-  buttons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.marketTab === state.activeTab);
-  });
 }
 
 function renderSessionSummary() {
@@ -360,11 +329,12 @@ function renderRankingBoard() {
   }
 
   const session = getMarketSession();
-  const stocks = getStocksByTab(state.activeTab).slice().sort((left, right) => right.volume - left.volume);
+  const boardMarket = getBoardMarket(session);
+  const stocks = getStocksByMarket(boardMarket).slice().sort((left, right) => right.volume - left.volume);
 
   dom.marketBoardTitle.textContent =
-    state.activeTab === "favorites" ? "즐겨찾기 종목" : "거래량 순위";
-  dom.marketBoardCaption.textContent = getBoardCaption(session);
+    boardMarket === "kr" ? "한국주식 거래량 순위" : "미국주식 거래량 순위";
+  dom.marketBoardCaption.textContent = getBoardCaption(session, boardMarket);
 
   dom.marketRankingList.innerHTML = stocks
     .map((stock, index) => {
@@ -387,32 +357,16 @@ function renderRankingBoard() {
 }
 
 function getSelectedStock() {
-  return getStockById(state.selectedStockId) || getStocksByTab(state.activeTab)[0] || marketStocks[0];
+  const boardMarket = getBoardMarket(getMarketSession());
+  return getStockById(state.selectedStockId) || getStocksByMarket(boardMarket)[0] || marketStocks[0];
 }
 
-function getStocksByTab(tab) {
-  if (tab === "favorites") {
-    return marketStocks.filter((stock) => stock.favorite);
-  }
-
-  return marketStocks.filter((stock) => stock.market === tab);
+function getStocksByMarket(market) {
+  return marketStocks.filter((stock) => stock.market === market);
 }
 
 function getStockById(stockId) {
   return marketStocks.find((stock) => stock.id === stockId);
-}
-
-function getInitialTab() {
-  const session = getMarketSession();
-  if (session.kr.open) {
-    return "kr";
-  }
-
-  if (session.us.open) {
-    return "us";
-  }
-
-  return "favorites";
 }
 
 function getMarketSession() {
@@ -447,19 +401,17 @@ function getSessionStateForTimeZone(timeZone, startHour, startMinute, endHour, e
 }
 
 function getSessionNotice(session) {
-  if (state.activeTab === "favorites") {
-    return "즐겨찾기에서는 한국/미국 종목을 같이 검색하고 차트로 바로 볼 수 있습니다.";
-  }
+  const boardMarket = getBoardMarket(session);
 
-  if (state.activeTab === "kr") {
+  if (boardMarket === "kr") {
     return session.kr.open
-      ? "한국 시장 정규장 시간에는 거래량 높은 순으로 보는 구조입니다."
-      : "한국 시장이 닫혀 있어 최근 기준 순위 샘플을 보여줍니다.";
+      ? "한국 시장 정규장 시간이라 오른쪽 보드는 한국주식 거래량 순위입니다."
+      : "현재 장중 시장이 없어 한국주식 최근 기준 순위를 보여줍니다.";
   }
 
   return session.us.open
-    ? "미국 시장 정규장 시간에는 거래량 높은 순으로 보는 구조입니다."
-    : "미국 시장이 닫혀 있어 최근 기준 순위 샘플을 보여줍니다.";
+    ? "미국 시장 정규장 시간이라 오른쪽 보드는 미국주식 거래량 순위입니다."
+    : "미국 시장이 닫혀 있어 최근 기준 순위를 보여줍니다.";
 }
 
 function getLiveMarketStatusLabel(session) {
@@ -474,16 +426,24 @@ function getLiveMarketStatusLabel(session) {
   return `장중 시장 없음 · ${formatClock("Asia/Seoul")} KST`;
 }
 
-function getBoardCaption(session) {
-  if (state.activeTab === "favorites") {
-    return "즐겨찾기 종목을 거래량 기준으로 다시 정렬했습니다.";
-  }
-
-  if (state.activeTab === "kr") {
+function getBoardCaption(session, boardMarket) {
+  if (boardMarket === "kr") {
     return session.kr.open ? "한국 정규장 · 거래량 높은 순" : "한국 장마감 · 최근 기준 순위";
   }
 
   return session.us.open ? "미국 정규장 · 거래량 높은 순" : "미국 장마감 · 최근 기준 순위";
+}
+
+function getBoardMarket(session) {
+  if (session.kr.open) {
+    return "kr";
+  }
+
+  if (session.us.open) {
+    return "us";
+  }
+
+  return "kr";
 }
 
 function buildChartPaths(series) {
