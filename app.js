@@ -89,14 +89,14 @@ const portfolioData = {
 };
 
 const colorScale = [
-  "#7e8a99",
-  "#d0bfa8",
-  "#a2adba",
-  "#d7dde5",
-  "#55606d",
-  "#bcc6d1",
-  "#919daa",
-  "#e2d8cb",
+  "#0c72de",
+  "#18a088",
+  "#ef8a26",
+  "#de5967",
+  "#7c8ca7",
+  "#4058b5",
+  "#68a84e",
+  "#bd6a2c",
 ];
 
 const currencyFormatter = new Intl.NumberFormat("ko-KR", {
@@ -430,7 +430,7 @@ function getCashAllocationSegments() {
       value,
       meta: `${formatCashCurrencyLabel(currency)} 기준 현금`,
       type: "cash",
-      color: index === 0 ? "#39424e" : "#a2adba",
+      color: index === 0 ? "#0c72de" : "#77b6ff",
     }))
     .sort((left, right) => right.value - left.value);
 
@@ -444,14 +444,14 @@ function getGroupedStockSegments() {
       value: getHoldingsByMarket("국내주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
       meta: "전체 자산 기준 국내주식",
       type: "stock",
-      color: "#7e8a99",
+      color: "#18a088",
     },
     {
       label: "해외주식",
       value: getHoldingsByMarket("해외주식").reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0),
       meta: "전체 자산 기준 해외주식",
       type: "stock",
-      color: "#d0bfa8",
+      color: "#ef8a26",
     },
   ].filter((segment) => segment.value > 0);
 }
@@ -503,7 +503,7 @@ function getAccountAllocationSegments(accountId) {
       value: cashValue,
       meta: `${account.name} 전체 현금`,
       type: "cash",
-      color: "#39424e",
+      color: "#0c72de",
     },
     ...holdingSegments,
   ];
@@ -528,7 +528,7 @@ function getStockAllocationSegments() {
       value: cashValue,
       meta: "전체 자산 기준 남아 있는 현금",
       type: "cash",
-      color: "#39424e",
+      color: "#0c72de",
     },
     ...holdings,
   ];
@@ -688,7 +688,7 @@ function getOverallSelectorItems() {
       meta: "통화별 비율 보기",
       value: cashValue,
       ratio: totalAsset ? (cashValue / totalAsset) * 100 : 0,
-      color: "#39424e",
+      color: "#0c72de",
       tagClass: "tag-blue",
       tag: "현금",
       active: uiState.selectedOverallScope === "cash",
@@ -699,7 +699,7 @@ function getOverallSelectorItems() {
       meta: "국내 종목별 비율 보기",
       value: domesticValue,
       ratio: totalAsset ? (domesticValue / totalAsset) * 100 : 0,
-      color: "#7e8a99",
+      color: "#18a088",
       tagClass: "tag-teal",
       tag: "국내",
       active: uiState.selectedOverallScope === "domestic",
@@ -710,7 +710,7 @@ function getOverallSelectorItems() {
       meta: "해외 종목별 비율 보기",
       value: foreignValue,
       ratio: totalAsset ? (foreignValue / totalAsset) * 100 : 0,
-      color: "#d0bfa8",
+      color: "#ef8a26",
       tagClass: "tag-orange",
       tag: "해외",
       active: uiState.selectedOverallScope === "foreign",
@@ -722,7 +722,7 @@ function renderAccountSelectorItem(item) {
   return `
     <article class="selector-item ${item.active ? "active" : ""}" data-account-id="${item.id}">
       <div class="selector-left">
-        <span class="selector-dot" style="background:${item.active ? "#39424e" : "#c4ccd5"}"></span>
+        <span class="selector-dot" style="background:${item.active ? "#0c72de" : "#9fb0c9"}"></span>
         <div class="selector-label">
           <strong>${item.label}</strong>
           <span class="selector-meta">${item.meta}</span>
