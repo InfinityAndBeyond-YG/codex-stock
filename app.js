@@ -257,7 +257,7 @@ function renderSummaryCard() {
   }
 
   if (dom.cashKrwValue) {
-    dom.cashKrwValue.textContent = formatCurrency(cashAsset);
+    dom.cashKrwValue.textContent = formatDisplayCurrency(cashAsset);
   }
 
   if (dom.cashKrwPercent) {
@@ -268,7 +268,7 @@ function renderSummaryCard() {
     dom.cashCurrencyList.innerHTML = `
       <div class="cash-summary-row">
         <div>
-          <strong class="cash-currency-amount">${formatCurrency(cashAsset)}</strong>
+          <strong class="cash-currency-amount">${formatDisplayCurrency(cashAsset)}</strong>
         </div>
         <strong class="cash-currency-percent">현금 비중 ${formatPercent(cashRatio)}%</strong>
       </div>
@@ -296,7 +296,7 @@ function renderAllocationPanel() {
   dom.allocationDescription.textContent = allocationDescription;
   dom.allocationDescription.hidden = !allocationDescription;
   dom.donutModeLabel.textContent = getDonutModeLabel();
-  dom.donutCenterValue.textContent = formatCurrency(allocationTotal);
+  dom.donutCenterValue.textContent = formatDisplayCurrency(allocationTotal);
   dom.donutCenterMeta.textContent = getDonutCenterMeta();
   dom.donutChart.style.background = buildConicGradient(paletteSegments, allocationTotal);
   dom.donutPercentLayer.innerHTML = getDonutPercentBadges(paletteSegments, allocationTotal)
@@ -656,7 +656,7 @@ function getAccountSelectionItems() {
       return {
         id: account.id,
         label: account.name,
-        meta: `현금 ${formatCurrency(getAccountCashValue(account.id))} · 종목 ${getAccountHoldings(account.id).length}개`,
+        meta: `현금 ${formatDisplayCurrency(getAccountCashValue(account.id))} · 종목 ${getAccountHoldings(account.id).length}개`,
         value: assetValue,
         ratio: totalAsset ? (assetValue / totalAsset) * 100 : 0,
         active: account.id === uiState.selectedAccountId,
@@ -735,7 +735,7 @@ function renderAccountSelectorItem(item) {
       </div>
       <div class="selector-right">
         <strong class="selector-value">${formatPercent(item.ratio)}%</strong>
-        <span class="selector-meta">${formatCurrency(item.value)}</span>
+        <span class="selector-meta">${formatDisplayCurrency(item.value)}</span>
       </div>
     </article>
   `;
@@ -753,7 +753,7 @@ function renderStockSelectorItem(item) {
       </div>
       <div class="selector-right">
         <strong class="selector-value">${formatPercent(item.ratio)}%</strong>
-        <span class="selector-meta">${formatCurrency(item.value)}</span>
+        <span class="selector-meta">${formatDisplayCurrency(item.value)}</span>
       </div>
     </article>
   `;
@@ -766,7 +766,7 @@ function renderDonutLegendItem(segment) {
         <span class="donut-legend-swatch" style="background:${segment.color}"></span>
         <span class="donut-legend-label">${segment.label}</span>
       </div>
-      <strong class="donut-legend-value">${formatCurrency(segment.value)}</strong>
+      <strong class="donut-legend-value">${formatDisplayCurrency(segment.value)}</strong>
     </div>
   `;
 }
@@ -823,7 +823,7 @@ function renderStaticSelectorItem(item) {
       <div class="selector-right">
         <span class="selector-tag ${item.tagClass}">${item.tag}</span>
         <strong class="selector-value">${formatPercent(item.ratio)}%</strong>
-        <span class="selector-meta">${formatCurrency(item.value)}</span>
+        <span class="selector-meta">${formatDisplayCurrency(item.value)}</span>
       </div>
     </article>
   `;
