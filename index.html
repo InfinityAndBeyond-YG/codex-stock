@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260323-20" />
-    <script defer src="./app.js?v=20260323-11"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260323-21" />
+    <script defer src="./app.js?v=20260323-12"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -37,7 +37,13 @@
             <p class="section-kicker">자산 요약</p>
             <div class="avg-layout">
               <div class="summary-metric-block">
-                <h2>총 평가 자산</h2>
+                <div class="summary-title-row">
+                  <h2>총 평가 자산</h2>
+                  <div class="currency-toggle" id="summaryCurrencyToggle">
+                    <button type="button" class="currency-chip active" data-display-currency="KRW">원화</button>
+                    <button type="button" class="currency-chip" data-display-currency="USD">달러</button>
+                  </div>
+                </div>
                 <strong id="avgCostValue" class="avg-value">-</strong>
               </div>
               <div class="summary-metric-block">
@@ -109,34 +115,17 @@
         </aside>
       </main>
 
-      <section class="panel blueprint-panel">
+      <section class="panel history-panel">
         <div class="panel-head">
           <div>
-            <p class="section-kicker">Next Layout</p>
-            <h2>다음 단계 자리만 먼저 확보</h2>
+            <p class="section-kicker">12 Month Flow</p>
+            <h2>월별 평균 전체 자산</h2>
           </div>
-          <p class="section-caption">
-            월별 막대 그래프, 계좌 흐름, 스크린샷 입력은 아래 구역으로 이어붙일 수
-            있게 자리만 남겨뒀습니다.
-          </p>
+          <p id="historyAverage" class="section-caption">-</p>
         </div>
 
-        <div class="blueprint-grid">
-          <article class="blueprint-card">
-            <span>01</span>
-            <strong>월별 자산 흐름 막대 그래프</strong>
-            <p>상단 비율 구조 다음에 바로 연결되는 메인 분석 영역</p>
-          </article>
-          <article class="blueprint-card">
-            <span>02</span>
-            <strong>계좌별 상세 흐름 표</strong>
-            <p>계좌별 선택 이후 비교 표와 세부 자산 흐름이 오는 자리</p>
-          </article>
-          <article class="blueprint-card">
-            <span>03</span>
-            <strong>스크린샷 자동 입력 영역</strong>
-            <p>맨 아래에서 OCR 업로드와 자동 반영 기능이 들어갈 자리</p>
-          </article>
+        <div class="history-chart-shell">
+          <div id="monthlyAssetChart" class="history-chart"></div>
         </div>
       </section>
     </div>

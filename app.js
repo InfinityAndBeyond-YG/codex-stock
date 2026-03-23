@@ -105,6 +105,26 @@ const currencyFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 0,
 });
 
+const usdCurrencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+const compactKrwFormatter = new Intl.NumberFormat("ko-KR", {
+  style: "currency",
+  currency: "KRW",
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+const compactUsdFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
 const percentFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 1,
 });
@@ -131,6 +151,7 @@ const uiState = {
   mode: "overall",
   selectedOverallScope: "overview",
   selectedAccountId: portfolioData.accounts[0].id,
+  displayCurrency: "KRW",
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -147,6 +168,7 @@ function cacheDom() {
     "cashKrwValue",
     "cashKrwPercent",
     "cashCurrencyList",
+    "summaryCurrencyToggle",
     "allocationTitle",
     "allocationDescription",
     "donutChart",
@@ -159,6 +181,8 @@ function cacheDom() {
     "selectorTitle",
     "selectorDescription",
     "selectorList",
+    "historyAverage",
+    "monthlyAssetChart",
   ].forEach((id) => {
     dom[id] = document.getElementById(id);
   });
@@ -194,6 +218,18 @@ function bindEvents() {
     uiState.selectedAccountId = accountButton.dataset.accountId;
     render();
   });
+
+  if (dom.summaryCurrencyToggle) {
+    dom.summaryCurrencyToggle.addEventListener("click", (event) => {
+      const currencyButton = event.target.closest("[data-display-currency]");
+      if (!currencyButton) {
+        return;
+      }
+
+      uiState.displayCurrency = currencyButton.dataset.displayCurrency;
+      render();
+    });
+  }
 }
 
 function render() {
@@ -201,6 +237,7 @@ function render() {
   renderSummaryCard();
   renderAllocationPanel();
   renderSelectorPanel();
+  renderMonthlyAssetChart();
 }
 
 function renderModeChips() {
@@ -216,7 +253,7 @@ function renderSummaryCard() {
   const cashRatio = totalAsset ? (cashAsset / totalAsset) * 100 : 0;
 
   if (dom.avgCostValue) {
-    dom.avgCostValue.textContent = formatCurrency(totalAsset);
+    dom.avgCostValue.textContent = formatDisplayCurrency(totalAsset);
   }
 
   if (dom.cashKrwValue) {
@@ -236,6 +273,13 @@ function renderSummaryCard() {
         <strong class="cash-currency-percent">현금 비중 ${formatPercent(cashRatio)}%</strong>
       </div>
     `;
+  }
+
+  if (dom.summaryCurrencyToggle) {
+    const buttons = dom.summaryCurrencyToggle.querySelectorAll("[data-display-currency]");
+    buttons.forEach((button) => {
+      button.classList.toggle("active", button.dataset.displayCurrency === uiState.displayCurrency);
+    });
   }
 }
 
@@ -278,8 +322,43 @@ function renderSelectorPanel() {
   dom.selectorList.innerHTML = getOverallSelectorItems().map(renderStaticSelectorItem).join("");
 }
 
+function renderMonthlyAssetChart() {
+  if (!dom.monthlyAssetChart || !dom.historyAverage) {
+    return;
+  }
+
+  const history = getMonthlyAverageAssetHistory();
+  const averageValue = history.reduce((sum, item) => sum + item.value, 0) / (history.length || 1);
+  const maxValue = Math.max(...history.map((item) => item.value), 0);
+
+  dom.historyAverage.textContent = `12개월 평균 ${formatDisplayCurrency(averageValue)}`;
+  dom.monthlyAssetChart.innerHTML = history
+    .map((item, index) => renderMonthlyAssetBar(item, maxValue, index === history.length - 1))
+    .join("");
+}
+
 function getTotalAssetValue() {
   return getTotalCashValue() + getTotalHoldingValue();
+}
+
+function getMonthlyAverageAssetHistory() {
+  const totalAsset = getTotalAssetValue();
+  const monthlyTrend = [0.79, 0.81, 0.83, 0.85, 0.87, 0.89, 0.91, 0.94, 0.96, 0.97, 0.99, 1];
+  const today = new Date();
+
+  return monthlyTrend.map((multiplier, index) => {
+    const monthDate = new Date(
+      today.getFullYear(),
+      today.getMonth() - (monthlyTrend.length - 1 - index),
+      1
+    );
+
+    return {
+      label: `${monthDate.getMonth() + 1}월`,
+      fullLabel: `${monthDate.getFullYear()}년 ${monthDate.getMonth() + 1}월`,
+      value: Math.round(totalAsset * multiplier),
+    };
+  });
 }
 
 function getCurrentScopeTotalAssetValue() {
@@ -750,6 +829,20 @@ function renderStaticSelectorItem(item) {
   `;
 }
 
+function renderMonthlyAssetBar(item, maxValue, isCurrentMonth) {
+  const heightPercent = maxValue ? (item.value / maxValue) * 100 : 0;
+
+  return `
+    <article class="history-bar-item ${isCurrentMonth ? "current" : ""}" title="${item.fullLabel} ${formatDisplayCurrency(item.value)}">
+      <strong class="history-bar-value">${formatCompactDisplayCurrency(item.value)}</strong>
+      <div class="history-bar-track">
+        <div class="history-bar-fill" style="height:${heightPercent}%"></div>
+      </div>
+      <span class="history-bar-label">${item.label}</span>
+    </article>
+  `;
+}
+
 function getAccountById(accountId) {
   return portfolioData.accounts.find((account) => account.id === accountId);
 }
@@ -811,6 +904,24 @@ function formatCurrency(value) {
   return currencyFormatter.format(Math.round(value || 0));
 }
 
+function formatDisplayCurrency(value) {
+  const numericValue = Math.round(value || 0);
+  if (uiState.displayCurrency === "USD") {
+    return usdCurrencyFormatter.format(numericValue / portfolioData.exchangeRates.USD);
+  }
+
+  return currencyFormatter.format(numericValue);
+}
+
+function formatCompactDisplayCurrency(value) {
+  const numericValue = Math.round(value || 0);
+  if (uiState.displayCurrency === "USD") {
+    return compactUsdFormatter.format(numericValue / portfolioData.exchangeRates.USD);
+  }
+
+  return compactKrwFormatter.format(numericValue);
+}
+
 function formatPercent(value) {
   return percentFormatter.format(Number(value || 0));
 }
@@ -840,6 +951,6 @@ function getReadableTextColor(hexColor) {
 
 function formatCashCurrencyLabel(currency) {
   const code = `${currency || ""}`.toUpperCase();
-  const currencyName = currencyNameMap[currency] || currency;
+  const currencyName = currencyNameMap[code] || currency;
   return `${code} ${currencyName}`;
 }
