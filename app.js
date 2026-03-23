@@ -181,7 +181,6 @@ function cacheDom() {
     "selectorTitle",
     "selectorDescription",
     "selectorList",
-    "historyAverage",
     "monthlyAssetChart",
   ].forEach((id) => {
     dom[id] = document.getElementById(id);
@@ -323,15 +322,13 @@ function renderSelectorPanel() {
 }
 
 function renderMonthlyAssetChart() {
-  if (!dom.monthlyAssetChart || !dom.historyAverage) {
+  if (!dom.monthlyAssetChart) {
     return;
   }
 
   const history = getMonthlyAverageAssetHistory();
-  const averageValue = history.reduce((sum, item) => sum + item.value, 0) / (history.length || 1);
   const maxValue = Math.max(...history.map((item) => item.value), 0);
 
-  dom.historyAverage.textContent = `12개월 평균 ${formatDisplayCurrency(averageValue)}`;
   dom.monthlyAssetChart.innerHTML = history
     .map((item, index) => renderMonthlyAssetBar(item, maxValue, index === history.length - 1))
     .join("");
