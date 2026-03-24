@@ -1782,6 +1782,35 @@ button {
 }
 
 @media (max-width: 560px) {
+  .left-stage {
+    order: 1;
+  }
+
+  .right-stage {
+    order: 2;
+  }
+
+  .avg-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .avg-panel > .section-kicker {
+    order: 0;
+  }
+
+  .inline-donut {
+    order: 1;
+    margin-top: 8px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .avg-layout {
+    order: 2;
+    margin-top: 18px;
+  }
+
   .mode-chip {
     flex: 1 1 100%;
   }
