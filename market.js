@@ -214,7 +214,7 @@ function bindEvents() {
     }
 
     state.selectedStockId = stock.id;
-    state.searchQuery = stock.name;
+    state.searchQuery = "";
     if (dom.marketSearchInput) {
       dom.marketSearchInput.value = stock.name;
     }
