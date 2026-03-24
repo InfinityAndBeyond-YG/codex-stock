@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-15" />
+    <link rel="stylesheet" href="./styles.css?v=20260324-16" />
     <script defer src="./market.js?v=20260324-07"></script>
   </head>
   <body>
@@ -56,6 +56,7 @@
                   autocomplete="off"
                 />
               </label>
+              <div id="marketSearchResults" class="market-search-results"></div>
             </div>
             <div class="market-favorite-tab-wrap">
               <button
@@ -68,15 +69,9 @@
                 <span>즐겨찾기</span>
                 <strong id="favoriteCountBadge" class="favorite-count-badge">0</strong>
               </button>
+              <div id="favoritePanel" class="favorite-panel"></div>
             </div>
           </div>
-
-          <div class="market-dropdown-row">
-            <div class="market-dropdown-spacer" aria-hidden="true"></div>
-            <div id="favoritePanel" class="favorite-panel"></div>
-          </div>
-
-          <div id="marketSearchResults" class="market-search-results"></div>
 
           <div class="market-stage-grid">
             <div class="live-chart-shell">
