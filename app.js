@@ -362,18 +362,10 @@ function getMonthlyAverageAssetHistory() {
 }
 
 function getCurrentScopeTotalAssetValue() {
-  if (uiState.mode === "accounts") {
-    return getAccountAssetValue(uiState.selectedAccountId);
-  }
-
   return getTotalAssetValue();
 }
 
 function getCurrentScopeCashValue() {
-  if (uiState.mode === "accounts") {
-    return getAccountCashValue(uiState.selectedAccountId);
-  }
-
   return getTotalCashValue();
 }
 
@@ -387,7 +379,7 @@ function getTotalHoldingValue() {
 
 function getAllocationSegments() {
   if (uiState.mode === "accounts") {
-    return getAccountAllocationSegments(uiState.selectedAccountId);
+    return getAccountCashAllocationSegments();
   }
 
   if (uiState.mode === "stocks") {
@@ -488,30 +480,17 @@ function getMarketAllocationSegments(market) {
     .sort((left, right) => right.value - left.value);
 }
 
-function getAccountAllocationSegments(accountId) {
-  const account = getAccountById(accountId);
-  const cashValue = getAccountCashValue(accountId);
-  const holdingSegments = getAccountHoldings(accountId)
-    .map((holding, index) => ({
-      label: holding.name,
-      value: getHoldingValueInKrw(holding),
-      meta: `${holding.market} · ${holding.currency}`,
-      type: "stock",
-      color: colorScale[index % colorScale.length],
-      tag: holding.market === "해외주식" ? "해외" : "국내",
-    }))
-    .sort((left, right) => right.value - left.value);
-
-  return [
-    {
-      label: "현금",
-      value: cashValue,
-      meta: `${account.name} 전체 현금`,
+function getAccountCashAllocationSegments() {
+  return portfolioData.accounts
+    .map((account, index) => ({
+      label: account.name,
+      value: getAccountCashValue(account.id),
+      meta: `계좌 총액 ${formatDisplayCurrency(getAccountAssetValue(account.id))}`,
       type: "cash",
-      color: "#0c72de",
-    },
-    ...holdingSegments,
-  ];
+      color: colorScale[index % colorScale.length],
+    }))
+    .filter((segment) => segment.value > 0)
+    .sort((left, right) => right.value - left.value);
 }
 
 function getStockAllocationSegments() {
@@ -541,8 +520,7 @@ function getStockAllocationSegments() {
 
 function getAllocationTitle() {
   if (uiState.mode === "accounts") {
-    const account = getAccountById(uiState.selectedAccountId);
-    return `${account.name} 전체 자산 비율`;
+    return "계좌별 현금 비율";
   }
 
   if (uiState.mode === "stocks") {
@@ -566,7 +544,7 @@ function getAllocationTitle() {
 
 function getAllocationDescription() {
   if (uiState.mode === "accounts") {
-    return "계좌별에서는 현금을 먼저 두고, 그다음 주식 종목 비율 순서로 보여줍니다.";
+    return "계좌별에서는 각 계좌의 현금 금액 기준으로 퍼센트와 계좌 총액을 보여줍니다.";
   }
 
   if (uiState.mode === "stocks") {
@@ -602,7 +580,7 @@ function getDonutModeLabel() {
 
 function getDonutCenterMeta() {
   if (uiState.mode === "accounts") {
-    return `${getAccountById(uiState.selectedAccountId).name} 기준`;
+    return "전체 현금 기준 계좌별";
   }
 
   if (uiState.mode === "stocks") {
@@ -626,7 +604,7 @@ function getDonutCenterMeta() {
 
 function getSelectorTitle() {
   if (uiState.mode === "accounts") {
-    return "계좌별 보기";
+    return "계좌별 현금 보기";
   }
 
   if (uiState.mode === "stocks") {
@@ -638,7 +616,7 @@ function getSelectorTitle() {
 
 function getSelectorDescription() {
   if (uiState.mode === "accounts") {
-    return "계좌를 누르면 왼쪽 원그래프가 그 계좌의 전체 자산 비율로 바뀝니다.";
+    return "각 계좌의 현금 금액, 현금 비중, 계좌 총액을 같이 확인합니다.";
   }
 
   if (uiState.mode === "stocks") {
@@ -649,17 +627,17 @@ function getSelectorDescription() {
 }
 
 function getAccountSelectionItems() {
-  const totalAsset = getTotalAssetValue();
+  const totalCash = getTotalCashValue();
   return portfolioData.accounts
     .map((account) => {
-      const assetValue = getAccountAssetValue(account.id);
+      const cashValue = getAccountCashValue(account.id);
       return {
         id: account.id,
         label: account.name,
-        meta: `현금 ${formatDisplayCurrency(getAccountCashValue(account.id))} · 종목 ${getAccountHoldings(account.id).length}개`,
-        value: assetValue,
-        ratio: totalAsset ? (assetValue / totalAsset) * 100 : 0,
-        active: account.id === uiState.selectedAccountId,
+        meta: `계좌 총액 ${formatDisplayCurrency(getAccountAssetValue(account.id))}`,
+        value: cashValue,
+        ratio: totalCash ? (cashValue / totalCash) * 100 : 0,
+        color: colorScale[portfolioData.accounts.indexOf(account) % colorScale.length],
       };
     })
     .sort((left, right) => right.value - left.value);
@@ -725,9 +703,9 @@ function getOverallSelectorItems() {
 
 function renderAccountSelectorItem(item) {
   return `
-    <article class="selector-item ${item.active ? "active" : ""}" data-account-id="${item.id}">
+    <article class="selector-item selector-item-readonly">
       <div class="selector-left">
-        <span class="selector-dot" style="background:${item.active ? "#0c72de" : "#9fb0c9"}"></span>
+        <span class="selector-dot" style="background:${item.color}"></span>
         <div class="selector-label">
           <strong>${item.label}</strong>
           <span class="selector-meta">${item.meta}</span>
