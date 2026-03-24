@@ -913,6 +913,9 @@ button {
 }
 
 .summary-metric-block {
+  display: grid;
+  grid-template-rows: minmax(38px, auto) auto;
+  align-content: start;
   min-width: 0;
   text-align: left;
 }
@@ -923,6 +926,18 @@ button {
   align-items: flex-end;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.summary-title-row-solo {
+  justify-content: space-between;
+}
+
+.summary-title-spacer {
+  display: inline-block;
+  width: 74px;
+  height: 34px;
+  flex: 0 0 auto;
+  visibility: hidden;
 }
 
 .metric-inline-row .avg-value {
