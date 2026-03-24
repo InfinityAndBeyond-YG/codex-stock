@@ -8,6 +8,9 @@
   --line-soft: rgba(21, 42, 76, 0.08);
   --blue: #0c72de;
   --blue-soft: rgba(12, 114, 222, 0.12);
+  --button-active-solid: #0c72de;
+  --button-active-border: #0c72de;
+  --button-active-text: #ffffff;
   --teal: #0f9c8a;
   --teal-soft: rgba(15, 156, 138, 0.12);
   --orange: #ef8a26;
@@ -112,26 +115,23 @@ button {
   white-space: nowrap;
   text-align: center;
   text-decoration: none;
-  box-shadow: 0 10px 22px rgba(23, 43, 77, 0.06);
   cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 .header-action-button:hover {
   transform: translateY(-1px);
   border-color: rgba(12, 114, 222, 0.2);
-  box-shadow: 0 14px 24px rgba(12, 114, 222, 0.12);
 }
 
 .header-action-button.active {
-  border-color: rgba(12, 114, 222, 0.24);
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  box-shadow: var(--shadow-focus);
+  border-color: var(--button-active-border);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
 }
 
 .header-action-button.ghost-button {
   background: transparent;
-  box-shadow: none;
 }
 
 .eyebrow {
@@ -649,20 +649,28 @@ button {
   font-size: 0.76rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .favorite-tab-button:hover {
   transform: translateY(-1px);
   border-color: rgba(12, 114, 222, 0.18);
-  box-shadow: 0 12px 22px rgba(23, 43, 77, 0.08);
 }
 
 .favorite-tab-button.active {
-  border-color: rgba(12, 114, 222, 0.24);
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  box-shadow: var(--shadow-focus);
-  color: var(--text-strong);
+  border-color: var(--button-active-border);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
+}
+
+.favorite-tab-button.active .favorite-count-badge-kr {
+  background: #0858ac;
+  color: #ffffff;
+}
+
+.favorite-tab-button.active .favorite-count-badge-us {
+  background: #f28c28;
+  color: #ffffff;
 }
 
 .favorite-count-group {
@@ -709,14 +717,13 @@ button {
   font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 .market-tab.active {
-  border-color: rgba(12, 114, 222, 0.24);
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  box-shadow: var(--shadow-focus);
-  color: var(--text-strong);
+  border-color: var(--button-active-border);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
 }
 
 .market-search {
@@ -866,20 +873,18 @@ button {
   font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .chart-range-chip:hover {
   transform: translateY(-1px);
   border-color: rgba(12, 114, 222, 0.18);
-  box-shadow: 0 12px 22px rgba(23, 43, 77, 0.08);
 }
 
 .chart-range-chip.active {
-  border-color: rgba(12, 114, 222, 0.24);
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  box-shadow: var(--shadow-focus);
-  color: var(--text-strong);
+  border-color: var(--button-active-border);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
 }
 
 .chart-summary-copy {
@@ -1161,13 +1166,12 @@ button {
   font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  transition: background 160ms ease, color 160ms ease;
 }
 
 .currency-chip.active {
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  color: var(--text-strong);
-  box-shadow: inset 0 0 0 1px rgba(12, 114, 222, 0.14);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
 }
 
 .summary-metric-block {
@@ -1536,7 +1540,7 @@ button {
   cursor: pointer;
   font-weight: 700;
   font-size: 0.82rem;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
 .mode-chip:hover,
@@ -1545,10 +1549,9 @@ button {
 }
 
 .mode-chip.active {
-  border-color: rgba(12, 114, 222, 0.24);
-  background: linear-gradient(135deg, rgba(12, 114, 222, 0.14), rgba(15, 156, 138, 0.08));
-  color: var(--text-strong);
-  box-shadow: var(--shadow-focus);
+  border-color: var(--button-active-border);
+  background: var(--button-active-solid);
+  color: var(--button-active-text);
 }
 
 .selector-copy strong {
