@@ -535,6 +535,7 @@ button {
 .favorite-panel {
   display: none;
   gap: 8px;
+  width: 100%;
   padding: 10px;
   border: 1px solid rgba(21, 42, 76, 0.08);
   border-radius: 20px;
@@ -635,6 +636,7 @@ button {
 .market-favorite-tab-wrap {
   display: flex;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .favorite-tab-button {
@@ -642,7 +644,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-width: 184px;
+  width: 100%;
   border: 1px solid rgba(21, 42, 76, 0.08);
   background: rgba(255, 255, 255, 0.92);
   color: var(--text-body);
