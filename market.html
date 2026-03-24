@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-16" />
+    <link rel="stylesheet" href="./styles.css?v=20260324-17" />
     <script defer src="./market.js?v=20260324-07"></script>
   </head>
   <body>
@@ -67,7 +67,18 @@
                 aria-controls="favoritePanel"
               >
                 <span>즐겨찾기</span>
-                <strong id="favoriteCountBadge" class="favorite-count-badge">0</strong>
+                <span class="favorite-count-group">
+                  <strong
+                    id="favoriteKrCountBadge"
+                    class="favorite-count-badge favorite-count-badge-kr"
+                    title="한국 즐겨찾기 수"
+                  >0</strong>
+                  <strong
+                    id="favoriteUsCountBadge"
+                    class="favorite-count-badge favorite-count-badge-us"
+                    title="미국 즐겨찾기 수"
+                  >0</strong>
+                </span>
               </button>
               <div id="favoritePanel" class="favorite-panel"></div>
             </div>

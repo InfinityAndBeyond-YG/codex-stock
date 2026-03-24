@@ -665,6 +665,12 @@ button {
   color: var(--text-strong);
 }
 
+.favorite-count-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .favorite-count-badge {
   display: inline-flex;
   min-width: 24px;
@@ -676,6 +682,16 @@ button {
   color: var(--blue);
   font-size: 0.68rem;
   font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.favorite-count-badge-kr {
+  background: rgba(12, 114, 222, 0.12);
+  color: var(--blue);
+}
+
+.favorite-count-badge-us {
+  background: rgba(242, 140, 40, 0.16);
+  color: #d77712;
 }
 
 .market-tabs {

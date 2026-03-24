@@ -168,7 +168,8 @@ function cacheDom() {
     "marketSearchInput",
     "marketSearchResults",
     "favoriteTabButton",
-    "favoriteCountBadge",
+    "favoriteKrCountBadge",
+    "favoriteUsCountBadge",
     "favoritePanel",
     "marketBoardTitle",
     "marketBoardCaption",
@@ -330,12 +331,14 @@ function renderSearchResults() {
 }
 
 function renderFavoritePanel() {
-  if (!dom.favoritePanel || !dom.favoriteTabButton || !dom.favoriteCountBadge) {
+  if (!dom.favoritePanel || !dom.favoriteTabButton || !dom.favoriteKrCountBadge || !dom.favoriteUsCountBadge) {
     return;
   }
 
-  const favorites = getFavoriteStocks();
-  dom.favoriteCountBadge.textContent = `${favorites.length}`;
+  const session = getMarketSession();
+  const favorites = getFavoriteStocks(getPreferredFavoriteMarket(session));
+  dom.favoriteKrCountBadge.textContent = `${getFavoriteStocksByMarket("kr").length}`;
+  dom.favoriteUsCountBadge.textContent = `${getFavoriteStocksByMarket("us").length}`;
   dom.favoriteTabButton.classList.toggle("active", state.favoritePanelOpen);
   dom.favoriteTabButton.setAttribute("aria-expanded", state.favoritePanelOpen ? "true" : "false");
   dom.favoritePanel.classList.toggle("open", state.favoritePanelOpen);
@@ -507,8 +510,34 @@ function getStockById(stockId) {
   return marketStocks.find((stock) => stock.id === stockId);
 }
 
-function getFavoriteStocks() {
-  return marketStocks.filter((stock) => stock.favorite);
+function getFavoriteStocksByMarket(market) {
+  return marketStocks.filter((stock) => stock.favorite && stock.market === market);
+}
+
+function getPreferredFavoriteMarket(session) {
+  return getBoardMarket(session);
+}
+
+function getFavoriteStocks(preferredMarket) {
+  const favorites = marketStocks.filter((stock) => stock.favorite);
+  if (!preferredMarket) {
+    return favorites;
+  }
+
+  return favorites.sort((left, right) => {
+    const leftPriority = left.market === preferredMarket ? 0 : 1;
+    const rightPriority = right.market === preferredMarket ? 0 : 1;
+
+    if (leftPriority !== rightPriority) {
+      return leftPriority - rightPriority;
+    }
+
+    if (left.market !== right.market) {
+      return left.market.localeCompare(right.market);
+    }
+
+    return left.name.localeCompare(right.name, "ko");
+  });
 }
 
 function toggleFavoriteStock(stockId) {
