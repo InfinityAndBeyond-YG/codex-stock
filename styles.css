@@ -233,6 +233,13 @@ button {
   flex-wrap: wrap;
 }
 
+.hero-market-statuses {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .live-market-pill {
   display: inline-flex;
   align-items: center;
@@ -244,6 +251,11 @@ button {
   font-size: 0.74rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.live-market-pill-us {
+  background: rgba(242, 140, 40, 0.14);
+  color: #d77712;
 }
 
 .hero-copy {
@@ -1649,6 +1661,10 @@ button {
 
   .hero-title-row {
     align-items: flex-start;
+  }
+
+  .hero-market-statuses {
+    width: 100%;
   }
 
   .avg-panel,

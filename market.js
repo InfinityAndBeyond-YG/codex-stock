@@ -182,7 +182,8 @@ function cacheDom() {
     "chartDetailStats",
     "chartPriceScale",
     "chartAxisLabels",
-    "heroLiveStatus",
+    "heroKrStatus",
+    "heroUsStatus",
   ].forEach((id) => {
     dom[id] = document.getElementById(id);
   });
@@ -273,8 +274,12 @@ function renderMarketPage() {
 
 function renderSessionSummary() {
   const session = getMarketSession();
-  if (dom.heroLiveStatus) {
-    dom.heroLiveStatus.textContent = getLiveMarketStatusLabel(session);
+  if (dom.heroKrStatus) {
+    dom.heroKrStatus.textContent = getKrMarketStatusLabel(session);
+  }
+
+  if (dom.heroUsStatus) {
+    dom.heroUsStatus.textContent = getUsMarketStatusLabel(session);
   }
 }
 
@@ -396,7 +401,7 @@ function renderChart() {
     dom.chartStockChange.textContent = `${positive ? "+" : ""}${percentFormatter.format(selectedStock.changePercent)}%`;
   }
 
-  const lineColor = selectedStock.changePercent >= 0 ? "#0c72de" : "#de5967";
+  const lineColor = getChartLineColor(selectedStock);
   const gridMarkup = [20, 66, 112, 158, 204]
     .map(
       (y) =>
@@ -576,16 +581,20 @@ function getSessionStateForTimeZone(timeZone, startHour, startMinute, endHour, e
   };
 }
 
-function getLiveMarketStatusLabel(session) {
-  if (session.kr.open) {
-    return `한국 장중 · ${formatClock("Asia/Seoul")} KST`;
+function getKrMarketStatusLabel(session) {
+  return `${session.kr.open ? "한국 장중" : "한국 장마감"} · ${formatClock("Asia/Seoul")} KST`;
+}
+
+function getUsMarketStatusLabel(session) {
+  return `${session.us.open ? "미국 장중" : "미국 장마감"} · ${formatClock("America/New_York")} ET`;
+}
+
+function getChartLineColor(stock) {
+  if (stock.market === "us") {
+    return "#f28c28";
   }
 
-  if (session.us.open) {
-    return `미국 장중 · ${formatClock("America/New_York")} ET`;
-  }
-
-  return `장중 시장 없음 · ${formatClock("Asia/Seoul")} KST`;
+  return stock.changePercent >= 0 ? "#0c72de" : "#de5967";
 }
 
 function getBoardCaption(session, boardMarket) {

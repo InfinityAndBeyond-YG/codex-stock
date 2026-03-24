@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-08" />
-    <script defer src="./market.js?v=20260324-05"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260324-09" />
+    <script defer src="./market.js?v=20260324-06"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -38,7 +38,10 @@
           <p class="section-kicker">Market Page</p>
           <div class="hero-title-row">
             <h1 class="market-page-title">주식현재가</h1>
-            <span id="heroLiveStatus" class="live-market-pill">-</span>
+            <div class="hero-market-statuses">
+              <span id="heroKrStatus" class="live-market-pill">-</span>
+              <span id="heroUsStatus" class="live-market-pill live-market-pill-us">-</span>
+            </div>
           </div>
 
           <div class="market-top-row">
