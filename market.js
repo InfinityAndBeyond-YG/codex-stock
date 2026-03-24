@@ -142,17 +142,20 @@ const percentFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 1,
 });
 
+const favoriteStorageKey = "stockflow-market-favorites";
 const dom = {};
 
 const state = {
   selectedStockId: null,
   searchQuery: "",
   chartRange: "1D",
+  favoritePanelOpen: false,
 };
 
 document.addEventListener("DOMContentLoaded", initMarketPage);
 
 function initMarketPage() {
+  hydrateFavoriteStocks();
   cacheDom();
   const boardMarket = getBoardMarket(getMarketSession());
   state.selectedStockId = getStocksByMarket(boardMarket)[0]?.id || marketStocks[0].id;
@@ -164,6 +167,9 @@ function cacheDom() {
   [
     "marketSearchInput",
     "marketSearchResults",
+    "favoriteTabButton",
+    "favoriteCountBadge",
+    "favoritePanel",
     "marketBoardTitle",
     "marketBoardCaption",
     "marketRankingList",
@@ -189,6 +195,13 @@ function bindEvents() {
   });
 
   dom.marketSearchResults?.addEventListener("click", (event) => {
+    const favoriteButton = event.target.closest("[data-favorite-toggle]");
+    if (favoriteButton) {
+      toggleFavoriteStock(favoriteButton.dataset.favoriteToggle);
+      renderMarketPage();
+      return;
+    }
+
     const button = event.target.closest("[data-stock-id]");
     if (!button) {
       return;
@@ -204,6 +217,28 @@ function bindEvents() {
     if (dom.marketSearchInput) {
       dom.marketSearchInput.value = stock.name;
     }
+    renderMarketPage();
+  });
+
+  dom.favoriteTabButton?.addEventListener("click", () => {
+    state.favoritePanelOpen = !state.favoritePanelOpen;
+    renderFavoritePanel();
+  });
+
+  dom.favoritePanel?.addEventListener("click", (event) => {
+    const favoriteButton = event.target.closest("[data-favorite-toggle]");
+    if (favoriteButton) {
+      toggleFavoriteStock(favoriteButton.dataset.favoriteToggle);
+      renderMarketPage();
+      return;
+    }
+
+    const button = event.target.closest("[data-stock-id]");
+    if (!button) {
+      return;
+    }
+
+    state.selectedStockId = button.dataset.stockId;
     renderMarketPage();
   });
 
@@ -231,6 +266,7 @@ function bindEvents() {
 function renderMarketPage() {
   renderSessionSummary();
   renderSearchResults();
+  renderFavoritePanel();
   renderChart();
   renderRankingBoard();
 }
@@ -268,10 +304,65 @@ function renderSearchResults() {
   dom.marketSearchResults.innerHTML = results
     .map(
       (stock) => `
-        <button type="button" class="search-result-chip" data-stock-id="${stock.id}">
-          <span>${stock.name}</span>
-          <small>${stock.ticker} · ${stock.market === "kr" ? "한국주식" : "미국주식"}</small>
-        </button>
+        <article class="search-result-chip">
+          <button type="button" class="search-result-main" data-stock-id="${stock.id}">
+            <span>${stock.name}</span>
+            <small>${stock.ticker} · ${stock.market === "kr" ? "한국주식" : "미국주식"}</small>
+          </button>
+          <button
+            type="button"
+            class="favorite-star-button ${stock.favorite ? "active" : ""}"
+            data-favorite-toggle="${stock.id}"
+            aria-pressed="${stock.favorite ? "true" : "false"}"
+            aria-label="${stock.favorite ? "즐겨찾기 해제" : "즐겨찾기 추가"}"
+          >
+            &#9733;
+          </button>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderFavoritePanel() {
+  if (!dom.favoritePanel || !dom.favoriteTabButton || !dom.favoriteCountBadge) {
+    return;
+  }
+
+  const favorites = getFavoriteStocks();
+  dom.favoriteCountBadge.textContent = `${favorites.length}`;
+  dom.favoriteTabButton.classList.toggle("active", state.favoritePanelOpen);
+  dom.favoriteTabButton.setAttribute("aria-expanded", state.favoritePanelOpen ? "true" : "false");
+  dom.favoritePanel.classList.toggle("open", state.favoritePanelOpen);
+
+  if (!state.favoritePanelOpen) {
+    dom.favoritePanel.innerHTML = "";
+    return;
+  }
+
+  if (!favorites.length) {
+    dom.favoritePanel.innerHTML = `<p class="favorite-empty-copy">즐겨찾기한 종목이 아직 없습니다.</p>`;
+    return;
+  }
+
+  dom.favoritePanel.innerHTML = favorites
+    .map(
+      (stock) => `
+        <article class="favorite-item ${stock.id === state.selectedStockId ? "active" : ""}">
+          <button type="button" class="favorite-item-main" data-stock-id="${stock.id}">
+            <strong>${stock.name}</strong>
+            <small>${stock.ticker} · ${formatMoney(stock.price, stock.currency)}</small>
+          </button>
+          <button
+            type="button"
+            class="favorite-star-button active"
+            data-favorite-toggle="${stock.id}"
+            aria-pressed="true"
+            aria-label="즐겨찾기 해제"
+          >
+            &#9733;
+          </button>
+        </article>
       `
     )
     .join("");
@@ -409,6 +500,49 @@ function getStocksByMarket(market) {
 
 function getStockById(stockId) {
   return marketStocks.find((stock) => stock.id === stockId);
+}
+
+function getFavoriteStocks() {
+  return marketStocks.filter((stock) => stock.favorite);
+}
+
+function toggleFavoriteStock(stockId) {
+  const stock = getStockById(stockId);
+  if (!stock) {
+    return;
+  }
+
+  stock.favorite = !stock.favorite;
+  persistFavoriteStocks();
+}
+
+function hydrateFavoriteStocks() {
+  try {
+    const saved = window.localStorage.getItem(favoriteStorageKey);
+    if (!saved) {
+      return;
+    }
+
+    const ids = JSON.parse(saved);
+    if (!Array.isArray(ids)) {
+      return;
+    }
+
+    marketStocks.forEach((stock) => {
+      stock.favorite = ids.includes(stock.id);
+    });
+  } catch (error) {
+    console.warn("Favorite stocks could not be loaded.", error);
+  }
+}
+
+function persistFavoriteStocks() {
+  try {
+    const favoriteIds = marketStocks.filter((stock) => stock.favorite).map((stock) => stock.id);
+    window.localStorage.setItem(favoriteStorageKey, JSON.stringify(favoriteIds));
+  } catch (error) {
+    console.warn("Favorite stocks could not be saved.", error);
+  }
 }
 
 function getMarketSession() {

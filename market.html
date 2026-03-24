@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-07" />
-    <script defer src="./market.js?v=20260324-04"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260324-08" />
+    <script defer src="./market.js?v=20260324-05"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -41,17 +41,31 @@
             <span id="heroLiveStatus" class="live-market-pill">-</span>
           </div>
 
-          <div class="market-controls">
-            <label class="market-search">
-              <span>종목 검색</span>
-              <input
-                id="marketSearchInput"
-                type="search"
-                inputmode="search"
-                placeholder="삼성전자, NVIDIA, Tesla"
-                autocomplete="off"
-              />
-            </label>
+          <div class="market-top-row">
+            <div class="market-controls">
+              <label class="market-search">
+                <span>종목 검색</span>
+                <input
+                  id="marketSearchInput"
+                  type="search"
+                  inputmode="search"
+                  placeholder="삼성전자, NVIDIA, Tesla"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+            <div class="market-favorite-tab-wrap">
+              <button
+                type="button"
+                id="favoriteTabButton"
+                class="favorite-tab-button"
+                aria-expanded="false"
+                aria-controls="favoritePanel"
+              >
+                <span>즐겨찾기</span>
+                <strong id="favoriteCountBadge" class="favorite-count-badge">0</strong>
+              </button>
+            </div>
           </div>
 
           <div id="marketSearchResults" class="market-search-results"></div>
@@ -94,6 +108,7 @@
             </div>
 
             <section class="panel side-panel market-side-panel market-inline-board">
+              <div id="favoritePanel" class="favorite-panel"></div>
               <div class="panel-head panel-head-tight market-board-head">
                 <div>
                   <p class="section-kicker">Volume Board</p>
