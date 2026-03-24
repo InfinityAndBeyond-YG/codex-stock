@@ -349,10 +349,10 @@ function renderChart() {
     ]
       .map(
         (item) => `
-          <article class="chart-detail-card">
-            <span>${item.label}</span>
+          <span class="chart-inline-stat">
+            <em>${item.label}</em>
             <strong>${item.value}</strong>
-          </article>
+          </span>
         `
       )
       .join("");

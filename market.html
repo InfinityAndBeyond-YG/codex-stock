@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260323-24" />
-    <script defer src="./market.js?v=20260323-03"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260324-01" />
+    <script defer src="./market.js?v=20260324-01"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -58,9 +58,12 @@
 
           <div class="live-chart-shell">
             <div class="chart-summary">
-              <div>
+              <div class="chart-summary-copy">
                 <p class="section-kicker">Selected Stock</p>
-                <h2 id="chartStockName">-</h2>
+                <div class="chart-headline-row">
+                  <h2 id="chartStockName">-</h2>
+                  <div id="chartDetailStats" class="chart-detail-inline"></div>
+                </div>
                 <p id="chartStockMeta" class="section-caption">-</p>
               </div>
               <div class="chart-price-stack">
@@ -75,8 +78,6 @@
               <button type="button" class="chart-range-chip" data-chart-range="1M">1달</button>
               <button type="button" class="chart-range-chip" data-chart-range="1Y">1년</button>
             </div>
-
-            <div id="chartDetailStats" class="chart-detail-stats"></div>
 
             <div class="chart-canvas">
               <div class="chart-body">
