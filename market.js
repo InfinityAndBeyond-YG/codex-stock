@@ -143,6 +143,7 @@ const percentFormatter = new Intl.NumberFormat("ko-KR", {
 });
 
 const favoriteStorageKey = "stockflow-market-favorites";
+const reportStorageKey = "stockflow-market-reports";
 const dom = {};
 
 const state = {
@@ -185,6 +186,9 @@ function cacheDom() {
     "chartAxisLabels",
     "heroKrStatus",
     "heroUsStatus",
+    "stockReportTitle",
+    "stockReportMeta",
+    "stockReportEditor",
   ].forEach((id) => {
     dom[id] = document.getElementById(id);
   });
@@ -263,6 +267,15 @@ function bindEvents() {
     state.chartRange = button.dataset.chartRange;
     renderMarketPage();
   });
+
+  dom.stockReportEditor?.addEventListener("input", (event) => {
+    const selectedStock = getSelectedStock();
+    if (!selectedStock) {
+      return;
+    }
+
+    persistStockReport(selectedStock.id, event.target.value);
+  });
 }
 
 function renderMarketPage() {
@@ -271,6 +284,7 @@ function renderMarketPage() {
   renderFavoritePanel();
   renderChart();
   renderRankingBoard();
+  renderStockReport();
 }
 
 function renderSessionSummary() {
@@ -497,6 +511,25 @@ function renderRankingBoard() {
     .join("");
 }
 
+function renderStockReport() {
+  const selectedStock = getSelectedStock();
+  if (!selectedStock) {
+    return;
+  }
+
+  if (dom.stockReportTitle) {
+    dom.stockReportTitle.textContent = `${selectedStock.name} 리포트`;
+  }
+
+  if (dom.stockReportMeta) {
+    dom.stockReportMeta.textContent = `${selectedStock.ticker} · ${selectedStock.market === "kr" ? "한국주식" : "미국주식"} 분석 메모`;
+  }
+
+  if (dom.stockReportEditor) {
+    dom.stockReportEditor.value = getStockReport(selectedStock.id);
+  }
+}
+
 function getSelectedStock() {
   const boardMarket = getBoardMarket(getMarketSession());
   return getStockById(state.selectedStockId) || getStocksByMarket(boardMarket)[0] || marketStocks[0];
@@ -576,6 +609,37 @@ function persistFavoriteStocks() {
     window.localStorage.setItem(favoriteStorageKey, JSON.stringify(favoriteIds));
   } catch (error) {
     console.warn("Favorite stocks could not be saved.", error);
+  }
+}
+
+function getStockReport(stockId) {
+  try {
+    const saved = window.localStorage.getItem(reportStorageKey);
+    if (!saved) {
+      return "";
+    }
+
+    const reports = JSON.parse(saved);
+    if (!reports || typeof reports !== "object") {
+      return "";
+    }
+
+    return typeof reports[stockId] === "string" ? reports[stockId] : "";
+  } catch (error) {
+    console.warn("Stock report could not be loaded.", error);
+    return "";
+  }
+}
+
+function persistStockReport(stockId, value) {
+  try {
+    const saved = window.localStorage.getItem(reportStorageKey);
+    const reports = saved ? JSON.parse(saved) : {};
+    const nextReports = reports && typeof reports === "object" ? reports : {};
+    nextReports[stockId] = value;
+    window.localStorage.setItem(reportStorageKey, JSON.stringify(nextReports));
+  } catch (error) {
+    console.warn("Stock report could not be saved.", error);
   }
 }
 

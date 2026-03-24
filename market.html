@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-18" />
-    <script defer src="./market.js?v=20260324-07"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260324-19" />
+    <script defer src="./market.js?v=20260324-08"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -133,6 +133,25 @@
               <div id="marketRankingList" class="market-ranking-list"></div>
             </section>
           </div>
+        </section>
+
+        <section class="panel market-report-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Stock Report</p>
+              <h2 id="stockReportTitle">주식 리포트</h2>
+            </div>
+            <p id="stockReportMeta" class="section-caption">-</p>
+          </div>
+
+          <label class="stock-report-field">
+            <span>분석 메모</span>
+            <textarea
+              id="stockReportEditor"
+              class="stock-report-editor"
+              placeholder="여기에 종목 분석, 투자 포인트, 리스크, 체크할 일정 등을 적어둘 수 있습니다."
+            ></textarea>
+          </label>
         </section>
       </main>
     </div>
