@@ -957,5 +957,5 @@ function formatCashCurrencyLabel(currency) {
 
 function getExchangeRateLabel() {
   const usdRate = portfolioData.exchangeRates.USD || 0;
-  return `현재 환율 $1 = ${formatCurrency(usdRate)}`;
+  return `현재 환율 ${formatCurrency(usdRate)}`;
 }
