@@ -148,7 +148,7 @@ const dom = {};
 const uiState = {
   mode: "overall",
   selectedOverallScope: "overview",
-  selectedAccountId: portfolioData.accounts[0].id,
+  selectedAccountId: null,
   displayCurrency: "KRW",
 };
 
@@ -193,7 +193,12 @@ function bindEvents() {
       return;
     }
 
-    uiState.mode = button.dataset.mode;
+    const nextMode = button.dataset.mode;
+    if (nextMode === "accounts" && uiState.mode !== "accounts") {
+      uiState.selectedAccountId = null;
+    }
+
+    uiState.mode = nextMode;
     if (uiState.mode === "overall") {
       uiState.selectedOverallScope = "overview";
     }
@@ -213,7 +218,8 @@ function bindEvents() {
       return;
     }
 
-    uiState.selectedAccountId = accountButton.dataset.accountId;
+    uiState.selectedAccountId =
+      uiState.selectedAccountId === accountButton.dataset.accountId ? null : accountButton.dataset.accountId;
     render();
   });
 
@@ -362,10 +368,18 @@ function getMonthlyAverageAssetHistory() {
 }
 
 function getCurrentScopeTotalAssetValue() {
+  if (uiState.mode === "accounts" && uiState.selectedAccountId) {
+    return getAccountAssetValue(uiState.selectedAccountId);
+  }
+
   return getTotalAssetValue();
 }
 
 function getCurrentScopeCashValue() {
+  if (uiState.mode === "accounts" && uiState.selectedAccountId) {
+    return getAccountCashValue(uiState.selectedAccountId);
+  }
+
   return getTotalCashValue();
 }
 
@@ -379,7 +393,9 @@ function getTotalHoldingValue() {
 
 function getAllocationSegments() {
   if (uiState.mode === "accounts") {
-    return getAccountCashAllocationSegments();
+    return uiState.selectedAccountId
+      ? getAccountAllocationSegments(uiState.selectedAccountId)
+      : getAccountCashAllocationSegments();
   }
 
   if (uiState.mode === "stocks") {
@@ -493,6 +509,33 @@ function getAccountCashAllocationSegments() {
     .sort((left, right) => right.value - left.value);
 }
 
+function getAccountAllocationSegments(accountId) {
+  const account = getAccountById(accountId);
+  const cashSegments = account.cashBalances
+    .map((cash, index) => ({
+      label: formatCashCurrencyLabel(cash.currency),
+      value: convertToKrw(cash.amount, cash.currency),
+      meta: `${account.name} 보유 현금`,
+      type: "cash",
+      color: index === 0 ? "#0c72de" : "#77b6ff",
+    }))
+    .filter((segment) => segment.value > 0)
+    .sort((left, right) => right.value - left.value);
+
+  const holdingSegments = getAccountHoldings(accountId)
+    .map((holding, index) => ({
+      label: holding.name,
+      value: getHoldingValueInKrw(holding),
+      meta: `${holding.market} · ${holding.currency}`,
+      type: "stock",
+      color: colorScale[(index + cashSegments.length) % colorScale.length],
+      tag: holding.market === "해외주식" ? "해외" : "국내",
+    }))
+    .sort((left, right) => right.value - left.value);
+
+  return [...cashSegments, ...holdingSegments];
+}
+
 function getStockAllocationSegments() {
   const cashValue = getTotalCashValue();
   const holdings = portfolioData.holdings
@@ -520,6 +563,10 @@ function getStockAllocationSegments() {
 
 function getAllocationTitle() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return `${getAccountById(uiState.selectedAccountId).name} 자산 비율`;
+    }
+
     return "계좌별 현금 비율";
   }
 
@@ -544,6 +591,10 @@ function getAllocationTitle() {
 
 function getAllocationDescription() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return "선택한 계좌 안에서 원화, 외화 현금과 보유 주식 비율을 같이 보여줍니다.";
+    }
+
     return "계좌별에서는 각 계좌의 현금 금액 기준으로 퍼센트와 계좌 총액을 보여줍니다.";
   }
 
@@ -556,6 +607,10 @@ function getAllocationDescription() {
 
 function getDonutModeLabel() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return "계좌 내부";
+    }
+
     return "계좌별";
   }
 
@@ -580,6 +635,10 @@ function getDonutModeLabel() {
 
 function getDonutCenterMeta() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return `${getAccountById(uiState.selectedAccountId).name} 기준`;
+    }
+
     return "전체 현금 기준 계좌별";
   }
 
@@ -604,6 +663,10 @@ function getDonutCenterMeta() {
 
 function getSelectorTitle() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return `${getAccountById(uiState.selectedAccountId).name} 보기`;
+    }
+
     return "계좌별 현금 보기";
   }
 
@@ -616,6 +679,10 @@ function getSelectorTitle() {
 
 function getSelectorDescription() {
   if (uiState.mode === "accounts") {
+    if (uiState.selectedAccountId) {
+      return "같은 계좌를 다시 누르면 계좌별 현금 분포 보기로 돌아갑니다.";
+    }
+
     return "각 계좌의 현금 금액, 현금 비중, 계좌 총액을 같이 확인합니다.";
   }
 
@@ -638,6 +705,7 @@ function getAccountSelectionItems() {
         value: cashValue,
         ratio: totalCash ? (cashValue / totalCash) * 100 : 0,
         color: colorScale[portfolioData.accounts.indexOf(account) % colorScale.length],
+        active: account.id === uiState.selectedAccountId,
       };
     })
     .sort((left, right) => right.value - left.value);
@@ -703,7 +771,7 @@ function getOverallSelectorItems() {
 
 function renderAccountSelectorItem(item) {
   return `
-    <article class="selector-item selector-item-readonly">
+    <article class="selector-item ${item.active ? "active" : ""}" data-account-id="${item.id}">
       <div class="selector-left">
         <span class="selector-dot" style="background:${item.color}"></span>
         <div class="selector-label">
