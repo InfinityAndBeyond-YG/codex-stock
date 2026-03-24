@@ -528,6 +528,14 @@ function buildPriceScale(low, high) {
 }
 
 function getChartSeriesByRange(stock, range) {
+  if (range === "ALL") {
+    return {
+      values: buildRangeSeries(stock.price, 18, 0.95, stock.changePercent),
+      labels: buildYearLabels(15),
+      rangeLabel: "전체 흐름",
+    };
+  }
+
   if (range === "10Y") {
     return {
       values: buildRangeSeries(stock.price, 16, 0.72, stock.changePercent),
