@@ -1132,10 +1132,10 @@ button {
 }
 
 .exchange-rate-meta {
-  margin: 0 0 7px;
+  margin: 0 0 3px;
   color: var(--text-soft);
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 400;
   white-space: nowrap;
 }
 
