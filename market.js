@@ -528,6 +528,30 @@ function buildPriceScale(low, high) {
 }
 
 function getChartSeriesByRange(stock, range) {
+  if (range === "10Y") {
+    return {
+      values: buildRangeSeries(stock.price, 16, 0.72, stock.changePercent),
+      labels: buildYearLabels(10),
+      rangeLabel: "10년 흐름",
+    };
+  }
+
+  if (range === "5Y") {
+    return {
+      values: buildRangeSeries(stock.price, 14, 0.48, stock.changePercent),
+      labels: buildYearLabels(5),
+      rangeLabel: "5년 흐름",
+    };
+  }
+
+  if (range === "3Y") {
+    return {
+      values: buildRangeSeries(stock.price, 12, 0.32, stock.changePercent),
+      labels: buildYearLabels(3),
+      rangeLabel: "3년 흐름",
+    };
+  }
+
   if (range === "1W") {
     return {
       values: buildRangeSeries(stock.price, 5, 0.042, stock.changePercent),
@@ -569,6 +593,20 @@ function buildRangeSeries(latestPrice, count, spreadRatio, changePercent) {
     const trend = baseStart + (latestPrice - baseStart) * progress;
     return Math.max(1, trend + wave);
   }).map((value, index, values) => (index === values.length - 1 ? latestPrice : Number(value.toFixed(2))));
+}
+
+function buildYearLabels(yearSpan) {
+  const currentYear = new Date().getFullYear();
+  const startYear = currentYear - yearSpan;
+  const checkpoints = [0, 0.33, 0.66, 1]
+    .map((ratio) => startYear + Math.round(yearSpan * ratio))
+    .filter((year, index, years) => years.indexOf(year) === index);
+
+  if (checkpoints[checkpoints.length - 1] !== currentYear) {
+    checkpoints[checkpoints.length - 1] = currentYear;
+  }
+
+  return checkpoints.map((year) => `${year}`);
 }
 
 function formatClock(timeZone) {
