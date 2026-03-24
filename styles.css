@@ -535,6 +535,7 @@ button {
 .market-controls {
   display: grid;
   gap: 14px;
+  width: min(100%, 520px);
   margin-top: 16px;
 }
 
