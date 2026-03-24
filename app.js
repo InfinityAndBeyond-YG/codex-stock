@@ -163,6 +163,7 @@ function init() {
 function cacheDom() {
   [
     "avgCostValue",
+    "exchangeRateValue",
     "cashKrwValue",
     "cashKrwPercent",
     "cashCurrencyList",
@@ -251,6 +252,10 @@ function renderSummaryCard() {
 
   if (dom.avgCostValue) {
     dom.avgCostValue.textContent = formatDisplayCurrency(totalAsset);
+  }
+
+  if (dom.exchangeRateValue) {
+    dom.exchangeRateValue.textContent = getExchangeRateLabel();
   }
 
   if (dom.cashKrwValue) {
@@ -948,4 +953,9 @@ function formatCashCurrencyLabel(currency) {
   const code = `${currency || ""}`.toUpperCase();
   const currencyName = currencyNameMap[code] || currency;
   return `${code} ${currencyName}`;
+}
+
+function getExchangeRateLabel() {
+  const usdRate = portfolioData.exchangeRates.USD || 0;
+  return `현재 환율 $1 = ${formatCurrency(usdRate)}`;
 }
