@@ -48,3 +48,4 @@ python3 -m http.server 4173
 2. 계좌별 상세 흐름 표
 3. 스크린샷 업로드와 자동 입력
 automation test
+automation test
