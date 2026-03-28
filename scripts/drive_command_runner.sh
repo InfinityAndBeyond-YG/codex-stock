@@ -20,6 +20,7 @@ timestamp() {
 }
 
 echo "[$(timestamp)] LaunchAgent tick"
+echo "[$(timestamp)] HOME=$HOME"
 
 weekday="$(TZ=Asia/Seoul date +%u)"
 if (( weekday > 5 )); then
@@ -36,6 +37,16 @@ fi
 if [[ ! -f "$COMMAND_FILE" ]]; then
   echo "[$(timestamp)] Skip: command file not found"
   exit 0
+fi
+
+if [[ ! -x "$CODEX_BIN" ]]; then
+  echo "[$(timestamp)] Failure: Codex binary not executable at $CODEX_BIN"
+  exit 1
+fi
+
+if [[ ! -d "$REPO_DIR" ]]; then
+  echo "[$(timestamp)] Failure: repo directory not found at $REPO_DIR"
+  exit 1
 fi
 
 if ! grep -q '[^[:space:]]' "$COMMAND_FILE"; then

@@ -7,11 +7,12 @@
 
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/yeginkim/Desktop/stockflow/scripts/drive_command_runner.sh</string>
+      <string>/bin/zsh</string>
+      <string>/Users/yeginkim/.stockflow-automation/drive_command_runner.sh</string>
     </array>
 
     <key>WorkingDirectory</key>
-    <string>/Users/yeginkim/Desktop/stockflow</string>
+    <string>/Users/yeginkim/.stockflow-automation</string>
 
     <key>StartInterval</key>
     <integer>300</integer>
