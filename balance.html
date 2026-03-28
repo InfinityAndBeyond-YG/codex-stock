@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260328-30" />
+    <link rel="stylesheet" href="./styles.css?v=20260328-31" />
     <script defer src="./balance.js?v=20260328-03"></script>
   </head>
   <body>
@@ -48,33 +48,35 @@
               <strong id="balanceTotalAssetValue">-</strong>
               <p>전체 계좌 합산</p>
             </article>
-            <button
-              type="button"
-              class="quick-stat-card quick-stat-card-button"
-              id="accountPickerButton"
-              aria-expanded="false"
-              aria-controls="accountPickerPanel"
-            >
-              <span>계좌 수</span>
-              <div class="account-count-line">
-                <strong id="accountCountValue">-</strong>
-                <strong id="accountSelectedValue" class="account-count-selected">-</strong>
+            <div class="quick-stat-stack">
+              <button
+                type="button"
+                class="quick-stat-card quick-stat-card-button"
+                id="accountPickerButton"
+                aria-expanded="false"
+                aria-controls="accountPickerPanel"
+              >
+                <span>계좌 수</span>
+                <div class="account-count-line">
+                  <strong id="accountCountValue">-</strong>
+                  <strong id="accountSelectedValue" class="account-count-selected">-</strong>
+                </div>
+                <p id="accountCountMeta">아래에서 계좌를 선택하세요.</p>
+              </button>
+
+              <div id="accountPickerPanel" class="account-picker-panel" hidden>
+                <div class="account-picker-head">
+                  <strong>계좌 선택</strong>
+                  <span>아래에서 계좌를 고르면 종목 잔고만 바로 보여줍니다.</span>
+                </div>
+                <div id="accountPickerList" class="account-picker-list"></div>
               </div>
-              <p id="accountCountMeta">아래에서 계좌를 선택하세요.</p>
-            </button>
+            </div>
             <article class="quick-stat-card">
               <span>보유 종목</span>
               <strong id="holdingCountValue">-</strong>
               <p id="holdingCountMeta">-</p>
             </article>
-          </div>
-
-          <div id="accountPickerPanel" class="account-picker-panel" hidden>
-            <div class="account-picker-head">
-              <strong>계좌 선택</strong>
-              <span>아래에서 계좌를 고르면 종목 잔고만 바로 보여줍니다.</span>
-            </div>
-            <div id="accountPickerList" class="account-picker-list"></div>
           </div>
         </section>
 

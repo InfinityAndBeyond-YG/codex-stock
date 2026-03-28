@@ -276,6 +276,7 @@ button {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 20px;
+  overflow: visible;
 }
 
 .quick-stat-card,
@@ -297,6 +298,11 @@ button {
   text-align: left;
   cursor: pointer;
   font: inherit;
+}
+
+.quick-stat-stack {
+  position: relative;
+  min-width: 0;
 }
 
 .quick-stat-card span,
@@ -353,12 +359,17 @@ button {
 }
 
 .account-picker-panel {
-  margin-top: 14px;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
   padding: 14px;
-  width: min(100%, 360px);
+  width: 100%;
+  min-width: 0;
   border-radius: 24px;
   border: 1px solid var(--line-soft);
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  box-shadow: 0 18px 38px rgba(16, 39, 72, 0.12);
 }
 
 .account-picker-head {
