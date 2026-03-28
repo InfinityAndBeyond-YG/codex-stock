@@ -623,7 +623,7 @@ button {
 .market-controls {
   display: grid;
   gap: 14px;
-  width: min(100%, 430px);
+  width: min(100%, 470px);
   margin-top: 0;
   position: relative;
 }
