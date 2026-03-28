@@ -114,6 +114,7 @@ function cacheBalanceDom() {
     "balanceTotalAssetValue",
     "accountPickerButton",
     "accountCountValue",
+    "accountSelectedValue",
     "accountCountMeta",
     "holdingCountValue",
     "holdingCountMeta",
@@ -168,11 +169,13 @@ function renderBalanceStats() {
 
   balanceDom.balanceTotalAssetValue.textContent = formatBalanceKrw(totalAsset);
   balanceDom.accountCountValue.textContent = `${balancePortfolioData.accounts.length}개`;
-  balanceDom.accountCountMeta.textContent = selectedAccount
-    ? `${selectedAccount.name} 선택됨 · 총 자산 ${formatBalanceKrw(
-        getAccountAssetValue(selectedAccount.id)
-      )}`
-    : "아래에서 계좌를 선택하세요.";
+  if (balanceDom.accountSelectedValue) {
+    balanceDom.accountSelectedValue.textContent = selectedAccount
+      ? `${selectedAccount.name} ${formatBalanceKrw(getAccountAssetValue(selectedAccount.id))}`
+      : "-";
+    balanceDom.accountSelectedValue.hidden = !selectedAccount;
+  }
+  balanceDom.accountCountMeta.textContent = "아래에서 계좌를 선택하세요.";
   balanceDom.holdingCountValue.textContent = `${totalHoldingCount}개`;
   balanceDom.holdingCountMeta.textContent = `국내 ${domesticCount}개 · 해외 ${foreignCount}개`;
 }

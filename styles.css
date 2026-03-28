@@ -325,6 +325,22 @@ button {
   letter-spacing: -0.04em;
 }
 
+.account-count-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.account-count-line strong {
+  margin-top: 0;
+}
+
+.account-count-selected {
+  color: var(--blue) !important;
+}
+
 .quick-stat-card p,
 .account-summary-card p,
 .guide-card p,
