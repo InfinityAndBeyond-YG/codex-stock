@@ -1131,6 +1131,12 @@ button {
   margin-bottom: 0;
 }
 
+.exchange-rate-stack {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+
 .exchange-rate-meta {
   margin: 0 0 3px;
   color: var(--text-soft);
@@ -1138,6 +1144,23 @@ button {
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
+}
+
+.exchange-rate-stack .exchange-rate-meta {
+  margin-bottom: 0;
+}
+
+.exchange-rate-source {
+  color: rgba(58, 91, 135, 0.72);
+  font-size: 0.64rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.exchange-rate-source:hover {
+  color: var(--blue);
 }
 
 .summary-title-row {

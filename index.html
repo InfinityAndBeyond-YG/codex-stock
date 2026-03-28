@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-26" />
-    <script defer src="./app.js?v=20260324-15"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260328-27" />
+    <script defer src="./app.js?v=20260328-16"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -49,7 +49,17 @@
                 </div>
                 <div class="summary-value-row">
                   <strong id="avgCostValue" class="avg-value">-</strong>
-                  <p id="exchangeRateValue" class="exchange-rate-meta">-</p>
+                  <div class="exchange-rate-stack">
+                    <p id="exchangeRateValue" class="exchange-rate-meta">-</p>
+                    <a
+                      class="exchange-rate-source"
+                      href="https://www.exchangerate-api.com"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Rates By Exchange Rate API
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="summary-metric-block">

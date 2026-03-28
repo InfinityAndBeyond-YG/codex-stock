@@ -143,6 +143,9 @@ const currencyNameMap = {
   EUR: "유로",
 };
 
+const FX_API_URL = "https://open.er-api.com/v6/latest/USD";
+const FX_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+
 const dom = {};
 
 const uiState = {
@@ -152,12 +155,21 @@ const uiState = {
   displayCurrency: "KRW",
 };
 
+const exchangeRateState = {
+  lastFetchedAt: null,
+  providerUpdatedAt: null,
+  status: "fallback",
+};
+
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
   cacheDom();
   bindEvents();
   render();
+  refreshExchangeRates();
+  window.setInterval(refreshExchangeRates, FX_REFRESH_INTERVAL_MS);
+  document.addEventListener("visibilitychange", handleExchangeRateVisibilityRefresh);
 }
 
 function cacheDom() {
@@ -251,6 +263,65 @@ function renderModeChips() {
   });
 }
 
+function handleExchangeRateVisibilityRefresh() {
+  if (document.visibilityState !== "visible") {
+    return;
+  }
+
+  if (
+    !exchangeRateState.lastFetchedAt ||
+    Date.now() - exchangeRateState.lastFetchedAt.getTime() >= FX_REFRESH_INTERVAL_MS
+  ) {
+    refreshExchangeRates();
+  }
+}
+
+async function refreshExchangeRates() {
+  try {
+    const response = await fetch(FX_API_URL, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const payload = await response.json();
+    const rates = payload?.rates || {};
+    if (payload?.result !== "success" || !Number.isFinite(Number(rates.KRW))) {
+      throw new Error("Unexpected exchange rate payload");
+    }
+
+    applyLiveExchangeRates(rates);
+    exchangeRateState.lastFetchedAt = new Date();
+    exchangeRateState.providerUpdatedAt = payload.time_last_update_unix
+      ? new Date(payload.time_last_update_unix * 1000)
+      : null;
+    exchangeRateState.status = "live";
+    render();
+  } catch (error) {
+    console.warn("Failed to refresh exchange rates.", error);
+  }
+}
+
+function applyLiveExchangeRates(usdBaseRates) {
+  const krwPerUsd = Number(usdBaseRates.KRW);
+  if (!Number.isFinite(krwPerUsd) || krwPerUsd <= 0) {
+    return;
+  }
+
+  Object.keys(portfolioData.exchangeRates).forEach((currency) => {
+    if (currency === "KRW") {
+      portfolioData.exchangeRates.KRW = 1;
+      return;
+    }
+
+    const usdQuotedRate = currency === "USD" ? 1 : Number(usdBaseRates[currency]);
+    if (!Number.isFinite(usdQuotedRate) || usdQuotedRate <= 0) {
+      return;
+    }
+
+    portfolioData.exchangeRates[currency] = krwPerUsd / usdQuotedRate;
+  });
+}
+
 function renderSummaryCard() {
   const totalAsset = getCurrentScopeTotalAssetValue();
   const cashAsset = getCurrentScopeCashValue();
@@ -262,6 +333,7 @@ function renderSummaryCard() {
 
   if (dom.exchangeRateValue) {
     dom.exchangeRateValue.textContent = getExchangeRateLabel();
+    dom.exchangeRateValue.title = getExchangeRateTooltip();
   }
 
   if (dom.cashKrwValue) {
@@ -1004,4 +1076,14 @@ function formatCashCurrencyLabel(currency) {
 function getExchangeRateLabel() {
   const usdRate = portfolioData.exchangeRates.USD || 0;
   return `현재 환율 ${formatCurrency(usdRate)}`;
+}
+
+function getExchangeRateTooltip() {
+  if (!exchangeRateState.providerUpdatedAt) {
+    return "기본 환율 값을 표시 중입니다.";
+  }
+
+  return `마지막 환율 갱신 ${exchangeRateState.providerUpdatedAt.toLocaleString("ko-KR", {
+    timeZone: "Asia/Seoul",
+  })}`;
 }
