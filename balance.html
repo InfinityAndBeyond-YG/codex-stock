@@ -14,7 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-26" />
+    <link rel="stylesheet" href="./styles.css?v=20260328-28" />
+    <script defer src="./balance.js?v=20260328-01"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -44,19 +45,33 @@
           <div class="quick-stats">
             <article class="quick-stat-card">
               <span>총 평가자산</span>
-              <strong>₩26,713,034</strong>
+              <strong id="balanceTotalAssetValue">-</strong>
               <p>전체 계좌 합산</p>
             </article>
-            <article class="quick-stat-card">
+            <button
+              type="button"
+              class="quick-stat-card quick-stat-card-button"
+              id="accountPickerButton"
+              aria-expanded="false"
+              aria-controls="accountPickerPanel"
+            >
               <span>계좌 수</span>
-              <strong>2개</strong>
-              <p>하나 메인 · KB 서브</p>
-            </article>
+              <strong id="accountCountValue">-</strong>
+              <p id="accountCountMeta">아래에서 계좌를 선택하세요.</p>
+            </button>
             <article class="quick-stat-card">
               <span>보유 종목</span>
-              <strong>6개</strong>
-              <p>국내 3개 · 해외 3개</p>
+              <strong id="holdingCountValue">-</strong>
+              <p id="holdingCountMeta">-</p>
             </article>
+          </div>
+
+          <div id="accountPickerPanel" class="account-picker-panel" hidden>
+            <div class="account-picker-head">
+              <strong>계좌 선택</strong>
+              <span>아래에서 계좌를 고르면 종목 잔고만 바로 보여줍니다.</span>
+            </div>
+            <div id="accountPickerList" class="account-picker-list"></div>
           </div>
         </section>
 
@@ -65,85 +80,24 @@
             <div class="panel-head">
               <div>
                 <p class="section-kicker">Account Summary</p>
-                <h2>계좌별 잔고</h2>
+                <h2 id="balanceSectionTitle">계좌별 잔고</h2>
               </div>
             </div>
 
-            <div class="account-summary-grid">
-              <article class="account-summary-card">
-                <span>하나 메인계좌</span>
-                <strong>₩13,925,418</strong>
-                <p>현금 ₩3,920,600 · 종목 3개</p>
-              </article>
-              <article class="account-summary-card">
-                <span>KB 서브계좌</span>
-                <strong>₩12,787,616</strong>
-                <p>현금 ₩1,957,400 · 종목 3개</p>
-              </article>
-            </div>
+            <p id="balanceSectionMeta" class="section-caption balance-section-meta">-</p>
 
             <div class="table-wrap">
               <table class="stock-table">
                 <thead>
                   <tr>
                     <th>종목</th>
-                    <th>계좌</th>
                     <th>보유수량</th>
                     <th>평단</th>
                     <th>현재가</th>
                     <th>평가금액</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>삼성전자</td>
-                    <td>하나</td>
-                    <td>52주</td>
-                    <td>₩71,200</td>
-                    <td>₩74,800</td>
-                    <td>₩3,889,600</td>
-                  </tr>
-                  <tr>
-                    <td>SK하이닉스</td>
-                    <td>하나</td>
-                    <td>16주</td>
-                    <td>₩164,500</td>
-                    <td>₩181,000</td>
-                    <td>₩2,896,000</td>
-                  </tr>
-                  <tr>
-                    <td>NVIDIA</td>
-                    <td>하나</td>
-                    <td>11주</td>
-                    <td>$118.2</td>
-                    <td>$129.4</td>
-                    <td>₩2,092,398</td>
-                  </tr>
-                  <tr>
-                    <td>NAVER</td>
-                    <td>KB</td>
-                    <td>22주</td>
-                    <td>₩198,000</td>
-                    <td>₩213,500</td>
-                    <td>₩4,697,000</td>
-                  </tr>
-                  <tr>
-                    <td>Apple</td>
-                    <td>KB</td>
-                    <td>14주</td>
-                    <td>$201.5</td>
-                    <td>$214.2</td>
-                    <td>₩4,408,404</td>
-                  </tr>
-                  <tr>
-                    <td>Tesla</td>
-                    <td>KB</td>
-                    <td>8주</td>
-                    <td>$228.6</td>
-                    <td>$242.5</td>
-                    <td>₩2,851,800</td>
-                  </tr>
-                </tbody>
+                <tbody id="balanceHoldingsBody"></tbody>
               </table>
             </div>
           </article>

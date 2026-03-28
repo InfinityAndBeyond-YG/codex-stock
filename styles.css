@@ -292,6 +292,13 @@ button {
   padding: 16px 18px;
 }
 
+.quick-stat-card-button {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
 .quick-stat-card span,
 .account-summary-card span,
 .guide-card span,
@@ -327,6 +334,90 @@ button {
   color: var(--text-soft);
   font-size: 0.74rem;
   line-height: 1.5;
+}
+
+.account-picker-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 24px;
+  border: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
+.account-picker-head {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.account-picker-head strong {
+  color: var(--text-strong);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: -0.04em;
+}
+
+.account-picker-head span {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+}
+
+.account-picker-list {
+  display: grid;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.account-picker-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(21, 42, 76, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.account-picker-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(12, 114, 222, 0.18);
+}
+
+.account-picker-item.active {
+  border-color: var(--button-active-border);
+  background: rgba(12, 114, 222, 0.08);
+}
+
+.account-picker-copy,
+.account-picker-values {
+  display: grid;
+  gap: 4px;
+}
+
+.account-picker-copy strong,
+.account-picker-values strong {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: -0.03em;
+}
+
+.account-picker-copy span,
+.account-picker-values span {
+  color: var(--text-soft);
+  font-size: 0.72rem;
+}
+
+.account-picker-values {
+  justify-items: end;
 }
 
 .page-grid-two {
@@ -410,6 +501,10 @@ button {
   padding: 16px 18px;
 }
 
+.balance-section-meta {
+  margin: -4px 0 12px;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -437,6 +532,11 @@ button {
 .stock-table td {
   color: var(--text-body);
   font-size: 0.78rem;
+}
+
+.stock-table-empty {
+  color: var(--text-soft);
+  text-align: center;
 }
 
 .upload-dropzone {
