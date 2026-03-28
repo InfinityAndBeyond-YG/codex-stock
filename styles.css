@@ -339,6 +339,7 @@ button {
 .account-picker-panel {
   margin-top: 14px;
   padding: 14px;
+  width: min(100%, 360px);
   border-radius: 24px;
   border: 1px solid var(--line-soft);
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
@@ -372,9 +373,7 @@ button {
 
 .account-picker-item {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
   gap: 12px;
   padding: 14px 16px;
   border: 1px solid rgba(21, 42, 76, 0.08);
@@ -417,7 +416,21 @@ button {
 }
 
 .account-picker-values {
-  justify-items: end;
+  justify-items: start;
+}
+
+.balance-section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.balance-section-asset {
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .page-grid-two {
