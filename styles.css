@@ -856,11 +856,17 @@ button {
 .average-down-card {
   display: grid;
   gap: 10px;
-  padding: 10px 16px;
+  padding: 0 16px;
+}
+
+.average-down-accordion:not([open]) {
+  align-content: center;
 }
 
 .average-down-accordion[open] {
   gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .average-down-toggle {
@@ -869,8 +875,8 @@ button {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  padding: 0;
-  min-height: 44px;
+  padding: 14px 0;
+  min-height: 72px;
   border: 0;
   background: transparent;
   color: inherit;
