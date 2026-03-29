@@ -32,6 +32,7 @@ const balancePortfolioData = {
       shares: 52,
       avgCost: 71200,
       currentPrice: 74800,
+      fiveYearTotalReturn: 1.7959,
     },
     {
       id: "skhynix-hana",
@@ -41,6 +42,7 @@ const balancePortfolioData = {
       shares: 16,
       avgCost: 164500,
       currentPrice: 181000,
+      fiveYearTotalReturn: 6.7404,
     },
     {
       id: "nvidia-hana",
@@ -50,6 +52,7 @@ const balancePortfolioData = {
       shares: 11,
       avgCost: 118.2,
       currentPrice: 129.4,
+      fiveYearTotalReturn: 13.2153,
     },
     {
       id: "naver-kb",
@@ -59,6 +62,7 @@ const balancePortfolioData = {
       shares: 22,
       avgCost: 198000,
       currentPrice: 213500,
+      fiveYearTotalReturn: 0.3026,
     },
     {
       id: "apple-kb",
@@ -68,6 +72,7 @@ const balancePortfolioData = {
       shares: 14,
       avgCost: 201.5,
       currentPrice: 214.2,
+      fiveYearTotalReturn: 1.0922,
     },
     {
       id: "tesla-kb",
@@ -77,6 +82,7 @@ const balancePortfolioData = {
       shares: 8,
       avgCost: 228.6,
       currentPrice: 242.5,
+      fiveYearTotalReturn: 0.8041,
     },
   ],
 };
@@ -549,35 +555,17 @@ function formatHoldingReturnRate(holding) {
   return `${sign}${rate.toFixed(1)}%`;
 }
 
-function clampNumber(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
 function formatSignedPercent(value) {
   const sign = value > 0 ? "+" : "";
   return `${sign}${(value * 100).toFixed(1)}%`;
 }
 
-function getHoldingEstimatedGrowthRate(holding, visibleHoldings) {
-  const visibleTotalValue = visibleHoldings.reduce(
-    (sum, item) => sum + getHoldingValueInKrw(item),
-    0
-  );
-  const currentValue = getHoldingValueInKrw(holding);
-  const weight = visibleTotalValue > 0 ? currentValue / visibleTotalValue : 0;
-  const returnRate =
-    holding.avgCost > 0 ? (holding.currentPrice - holding.avgCost) / holding.avgCost : 0;
+function getHoldingHistoricalGrowthRate(holding) {
+  if (typeof holding.fiveYearTotalReturn !== "number" || holding.fiveYearTotalReturn <= -1) {
+    return 0;
+  }
 
-  const marketBaseline = holding.currency === "USD" ? 0.11 : 0.075;
-  const momentumAdjustment = clampNumber(returnRate * 0.24, -0.035, 0.045);
-  const balanceAdjustment = weight < 0.12 ? 0.008 : weight > 0.28 ? -0.006 : 0;
-  const concentrationPenalty = clampNumber((weight - 0.25) * 0.18, 0, 0.024);
-
-  return clampNumber(
-    marketBaseline + momentumAdjustment + balanceAdjustment - concentrationPenalty,
-    0.03,
-    0.24
-  );
+  return Math.pow(1 + holding.fiveYearTotalReturn, 1 / 5) - 1;
 }
 
 function renderAverageDownCalculator() {
@@ -651,7 +639,7 @@ function renderGrowthCalculator() {
   }
 
   const projections = visibleHoldings.map((holding) => {
-    const estimatedRate = getHoldingEstimatedGrowthRate(holding, visibleHoldings);
+    const estimatedRate = getHoldingHistoricalGrowthRate(holding);
     const futurePrice = holding.currentPrice * (1 + estimatedRate) ** years;
     const futureValue = convertBalanceToKrw(futurePrice * holding.shares, holding.currency);
     const currentValue = getHoldingValueInKrw(holding);
