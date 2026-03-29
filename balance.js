@@ -106,7 +106,7 @@ const balanceState = {
   holdingFilterOpen: false,
   compoundPrincipalTouched: false,
   growthMode: "historical",
-  tableScope: "account",
+  tableScope: "all",
   holdingFilter: "all",
 };
 
