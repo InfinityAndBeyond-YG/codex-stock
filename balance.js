@@ -140,6 +140,7 @@ function cacheBalanceDom() {
     "balanceSectionAsset",
     "balanceSectionMeta",
     "balanceHoldingsBody",
+    "averageDownCard",
     "averageCurrentShares",
     "averageCurrentCost",
     "averageBuyPrice",
@@ -227,6 +228,12 @@ function bindBalanceEvents() {
     balanceDom.averageBuyShares,
   ].forEach((input) => {
     input?.addEventListener("input", renderAverageDownCalculator);
+  });
+
+  balanceDom.averageDownCard?.addEventListener("toggle", () => {
+    if (!balanceDom.averageDownCard.open) {
+      clearAverageDownCalculator();
+    }
   });
 
   balanceDom.compoundPrincipal?.addEventListener("input", () => {
@@ -628,6 +635,27 @@ function renderAverageDownCalculator() {
 
   balanceDom.averageNewCost.textContent = formatCalculatorNumber(nextAverageCost);
   balanceDom.averageTotalShares.textContent = `${formatCalculatorNumber(totalShares)}주`;
+}
+
+function clearAverageDownCalculator() {
+  [
+    balanceDom.averageCurrentShares,
+    balanceDom.averageCurrentCost,
+    balanceDom.averageBuyPrice,
+    balanceDom.averageBuyShares,
+  ].forEach((input) => {
+    if (input) {
+      input.value = "";
+    }
+  });
+
+  if (balanceDom.averageNewCost) {
+    balanceDom.averageNewCost.textContent = "-";
+  }
+
+  if (balanceDom.averageTotalShares) {
+    balanceDom.averageTotalShares.textContent = "-";
+  }
 }
 
 function formatCalculatorNumber(value) {
