@@ -119,6 +119,13 @@ button {
   transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
 }
 
+.header-action-button.home-button {
+  width: 42px;
+  min-width: 42px;
+  padding: 10px 0;
+  font-size: 0.92rem;
+}
+
 .header-action-button:hover {
   transform: translateY(-1px);
   border-color: rgba(12, 114, 222, 0.2);
@@ -2109,6 +2116,10 @@ button {
 
   .header-action-button {
     flex: 1 1 calc(50% - 8px);
+  }
+
+  .header-action-button.home-button {
+    flex: 0 0 42px;
   }
 
   .inline-actions {
