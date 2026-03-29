@@ -6,7 +6,7 @@
     <title>내 주식 올리기 | Stock Flow</title>
     <meta
       name="description"
-      content="증권사 스크린샷과 거래내역을 올리는 Stock Flow 페이지"
+      content="거래 원장을 입력하고 거래 분석 탭으로 연동하는 Stock Flow 페이지"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +14,9 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-26" />
+    <link rel="stylesheet" href="./styles.css?v=20260329-09" />
+    <script defer src="./trade-ledger.js?v=20260329-01"></script>
+    <script defer src="./upload.js?v=20260329-01"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -45,24 +47,24 @@
           <p class="section-kicker">Upload Page</p>
           <h1>내 주식 올리기</h1>
           <p class="hero-copy">
-            증권사 잔고 화면이나 거래내역 스크린샷을 업로드하는 전용 페이지입니다.
+            증권사 거래내역을 모아 원장으로 저장하고, 거래 분석 탭에서 바로 집계할 수 있는 입력 페이지입니다.
           </p>
 
-          <div class="quick-stats">
+          <div class="quick-stats upload-quick-stats">
             <article class="quick-stat-card">
-              <span>지원 대상</span>
-              <strong>잔고 · 체결</strong>
-              <p>스크린샷, PDF, 이미지</p>
+              <span>전체 거래 원장</span>
+              <strong id="uploadTradeCount">-</strong>
+              <p id="uploadTradeCountMeta">-</p>
             </article>
             <article class="quick-stat-card">
-              <span>자동 인식</span>
-              <strong>평단 · 수량</strong>
-              <p>OCR 추출 후 자동 반영</p>
+              <span>매수 · 매도 비중</span>
+              <strong id="uploadTradeMix">-</strong>
+              <p>원장 기준 거래 구분</p>
             </article>
             <article class="quick-stat-card">
-              <span>업로드 방식</span>
-              <strong>드래그 앤 드롭</strong>
-              <p>모바일 사진 업로드 대응</p>
+              <span>최근 거래일</span>
+              <strong id="uploadLastTradeDate">-</strong>
+              <p>거래 분석 탭과 즉시 연동</p>
             </article>
           </div>
         </section>
@@ -71,37 +73,88 @@
           <article class="panel page-panel">
             <div class="panel-head">
               <div>
-                <p class="section-kicker">Upload Zone</p>
-                <h2>스크린샷 업로드</h2>
+                <p class="section-kicker">Trade Inbox</p>
+                <h2>거래 원장 올리기</h2>
               </div>
-              <p class="section-caption">기능 연결 전 단계라 화면 구조만 먼저 잡아둔 상태입니다.</p>
+              <p class="section-caption">OCR 연결 전이라 수동으로 거래를 쌓아도 거래 분석 탭에서 바로 읽습니다.</p>
             </div>
 
             <div class="upload-dropzone">
               <span class="upload-badge">OCR</span>
-              <strong>여기에 증권사 화면을 올리면 됩니다</strong>
-              <p>PNG, JPG, PDF를 드래그하거나 모바일에서 사진을 선택하는 버튼이 들어갈 자리입니다.</p>
-              <div class="inline-actions">
-                <button type="button" class="header-action-button">파일 선택</button>
-                <button type="button" class="header-action-button ghost-button">샘플 보기</button>
-              </div>
+              <strong>스크린샷 업로드는 연결 전, 거래 원장은 바로 저장됩니다</strong>
+              <p>증권사 체결내역 OCR을 붙이기 전 단계라 지금은 아래 수동 입력으로 거래를 저장하고 거래 분석 탭에서 합산 흐름을 바로 볼 수 있습니다.</p>
             </div>
 
-            <div class="guide-grid">
+            <section class="ledger-entry-card">
+              <div class="panel-head panel-head-tight">
+                <div>
+                  <p class="section-kicker">Manual Entry</p>
+                  <h2>거래 원장 추가</h2>
+                </div>
+                <p class="section-caption">저장하면 거래 분석 탭에서 연도·분기 손익에 즉시 반영됩니다.</p>
+              </div>
+
+              <form id="tradeEntryForm" class="trade-form">
+                <div class="trade-form-grid">
+                  <label class="trade-field">
+                    <span>거래일</span>
+                    <input id="tradeDateInput" type="date" required />
+                  </label>
+                  <label class="trade-field">
+                    <span>계좌</span>
+                    <select id="tradeAccountInput" required></select>
+                  </label>
+                  <label class="trade-field">
+                    <span>종목</span>
+                    <select id="tradeStockInput" required></select>
+                  </label>
+                  <label class="trade-field">
+                    <span>구분</span>
+                    <select id="tradeTypeInput" required>
+                      <option value="buy">매수</option>
+                      <option value="sell">매도</option>
+                    </select>
+                  </label>
+                  <label class="trade-field">
+                    <span>수량</span>
+                    <input id="tradeQuantityInput" type="number" min="1" step="1" placeholder="10" required />
+                  </label>
+                  <label class="trade-field">
+                    <span>체결가</span>
+                    <input id="tradePriceInput" type="number" min="0" step="0.1" placeholder="15000" required />
+                  </label>
+                  <label class="trade-field">
+                    <span>수수료</span>
+                    <input id="tradeFeeInput" type="number" min="0" step="0.1" placeholder="0" />
+                  </label>
+                  <label class="trade-field">
+                    <span>세금</span>
+                    <input id="tradeTaxInput" type="number" min="0" step="0.1" placeholder="0" />
+                  </label>
+                </div>
+
+                <div class="trade-form-actions">
+                  <button type="submit" class="header-action-button">거래 추가</button>
+                  <p id="tradeFormFeedback" class="trade-form-feedback" hidden></p>
+                </div>
+              </form>
+            </section>
+
+            <div class="guide-grid upload-guide-grid">
               <article class="guide-card">
                 <span>01</span>
-                <strong>잔고 화면 업로드</strong>
-                <p>증권사 앱 잔고 화면을 그대로 올리면 계좌와 종목 후보를 인식합니다.</p>
+                <strong>거래 원장 저장</strong>
+                <p>매수, 매도, 수수료, 세금을 거래 단위로 저장해 거래 분석 페이지에서 손익 계산의 기준으로 씁니다.</p>
               </article>
               <article class="guide-card">
                 <span>02</span>
-                <strong>평단과 수량 분석</strong>
-                <p>보유 수량, 평균단가, 통화를 읽어서 자동 반영 대상 목록을 만듭니다.</p>
+                <strong>평균단가 기준 실현손익</strong>
+                <p>지금 구조는 평균단가 방식으로 매도 손익을 계산해서 연도별, 분기별 실현손익으로 다시 묶습니다.</p>
               </article>
               <article class="guide-card">
                 <span>03</span>
-                <strong>거래내역 반영</strong>
-                <p>매수, 매도, 부분체결 같은 거래 흐름도 같이 붙일 수 있게 확장 가능합니다.</p>
+                <strong>향후 OCR 연결 준비</strong>
+                <p>나중에 스크린샷 OCR을 붙이면 이 거래 원장으로 바로 들어오도록 확장할 수 있게 구조를 먼저 맞춰둡니다.</p>
               </article>
             </div>
           </article>
@@ -109,23 +162,17 @@
           <article class="panel side-panel">
             <div class="panel-head panel-head-tight">
               <div>
-                <p class="section-kicker">Preview</p>
-                <h2>인식 예정 항목</h2>
+                <p class="section-kicker">Ledger Preview</p>
+                <h2>저장된 거래 원장</h2>
               </div>
             </div>
 
-            <div class="side-list">
+            <div id="uploadTransactionList" class="transaction-list"></div>
+
+            <div class="side-list upload-side-note">
               <article class="side-list-item">
-                <strong>계좌명</strong>
-                <p>하나 메인계좌, KB 서브계좌처럼 계좌별 묶음으로 분류합니다.</p>
-              </article>
-              <article class="side-list-item">
-                <strong>종목과 보유수량</strong>
-                <p>삼성전자 52주, NVIDIA 11주 같은 텍스트를 자동 추출합니다.</p>
-              </article>
-              <article class="side-list-item">
-                <strong>평균단가와 통화</strong>
-                <p>KRW, USD 기준 가격을 나눠서 포트폴리오에 반영하는 흐름을 준비했습니다.</p>
+                <strong>거래 분석 연동</strong>
+                <p>여기에 쌓인 거래는 거래 분석 탭에서 최근 1년 손익, 분기별 실현손익, 종목별/계좌별 손익으로 자동 집계됩니다.</p>
               </article>
             </div>
           </article>
