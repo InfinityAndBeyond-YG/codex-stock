@@ -855,11 +855,11 @@ button {
 
 .average-down-card {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .average-down-accordion[open] {
-  gap: 14px;
+  gap: 10px;
 }
 
 .average-down-toggle {
@@ -867,7 +867,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -883,7 +883,7 @@ button {
 
 .average-down-head {
   display: grid;
-  gap: 6px;
+  gap: 3px;
 }
 
 .average-down-head strong {
@@ -898,12 +898,12 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
   background: rgba(12, 114, 222, 0.08);
   color: var(--blue);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
   transition: transform 180ms ease, background 180ms ease, color 180ms ease;
