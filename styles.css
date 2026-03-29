@@ -856,8 +856,8 @@ button {
 .average-down-card {
   display: grid;
   gap: 10px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .average-down-accordion[open] {
@@ -870,8 +870,8 @@ button {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  padding: 1px 0;
-  min-height: 42px;
+  padding: 2px 0;
+  min-height: 46px;
   border: 0;
   background: transparent;
   color: inherit;
@@ -888,17 +888,18 @@ button {
   display: grid;
   align-content: center;
   gap: 2px;
-  min-height: 42px;
+  min-height: auto;
+  align-self: center;
 }
 
 .average-down-head strong {
   margin-top: 0;
-  line-height: 1.15;
+  line-height: 1.05;
 }
 
 .average-down-head p {
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.2;
 }
 
 .average-down-chevron {
