@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-10" />
-    <script defer src="./balance.js?v=20260329-10"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-11" />
+    <script defer src="./balance.js?v=20260329-11"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -246,11 +246,7 @@
                 </summary>
 
                 <div class="compound-panel">
-                  <div class="compound-grid">
-                    <label class="compound-field">
-                      <span>종목</span>
-                      <select id="growthHolding"></select>
-                    </label>
+                  <div class="compound-grid growth-grid">
                     <label class="compound-field">
                       <span>기간</span>
                       <input id="growthYears" type="number" min="1" step="1" value="5" />
@@ -263,14 +259,16 @@
 
                   <div class="compound-results">
                     <article class="compound-result">
-                      <span>예상 단가</span>
-                      <strong id="growthFuturePrice">-</strong>
-                    </article>
-                    <article class="compound-result">
-                      <span>예상 평가금액</span>
+                      <span>총 예상 평가금액</span>
                       <strong id="growthFutureValue">-</strong>
                     </article>
+                    <article class="compound-result">
+                      <span>총 예상 증가액</span>
+                      <strong id="growthFutureGain">-</strong>
+                    </article>
                   </div>
+
+                  <div id="growthHoldingsList" class="growth-list"></div>
 
                   <p class="compound-note">현재가 기준 연복리 성장률을 적용한 단순 계산입니다.</p>
                 </div>

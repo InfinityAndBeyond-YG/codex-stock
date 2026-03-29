@@ -99,7 +99,6 @@ const balanceState = {
   pickerOpen: false,
   holdingFilterOpen: false,
   compoundPrincipalTouched: false,
-  growthHoldingId: null,
   tableScope: "account",
   holdingFilter: "all",
 };
@@ -145,11 +144,11 @@ function cacheBalanceDom() {
     "compoundRate",
     "compoundFutureValue",
     "compoundGainValue",
-    "growthHolding",
     "growthYears",
     "growthRate",
-    "growthFuturePrice",
     "growthFutureValue",
+    "growthFutureGain",
+    "growthHoldingsList",
   ].forEach((id) => {
     balanceDom[id] = document.getElementById(id);
   });
@@ -229,11 +228,6 @@ function bindBalanceEvents() {
 
   [balanceDom.compoundYears, balanceDom.compoundRate].forEach((input) => {
     input?.addEventListener("input", renderCompoundCalculator);
-  });
-
-  balanceDom.growthHolding?.addEventListener("change", () => {
-    balanceState.growthHoldingId = balanceDom.growthHolding.value;
-    renderGrowthCalculator();
   });
 
   [balanceDom.growthYears, balanceDom.growthRate].forEach((input) => {
@@ -503,10 +497,6 @@ function getAccountHoldings(accountId) {
   return balancePortfolioData.holdings.filter((holding) => holding.accountId === accountId);
 }
 
-function getHoldingById(holdingId) {
-  return balancePortfolioData.holdings.find((holding) => holding.id === holdingId) || null;
-}
-
 function getAccountShortName(accountId) {
   return (
     balancePortfolioData.accounts.find((account) => account.id === accountId)?.shortName || ""
@@ -614,45 +604,62 @@ function renderCompoundCalculator() {
 }
 
 function renderGrowthCalculator() {
-  if (!balanceDom.growthHolding || !balanceDom.growthFuturePrice || !balanceDom.growthFutureValue) {
+  if (!balanceDom.growthFutureValue || !balanceDom.growthFutureGain || !balanceDom.growthHoldingsList) {
     return;
   }
 
   const visibleHoldings = getVisibleHoldings();
-  const selectedHoldingId = visibleHoldings.some((holding) => holding.id === balanceState.growthHoldingId)
-    ? balanceState.growthHoldingId
-    : visibleHoldings[0]?.id || null;
-
-  balanceState.growthHoldingId = selectedHoldingId;
-
-  balanceDom.growthHolding.innerHTML = visibleHoldings.length
-    ? visibleHoldings
-        .map(
-          (holding) => `
-            <option value="${holding.id}">
-              ${holding.name} · ${getAccountShortName(holding.accountId)}
-            </option>
-          `
-        )
-        .join("")
-    : '<option value="">종목 없음</option>';
-
-  balanceDom.growthHolding.value = selectedHoldingId || "";
-  balanceDom.growthHolding.disabled = !visibleHoldings.length;
-
   const years = Number(balanceDom.growthYears?.value || 0);
   const annualRate = Number(balanceDom.growthRate?.value || 0) / 100;
-  const selectedHolding = selectedHoldingId ? getHoldingById(selectedHoldingId) : null;
 
-  if (!selectedHolding || years <= 0 || annualRate < 0) {
-    balanceDom.growthFuturePrice.textContent = "-";
+  if (!visibleHoldings.length || years <= 0 || annualRate < 0) {
     balanceDom.growthFutureValue.textContent = "-";
+    balanceDom.growthFutureGain.textContent = "-";
+    balanceDom.growthHoldingsList.innerHTML = `
+      <article class="growth-item growth-item-empty">
+        <strong>표시할 종목이 없습니다.</strong>
+      </article>
+    `;
     return;
   }
 
-  const futurePrice = selectedHolding.currentPrice * (1 + annualRate) ** years;
-  const futureValue = convertBalanceToKrw(futurePrice * selectedHolding.shares, selectedHolding.currency);
+  const projections = visibleHoldings.map((holding) => {
+    const futurePrice = holding.currentPrice * (1 + annualRate) ** years;
+    const futureValue = convertBalanceToKrw(futurePrice * holding.shares, holding.currency);
+    const currentValue = getHoldingValueInKrw(holding);
+    return {
+      ...holding,
+      futurePrice,
+      futureValue,
+      gainValue: futureValue - currentValue,
+    };
+  });
 
-  balanceDom.growthFuturePrice.textContent = formatHoldingPrice(futurePrice, selectedHolding.currency);
-  balanceDom.growthFutureValue.textContent = formatBalanceKrw(futureValue);
+  const totalFutureValue = projections.reduce((sum, holding) => sum + holding.futureValue, 0);
+  const totalGainValue = projections.reduce((sum, holding) => sum + holding.gainValue, 0);
+
+  balanceDom.growthFutureValue.textContent = formatBalanceKrw(totalFutureValue);
+  balanceDom.growthFutureGain.textContent = formatBalanceKrw(totalGainValue);
+  balanceDom.growthHoldingsList.innerHTML = projections
+    .map(
+      (holding) => `
+        <article class="growth-item">
+          <div class="growth-item-head">
+            <strong class="growth-item-title">${holding.name}</strong>
+            <span class="growth-item-account">${getAccountShortName(holding.accountId)}</span>
+          </div>
+          <div class="growth-item-values">
+            <div class="growth-item-value">
+              <span>예상 단가</span>
+              <strong>${formatHoldingPrice(holding.futurePrice, holding.currency)}</strong>
+            </div>
+            <div class="growth-item-value">
+              <span>예상 평가금액</span>
+              <strong>${formatBalanceKrw(holding.futureValue)}</strong>
+            </div>
+          </div>
+        </article>
+      `
+    )
+    .join("");
 }
