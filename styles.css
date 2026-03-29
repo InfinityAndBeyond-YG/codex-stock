@@ -390,6 +390,12 @@ button {
   text-align: right;
 }
 
+#accountPickerButton > span,
+#accountPickerButton .account-count-selected,
+#accountPickerButton .account-count-subvalue {
+  color: var(--text-strong) !important;
+}
+
 .quick-stat-card p,
 .account-summary-card p,
 .guide-card p,
