@@ -192,6 +192,8 @@ button {
 .page-stack {
   display: grid;
   gap: 16px;
+  position: relative;
+  overflow: visible;
 }
 
 .panel {
@@ -211,6 +213,9 @@ button {
 
 .hero-panel {
   padding: 22px 20px;
+  position: relative;
+  z-index: 8;
+  overflow: visible;
 }
 
 .hero-panel h1 {
@@ -303,6 +308,7 @@ button {
 .quick-stat-stack {
   position: relative;
   min-width: 0;
+  z-index: 9;
 }
 
 .quick-stat-card span,
@@ -464,6 +470,8 @@ button {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.72fr);
   gap: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .page-panel,
