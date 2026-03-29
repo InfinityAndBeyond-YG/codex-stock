@@ -470,7 +470,7 @@ button {
 #accountPickerButton > span,
 #accountPickerButton .account-count-selected,
 #accountPickerButton .account-count-subvalue {
-  color: var(--text-strong) !important;
+  color: var(--text-soft) !important;
 }
 
 .quick-stat-card p,
