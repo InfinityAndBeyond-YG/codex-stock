@@ -306,6 +306,29 @@ button {
   overflow: visible;
 }
 
+.balance-quick-stats {
+  align-items: stretch;
+}
+
+.balance-quick-stats > .quick-stat-card,
+.balance-quick-stats > .quick-stat-stack {
+  align-self: stretch;
+}
+
+.balance-quick-stats > .quick-stat-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.balance-quick-stats > .quick-stat-card,
+.balance-quick-stats > .quick-stat-stack > .quick-stat-card {
+  min-height: 118px;
+}
+
+.balance-quick-stats > .quick-stat-stack > .quick-stat-card {
+  height: 100%;
+}
+
 .quick-stat-card,
 .account-summary-card,
 .quote-card,
