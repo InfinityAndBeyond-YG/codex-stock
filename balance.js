@@ -7,7 +7,7 @@ const balancePortfolioData = {
     {
       id: "hana",
       name: "하나 메인계좌",
-      shortName: "하나",
+      shortName: "하나 메인",
       cashBalances: [
         { currency: "KRW", amount: 2480000 },
         { currency: "USD", amount: 980 },
@@ -16,7 +16,7 @@ const balancePortfolioData = {
     {
       id: "kb",
       name: "KB 서브계좌",
-      shortName: "KB",
+      shortName: "KB 서브",
       cashBalances: [
         { currency: "KRW", amount: 1340000 },
         { currency: "USD", amount: 420 },
@@ -255,7 +255,7 @@ function renderBalancePicker() {
       const activeClass = selectedAccount?.id === account.id ? "active" : "";
       return `
         <button type="button" class="account-picker-item ${activeClass}" data-account-id="${account.id}">
-          <strong class="account-picker-name">${account.name}</strong>
+          <strong class="account-picker-name">${account.shortName}</strong>
           <strong class="account-picker-amount">${formatBalanceKrw(getAccountAssetValue(account.id))}</strong>
         </button>
       `;
