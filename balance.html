@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-09" />
-    <script defer src="./balance.js?v=20260329-09"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-10" />
+    <script defer src="./balance.js?v=20260329-10"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -236,10 +236,45 @@
                   <p class="compound-note">연복리 기준의 단순 계산이며, 세금과 수수료는 제외합니다.</p>
                 </div>
               </details>
-              <article class="side-list-item">
-                <strong>다음 단계</strong>
-                <p>실손익, 수익률, 종목 필터, 계좌 토글을 이 페이지에서 이어서 확장할 수 있습니다.</p>
-              </article>
+              <details class="side-list-item compound-card compound-accordion">
+                <summary class="compound-toggle">
+                  <div class="compound-head">
+                    <strong>성장률 계산기</strong>
+                    <p>종목별 성장률과 기간을 넣으면 몇 년 뒤 예상 단가를 계산합니다.</p>
+                  </div>
+                  <span class="compound-chevron" aria-hidden="true">+</span>
+                </summary>
+
+                <div class="compound-panel">
+                  <div class="compound-grid">
+                    <label class="compound-field">
+                      <span>종목</span>
+                      <select id="growthHolding"></select>
+                    </label>
+                    <label class="compound-field">
+                      <span>기간</span>
+                      <input id="growthYears" type="number" min="1" step="1" value="5" />
+                    </label>
+                    <label class="compound-field">
+                      <span>연 성장률</span>
+                      <input id="growthRate" type="number" min="0" step="1" value="10" />
+                    </label>
+                  </div>
+
+                  <div class="compound-results">
+                    <article class="compound-result">
+                      <span>예상 단가</span>
+                      <strong id="growthFuturePrice">-</strong>
+                    </article>
+                    <article class="compound-result">
+                      <span>예상 평가금액</span>
+                      <strong id="growthFutureValue">-</strong>
+                    </article>
+                  </div>
+
+                  <p class="compound-note">현재가 기준 연복리 성장률을 적용한 단순 계산입니다.</p>
+                </div>
+              </details>
             </div>
           </article>
         </section>
