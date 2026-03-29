@@ -198,6 +198,7 @@ function bindBalanceEvents() {
 
 function renderBalancePage() {
   renderBalanceStats();
+  renderBalanceQuickStatState();
   renderBalancePicker();
   renderHoldingFilterPanel();
   renderAccountHoldings();
@@ -236,6 +237,27 @@ function renderBalanceStats() {
       : balanceState.holdingFilter === "foreign"
         ? `미국주식 ${foreignCount}개`
         : `국내 ${domesticCount}개 · 해외 ${foreignCount}개`;
+}
+
+function renderBalanceQuickStatState() {
+  const totalAssetActive = balanceState.tableScope === "all" && balanceState.holdingFilter === "all";
+  const accountPickerActive = balanceState.tableScope === "account" || balanceState.pickerOpen;
+  const holdingFilterActive =
+    balanceState.holdingFilterOpen ||
+    (balanceState.tableScope === "all" && balanceState.holdingFilter !== "all");
+
+  toggleQuickStatState(balanceDom.totalAssetButton, totalAssetActive);
+  toggleQuickStatState(balanceDom.accountPickerButton, accountPickerActive);
+  toggleQuickStatState(balanceDom.holdingFilterButton, holdingFilterActive);
+}
+
+function toggleQuickStatState(element, active) {
+  if (!element) {
+    return;
+  }
+
+  element.classList.toggle("is-active", active);
+  element.setAttribute("aria-pressed", String(active));
 }
 
 function renderBalancePicker() {
