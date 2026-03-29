@@ -552,6 +552,37 @@ function formatHoldingReturnRate(holding) {
   return `${sign}${rate.toFixed(1)}%`;
 }
 
+function clampNumber(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function formatSignedPercent(value) {
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${(value * 100).toFixed(1)}%`;
+}
+
+function getHoldingEstimatedGrowthRate(holding, visibleHoldings, baseRate) {
+  const visibleTotalValue = visibleHoldings.reduce(
+    (sum, item) => sum + getHoldingValueInKrw(item),
+    0
+  );
+  const currentValue = getHoldingValueInKrw(holding);
+  const weight = visibleTotalValue > 0 ? currentValue / visibleTotalValue : 0;
+  const returnRate =
+    holding.avgCost > 0 ? (holding.currentPrice - holding.avgCost) / holding.avgCost : 0;
+
+  const marketAdjustment = holding.currency === "USD" ? 0.018 : 0.006;
+  const momentumAdjustment = clampNumber(returnRate * 0.24, -0.035, 0.045);
+  const balanceAdjustment = weight < 0.12 ? 0.008 : weight > 0.28 ? -0.006 : 0;
+  const concentrationPenalty = clampNumber((weight - 0.25) * 0.18, 0, 0.024);
+
+  return clampNumber(
+    baseRate + marketAdjustment + momentumAdjustment + balanceAdjustment - concentrationPenalty,
+    0.03,
+    0.24
+  );
+}
+
 function renderAverageDownCalculator() {
   if (!balanceDom.averageNewCost || !balanceDom.averageTotalShares) {
     return;
@@ -610,9 +641,9 @@ function renderGrowthCalculator() {
 
   const visibleHoldings = getVisibleHoldings();
   const years = Number(balanceDom.growthYears?.value || 0);
-  const annualRate = Number(balanceDom.growthRate?.value || 0) / 100;
+  const baseRate = Number(balanceDom.growthRate?.value || 0) / 100;
 
-  if (!visibleHoldings.length || years <= 0 || annualRate < 0) {
+  if (!visibleHoldings.length || years <= 0 || baseRate < 0) {
     balanceDom.growthFutureValue.textContent = "-";
     balanceDom.growthFutureGain.textContent = "-";
     balanceDom.growthHoldingsList.innerHTML = `
@@ -624,11 +655,13 @@ function renderGrowthCalculator() {
   }
 
   const projections = visibleHoldings.map((holding) => {
-    const futurePrice = holding.currentPrice * (1 + annualRate) ** years;
+    const estimatedRate = getHoldingEstimatedGrowthRate(holding, visibleHoldings, baseRate);
+    const futurePrice = holding.currentPrice * (1 + estimatedRate) ** years;
     const futureValue = convertBalanceToKrw(futurePrice * holding.shares, holding.currency);
     const currentValue = getHoldingValueInKrw(holding);
     return {
       ...holding,
+      estimatedRate,
       futurePrice,
       futureValue,
       gainValue: futureValue - currentValue,
@@ -645,8 +678,11 @@ function renderGrowthCalculator() {
       (holding) => `
         <article class="growth-item">
           <div class="growth-item-head">
-            <strong class="growth-item-title">${holding.name}</strong>
-            <span class="growth-item-account">${getAccountShortName(holding.accountId)}</span>
+            <div class="growth-item-title-wrap">
+              <strong class="growth-item-title">${holding.name}</strong>
+              <span class="growth-item-account">${getAccountShortName(holding.accountId)}</span>
+            </div>
+            <span class="growth-item-rate">${formatSignedPercent(holding.estimatedRate)}</span>
           </div>
           <div class="growth-item-values">
             <div class="growth-item-value">
