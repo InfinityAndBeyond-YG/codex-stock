@@ -98,6 +98,7 @@ const balanceState = {
   selectedAccountId: balancePortfolioData.accounts[0]?.id || null,
   pickerOpen: false,
   holdingFilterOpen: false,
+  compoundPrincipalTouched: false,
   tableScope: "account",
   holdingFilter: "all",
 };
@@ -138,6 +139,11 @@ function cacheBalanceDom() {
     "averageBuyShares",
     "averageNewCost",
     "averageTotalShares",
+    "compoundPrincipal",
+    "compoundYears",
+    "compoundRate",
+    "compoundFutureValue",
+    "compoundGainValue",
   ].forEach((id) => {
     balanceDom[id] = document.getElementById(id);
   });
@@ -209,6 +215,15 @@ function bindBalanceEvents() {
   ].forEach((input) => {
     input?.addEventListener("input", renderAverageDownCalculator);
   });
+
+  balanceDom.compoundPrincipal?.addEventListener("input", () => {
+    balanceState.compoundPrincipalTouched = true;
+    renderCompoundCalculator();
+  });
+
+  [balanceDom.compoundYears, balanceDom.compoundRate].forEach((input) => {
+    input?.addEventListener("change", renderCompoundCalculator);
+  });
 }
 
 function renderBalancePage() {
@@ -218,6 +233,7 @@ function renderBalancePage() {
   renderHoldingFilterPanel();
   renderAccountHoldings();
   renderAverageDownCalculator();
+  renderCompoundCalculator();
 }
 
 function renderBalanceStats() {
@@ -253,6 +269,10 @@ function renderBalanceStats() {
       : balanceState.holdingFilter === "foreign"
         ? `미국주식 ${foreignCount}개`
         : `국내 ${domesticCount}개 · 해외 ${foreignCount}개`;
+
+  if (balanceDom.compoundPrincipal && (!balanceState.compoundPrincipalTouched || !balanceDom.compoundPrincipal.value)) {
+    balanceDom.compoundPrincipal.value = String(Math.round(totalAsset));
+  }
 }
 
 function renderBalanceQuickStatState() {
@@ -543,4 +563,26 @@ function formatCalculatorNumber(value) {
   return new Intl.NumberFormat("ko-KR", {
     maximumFractionDigits: 2,
   }).format(value || 0);
+}
+
+function renderCompoundCalculator() {
+  if (!balanceDom.compoundFutureValue || !balanceDom.compoundGainValue) {
+    return;
+  }
+
+  const principal = Number(balanceDom.compoundPrincipal?.value || 0);
+  const years = Number(balanceDom.compoundYears?.value || 0);
+  const annualRate = Number(balanceDom.compoundRate?.value || 0) / 100;
+
+  if (principal <= 0 || years <= 0 || annualRate < 0) {
+    balanceDom.compoundFutureValue.textContent = "-";
+    balanceDom.compoundGainValue.textContent = "-";
+    return;
+  }
+
+  const futureValue = principal * (1 + annualRate) ** years;
+  const gainValue = futureValue - principal;
+
+  balanceDom.compoundFutureValue.textContent = formatBalanceKrw(futureValue);
+  balanceDom.compoundGainValue.textContent = formatBalanceKrw(gainValue);
 }

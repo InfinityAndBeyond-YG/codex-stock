@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-07" />
-    <script defer src="./balance.js?v=20260329-05"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-08" />
+    <script defer src="./balance.js?v=20260329-08"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -197,10 +197,59 @@
                   <p class="average-down-note">수수료와 세금은 제외한 단순 계산입니다.</p>
                 </div>
               </details>
-              <article class="side-list-item">
-                <strong>평단과 현재가 비교</strong>
-                <p>같은 표 안에서 평균단가와 현재가를 붙여서 보는 구조로 잡았습니다.</p>
-              </article>
+              <details class="side-list-item compound-card compound-accordion">
+                <summary class="compound-toggle">
+                  <div class="compound-head">
+                    <strong>복리 계산기</strong>
+                    <p>탭을 열면 총 평가자산 기준으로 몇 년 뒤 예상 금액을 계산합니다.</p>
+                  </div>
+                  <span class="compound-chevron" aria-hidden="true">+</span>
+                </summary>
+
+                <div class="compound-panel">
+                  <div class="compound-grid">
+                    <label class="compound-field">
+                      <span>원금</span>
+                      <input id="compoundPrincipal" type="number" min="0" step="1" placeholder="총 평가자산 자동 입력" />
+                    </label>
+                    <label class="compound-field">
+                      <span>기간</span>
+                      <select id="compoundYears">
+                        <option value="1">1년</option>
+                        <option value="3">3년</option>
+                        <option value="5" selected>5년</option>
+                        <option value="10">10년</option>
+                        <option value="15">15년</option>
+                        <option value="20">20년</option>
+                      </select>
+                    </label>
+                    <label class="compound-field">
+                      <span>연 수익률</span>
+                      <select id="compoundRate">
+                        <option value="3">3%</option>
+                        <option value="5">5%</option>
+                        <option value="7" selected>7%</option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="15">15%</option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <div class="compound-results">
+                    <article class="compound-result">
+                      <span>예상 금액</span>
+                      <strong id="compoundFutureValue">-</strong>
+                    </article>
+                    <article class="compound-result">
+                      <span>예상 증가액</span>
+                      <strong id="compoundGainValue">-</strong>
+                    </article>
+                  </div>
+
+                  <p class="compound-note">연복리 기준의 단순 계산이며, 세금과 수수료는 제외합니다.</p>
+                </div>
+              </details>
               <article class="side-list-item">
                 <strong>다음 단계</strong>
                 <p>실손익, 수익률, 종목 필터, 계좌 토글을 이 페이지에서 이어서 확장할 수 있습니다.</p>
