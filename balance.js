@@ -132,6 +132,12 @@ function cacheBalanceDom() {
     "balanceSectionAsset",
     "balanceSectionMeta",
     "balanceHoldingsBody",
+    "averageCurrentShares",
+    "averageCurrentCost",
+    "averageBuyPrice",
+    "averageBuyShares",
+    "averageNewCost",
+    "averageTotalShares",
   ].forEach((id) => {
     balanceDom[id] = document.getElementById(id);
   });
@@ -194,6 +200,15 @@ function bindBalanceEvents() {
       renderBalancePage();
     });
   }
+
+  [
+    balanceDom.averageCurrentShares,
+    balanceDom.averageCurrentCost,
+    balanceDom.averageBuyPrice,
+    balanceDom.averageBuyShares,
+  ].forEach((input) => {
+    input?.addEventListener("input", renderAverageDownCalculator);
+  });
 }
 
 function renderBalancePage() {
@@ -202,6 +217,7 @@ function renderBalancePage() {
   renderBalancePicker();
   renderHoldingFilterPanel();
   renderAccountHoldings();
+  renderAverageDownCalculator();
 }
 
 function renderBalanceStats() {
@@ -498,4 +514,33 @@ function formatHoldingReturnRate(holding) {
   const rate = ((holding.currentPrice - holding.avgCost) / holding.avgCost) * 100;
   const sign = rate > 0 ? "+" : "";
   return `${sign}${rate.toFixed(1)}%`;
+}
+
+function renderAverageDownCalculator() {
+  if (!balanceDom.averageNewCost || !balanceDom.averageTotalShares) {
+    return;
+  }
+
+  const currentShares = Number(balanceDom.averageCurrentShares?.value || 0);
+  const currentCost = Number(balanceDom.averageCurrentCost?.value || 0);
+  const buyPrice = Number(balanceDom.averageBuyPrice?.value || 0);
+  const buyShares = Number(balanceDom.averageBuyShares?.value || 0);
+
+  if (currentShares <= 0 || currentCost <= 0 || buyPrice <= 0 || buyShares <= 0) {
+    balanceDom.averageNewCost.textContent = "-";
+    balanceDom.averageTotalShares.textContent = "-";
+    return;
+  }
+
+  const totalShares = currentShares + buyShares;
+  const nextAverageCost = (currentShares * currentCost + buyShares * buyPrice) / totalShares;
+
+  balanceDom.averageNewCost.textContent = formatCalculatorNumber(nextAverageCost);
+  balanceDom.averageTotalShares.textContent = `${formatCalculatorNumber(totalShares)}주`;
+}
+
+function formatCalculatorNumber(value) {
+  return new Intl.NumberFormat("ko-KR", {
+    maximumFractionDigits: 2,
+  }).format(value || 0);
 }
