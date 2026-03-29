@@ -340,7 +340,7 @@ button {
 .account-count-line {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 14px;
   flex-wrap: wrap;
   margin-top: 8px;
@@ -353,8 +353,7 @@ button {
 .account-count-selected {
   color: #3d6fb1 !important;
   font-weight: 600;
-  text-align: center;
-  margin-right: auto;
+  text-align: left;
 }
 
 .quick-stat-card p,
