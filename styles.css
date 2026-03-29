@@ -357,12 +357,14 @@ button {
   color: #3d6fb1 !important;
   font-weight: 600;
   text-align: center;
+  margin-left: 8px;
 }
 
 .account-count-amount {
   color: #5a7fb9 !important;
   justify-self: end;
   text-align: right;
+  margin-left: 0;
 }
 
 .quick-stat-card p,
