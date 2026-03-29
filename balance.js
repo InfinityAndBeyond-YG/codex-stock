@@ -105,6 +105,7 @@ const balanceState = {
   pickerOpen: false,
   holdingFilterOpen: false,
   compoundPrincipalTouched: false,
+  growthMode: "historical",
   tableScope: "account",
   holdingFilter: "all",
 };
@@ -151,6 +152,8 @@ function cacheBalanceDom() {
     "compoundFutureValue",
     "compoundGainValue",
     "growthYears",
+    "growthModeSwitch",
+    "growthModeNote",
     "growthFutureValue",
     "growthFutureGain",
     "growthHoldingsList",
@@ -236,6 +239,16 @@ function bindBalanceEvents() {
   });
 
   balanceDom.growthYears?.addEventListener("input", renderGrowthCalculator);
+
+  balanceDom.growthModeSwitch?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-growth-mode]");
+    if (!button) {
+      return;
+    }
+
+    balanceState.growthMode = button.dataset.growthMode;
+    renderGrowthCalculator();
+  });
 }
 
 function renderBalancePage() {
@@ -560,12 +573,38 @@ function formatSignedPercent(value) {
   return `${sign}${(value * 100).toFixed(1)}%`;
 }
 
+function clampNumber(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
 function getHoldingHistoricalGrowthRate(holding) {
   if (typeof holding.fiveYearTotalReturn !== "number" || holding.fiveYearTotalReturn <= -1) {
     return 0;
   }
 
   return Math.pow(1 + holding.fiveYearTotalReturn, 1 / 5) - 1;
+}
+
+function getHoldingEstimatedGrowthRate(holding, visibleHoldings) {
+  const visibleTotalValue = visibleHoldings.reduce(
+    (sum, item) => sum + getHoldingValueInKrw(item),
+    0
+  );
+  const currentValue = getHoldingValueInKrw(holding);
+  const weight = visibleTotalValue > 0 ? currentValue / visibleTotalValue : 0;
+  const returnRate =
+    holding.avgCost > 0 ? (holding.currentPrice - holding.avgCost) / holding.avgCost : 0;
+
+  const marketBaseline = holding.currency === "USD" ? 0.11 : 0.075;
+  const momentumAdjustment = clampNumber(returnRate * 0.24, -0.035, 0.045);
+  const balanceAdjustment = weight < 0.12 ? 0.008 : weight > 0.28 ? -0.006 : 0;
+  const concentrationPenalty = clampNumber((weight - 0.25) * 0.18, 0, 0.024);
+
+  return clampNumber(
+    marketBaseline + momentumAdjustment + balanceAdjustment - concentrationPenalty,
+    0.03,
+    0.24
+  );
 }
 
 function renderAverageDownCalculator() {
@@ -624,6 +663,19 @@ function renderGrowthCalculator() {
     return;
   }
 
+  balanceDom.growthModeSwitch
+    ?.querySelectorAll("[data-growth-mode]")
+    .forEach((button) => {
+      button.classList.toggle("active", button.dataset.growthMode === balanceState.growthMode);
+    });
+
+  if (balanceDom.growthModeNote) {
+    balanceDom.growthModeNote.textContent =
+      balanceState.growthMode === "historical"
+        ? "최근 5년 총수익률을 연환산한 CAGR 기준이며, 샘플 종목 데이터에 맞춰 계산합니다."
+        : "시장 기준치, 현재 수익률 모멘텀, 보유 비중 조정을 반영한 내부 추정식 기준입니다.";
+  }
+
   const visibleHoldings = getVisibleHoldings();
   const years = Number(balanceDom.growthYears?.value || 0);
 
@@ -639,7 +691,10 @@ function renderGrowthCalculator() {
   }
 
   const projections = visibleHoldings.map((holding) => {
-    const estimatedRate = getHoldingHistoricalGrowthRate(holding);
+    const estimatedRate =
+      balanceState.growthMode === "historical"
+        ? getHoldingHistoricalGrowthRate(holding)
+        : getHoldingEstimatedGrowthRate(holding, visibleHoldings);
     const futurePrice = holding.currentPrice * (1 + estimatedRate) ** years;
     const futureValue = convertBalanceToKrw(futurePrice * holding.shares, holding.currency);
     const currentValue = getHoldingValueInKrw(holding);

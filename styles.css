@@ -1086,8 +1086,24 @@ button {
 }
 
 .growth-grid {
-  grid-template-columns: minmax(0, 1fr);
-  max-width: 188px;
+  grid-template-columns: minmax(0, 188px) minmax(0, 1fr);
+  align-items: end;
+  max-width: none;
+}
+
+.growth-mode-field {
+  align-content: end;
+}
+
+.growth-mode-switch {
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.growth-mode-switch .mode-chip {
+  flex: 1 1 0;
+  padding: 10px 12px;
+  font-size: 0.76rem;
 }
 
 .compound-field {
@@ -2686,5 +2702,9 @@ button {
   .compound-results,
   .growth-item-values {
     grid-template-columns: 1fr;
+  }
+
+  .growth-mode-switch {
+    flex-wrap: wrap;
   }
 }

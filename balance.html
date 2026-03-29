@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-13" />
-    <script defer src="./balance.js?v=20260329-13"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-14" />
+    <script defer src="./balance.js?v=20260329-14"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -201,7 +201,7 @@
                 <summary class="compound-toggle">
                   <div class="compound-head">
                     <strong>성장률 계산기</strong>
-                    <p>최근 5년 성장률을 연환산한 기준으로 몇 년 뒤 예상 단가를 계산합니다.</p>
+                    <p>계산 기준을 바꿔가며 몇 년 뒤 예상 단가를 비교합니다.</p>
                   </div>
                   <span class="compound-chevron" aria-hidden="true">+</span>
                 </summary>
@@ -212,6 +212,13 @@
                       <span>기간</span>
                       <input id="growthYears" type="number" min="1" step="1" value="5" />
                     </label>
+                    <div class="compound-field growth-mode-field">
+                      <span>기준</span>
+                      <div id="growthModeSwitch" class="mode-switch growth-mode-switch">
+                        <button type="button" class="mode-chip active" data-growth-mode="historical">5년 성과</button>
+                        <button type="button" class="mode-chip" data-growth-mode="estimated">내부 추정</button>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="compound-results">
@@ -227,7 +234,7 @@
 
                   <div id="growthHoldingsList" class="growth-list"></div>
 
-                  <p class="compound-note">최근 5년 총수익률을 연환산한 CAGR 기준이며, 샘플 종목 데이터에 맞춰 계산합니다.</p>
+                  <p id="growthModeNote" class="compound-note">최근 5년 총수익률을 연환산한 CAGR 기준이며, 샘플 종목 데이터에 맞춰 계산합니다.</p>
                 </div>
               </details>
               <details class="side-list-item compound-card compound-accordion">
