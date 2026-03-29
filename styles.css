@@ -322,7 +322,9 @@ button {
 
 .balance-quick-stats > .quick-stat-card,
 .balance-quick-stats > .quick-stat-stack > .quick-stat-card {
-  min-height: 118px;
+  min-height: 104px;
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 .balance-quick-stats > .quick-stat-stack > .quick-stat-card {
@@ -435,6 +437,7 @@ button {
   text-align: right;
 }
 
+#accountPickerButton #accountCountValue,
 #accountPickerButton > span,
 #accountPickerButton .account-count-selected,
 #accountPickerButton .account-count-subvalue {
