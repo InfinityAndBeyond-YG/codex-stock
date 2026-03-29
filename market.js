@@ -177,6 +177,7 @@ function cacheDom() {
     "marketRankingList",
     "chartStockName",
     "chartStockMeta",
+    "chartRangeGrowth",
     "chartStockPrice",
     "chartStockChange",
     "chartRangeSwitch",
@@ -398,6 +399,7 @@ function renderChart() {
 
   const chartSeries = getChartSeriesByRange(selectedStock, state.chartRange);
   const chartDetails = getChartDetails(chartSeries);
+  const rangeChangePercent = getChartRangeChangePercent(chartSeries);
 
   if (dom.chartStockName) {
     dom.chartStockName.textContent = selectedStock.name;
@@ -406,6 +408,12 @@ function renderChart() {
   if (dom.chartStockMeta) {
     const marketLabel = selectedStock.market === "kr" ? "한국주식" : "미국주식";
     dom.chartStockMeta.textContent = `${selectedStock.ticker} · ${marketLabel} · ${chartSeries.rangeLabel}`;
+  }
+
+  if (dom.chartRangeGrowth) {
+    const positive = rangeChangePercent >= 0;
+    dom.chartRangeGrowth.className = `change-pill ${positive ? "positive" : "negative"} chart-range-growth`;
+    dom.chartRangeGrowth.textContent = `성장률 ${positive ? "+" : ""}${percentFormatter.format(rangeChangePercent)}%`;
   }
 
   if (dom.chartStockPrice) {
@@ -752,6 +760,17 @@ function getChartDetails(chartSeries) {
     range: high - low,
     priceScale,
   };
+}
+
+function getChartRangeChangePercent(chartSeries) {
+  const values = chartSeries.values || [];
+  if (!values.length || !values[0]) {
+    return 0;
+  }
+
+  const first = values[0];
+  const last = values[values.length - 1];
+  return ((last - first) / first) * 100;
 }
 
 function buildPriceScale(low, high) {

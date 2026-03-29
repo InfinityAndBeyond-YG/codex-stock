@@ -1636,6 +1636,22 @@ button {
   min-width: 0;
 }
 
+.chart-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-meta-row .section-caption {
+  margin: 0;
+}
+
+.chart-range-growth {
+  font-size: 0.72rem;
+  padding: 6px 10px;
+}
+
 .chart-headline-row {
   display: flex;
   align-items: center;
