@@ -609,7 +609,7 @@ button {
 }
 
 .balance-page-grid {
-  grid-template-columns: minmax(0, 1.28fr) minmax(240px, 0.52fr);
+  grid-template-columns: minmax(0, 1.22fr) minmax(260px, 0.58fr);
 }
 
 .page-panel,
