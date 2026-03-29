@@ -222,7 +222,7 @@ function bindBalanceEvents() {
   });
 
   [balanceDom.compoundYears, balanceDom.compoundRate].forEach((input) => {
-    input?.addEventListener("change", renderCompoundCalculator);
+    input?.addEventListener("input", renderCompoundCalculator);
   });
 }
 
