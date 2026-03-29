@@ -339,10 +339,9 @@ button {
 
 .account-count-line {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: minmax(28px, auto) minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: start;
-  gap: 14px;
+  column-gap: 12px;
   margin-top: 8px;
 }
 
@@ -350,14 +349,20 @@ button {
   margin-top: 0;
 }
 
+.account-count-line #accountCountValue {
+  text-align: left;
+}
+
 .account-count-selected {
   color: #3d6fb1 !important;
   font-weight: 600;
-  text-align: left;
+  text-align: center;
 }
 
 .account-count-amount {
   color: #5a7fb9 !important;
+  justify-self: end;
+  text-align: right;
 }
 
 .quick-stat-card p,
