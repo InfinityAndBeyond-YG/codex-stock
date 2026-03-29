@@ -340,7 +340,7 @@ function renderAccountHoldings() {
   if (!holdings.length) {
     balanceDom.balanceHoldingsBody.innerHTML = `
       <tr>
-        <td colspan="5" class="stock-table-empty">표시할 종목이 없습니다.</td>
+        <td colspan="6" class="stock-table-empty">표시할 종목이 없습니다.</td>
       </tr>
     `;
     return;
@@ -353,6 +353,7 @@ function renderAccountHoldings() {
           <td>${holding.name}</td>
           <td>${holding.shares}주</td>
           <td>${formatHoldingPrice(holding.avgCost, holding.currency)}</td>
+          <td>${formatHoldingReturnRate(holding)}</td>
           <td>${formatHoldingPrice(holding.currentPrice, holding.currency)}</td>
           <td>${formatBalanceKrw(getHoldingValueInKrw(holding))}</td>
         </tr>
@@ -487,4 +488,14 @@ function formatHoldingPrice(value, currency) {
   }
 
   return formatBalanceKrw(value);
+}
+
+function formatHoldingReturnRate(holding) {
+  if (!holding.avgCost) {
+    return "-";
+  }
+
+  const rate = ((holding.currentPrice - holding.avgCost) / holding.avgCost) * 100;
+  const sign = rate > 0 ? "+" : "";
+  return `${sign}${rate.toFixed(1)}%`;
 }
