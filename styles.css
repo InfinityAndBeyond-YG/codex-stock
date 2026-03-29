@@ -962,7 +962,7 @@ button {
 }
 
 .average-down-result {
-  padding: 12px 14px;
+  padding: 9px 12px;
   border: 1px solid rgba(21, 42, 76, 0.08);
   border-radius: 18px;
   background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
@@ -975,7 +975,7 @@ button {
 }
 
 .average-down-result strong {
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 0.98rem;
   letter-spacing: -0.04em;
 }
