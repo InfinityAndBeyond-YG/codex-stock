@@ -353,7 +353,8 @@ button {
 .account-count-selected {
   color: #3d6fb1 !important;
   font-weight: 600;
-  text-align: right;
+  text-align: center;
+  margin-right: auto;
 }
 
 .quick-stat-card p,
