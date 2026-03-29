@@ -886,7 +886,7 @@ button {
 .average-down-head {
   display: grid;
   align-content: center;
-  gap: 2px;
+  gap: 6px;
   min-height: auto;
   align-self: center;
   padding-block: 2px;
