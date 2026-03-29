@@ -673,7 +673,7 @@ function renderGrowthCalculator() {
     balanceDom.growthModeNote.textContent =
       balanceState.growthMode === "historical"
         ? "최근 5년 총수익률을 연환산한 CAGR 기준이며, 샘플 종목 데이터에 맞춰 계산합니다."
-        : "시장 기준치, 현재 수익률 모멘텀, 보유 비중 조정을 반영한 내부 추정식 기준입니다.";
+        : "시장 기준치, 현재 수익률 모멘텀, 보유 비중 보정, 집중도 패널티를 반영해 계산합니다.";
   }
 
   const visibleHoldings = getVisibleHoldings();
