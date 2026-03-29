@@ -356,8 +356,9 @@ button {
 .account-count-selected {
   color: #3d6fb1 !important;
   font-weight: 600;
-  text-align: center;
-  margin-left: 8px;
+  text-align: right;
+  justify-self: end;
+  margin-left: 0;
 }
 
 .account-count-amount {
