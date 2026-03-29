@@ -264,6 +264,9 @@ function renderBalancePicker() {
 }
 
 function renderHoldingFilterPanel() {
+  const domesticCount = balancePortfolioData.holdings.filter((holding) => holding.currency === "KRW").length;
+  const foreignCount = balancePortfolioData.holdings.filter((holding) => holding.currency === "USD").length;
+
   if (balanceDom.holdingFilterButton) {
     balanceDom.holdingFilterButton.setAttribute("aria-expanded", String(balanceState.holdingFilterOpen));
   }
@@ -279,6 +282,14 @@ function renderHoldingFilterPanel() {
   balanceDom.holdingFilterPanel
     .querySelectorAll("[data-holding-filter]")
     .forEach((button) => {
+      const isDomestic = button.dataset.holdingFilter === "domestic";
+      const count = isDomestic ? domesticCount : foreignCount;
+      const label = isDomestic ? "한국 주식" : "미국주식";
+
+      button.innerHTML = `
+        <span class="holding-filter-name">${label}</span>
+        <span class="holding-filter-count">${count}개</span>
+      `;
       button.classList.toggle("active", button.dataset.holdingFilter === balanceState.holdingFilter);
     });
 }

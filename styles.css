@@ -456,6 +456,10 @@ button {
 
 .holding-filter-item {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   border: 1px solid rgba(21, 42, 76, 0.08);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.94);
@@ -469,9 +473,24 @@ button {
   transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
+.holding-filter-name {
+  white-space: nowrap;
+}
+
+.holding-filter-count {
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .holding-filter-item.active {
   border-color: var(--button-active-border);
   background: rgba(12, 114, 222, 0.08);
+  color: var(--blue);
+}
+
+.holding-filter-item.active .holding-filter-count {
   color: var(--blue);
 }
 
