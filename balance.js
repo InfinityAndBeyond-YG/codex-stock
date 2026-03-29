@@ -114,7 +114,8 @@ function cacheBalanceDom() {
     "balanceTotalAssetValue",
     "accountPickerButton",
     "accountCountValue",
-    "accountSelectedValue",
+    "accountSelectedLabel",
+    "accountSelectedAmount",
     "accountCountMeta",
     "holdingCountValue",
     "holdingCountMeta",
@@ -169,11 +170,15 @@ function renderBalanceStats() {
 
   balanceDom.balanceTotalAssetValue.textContent = formatBalanceKrw(totalAsset);
   balanceDom.accountCountValue.textContent = `${balancePortfolioData.accounts.length}개`;
-  if (balanceDom.accountSelectedValue) {
-    balanceDom.accountSelectedValue.textContent = selectedAccount
-      ? `${selectedAccount.name} ${formatBalanceKrw(getAccountAssetValue(selectedAccount.id))}`
+  if (balanceDom.accountSelectedLabel) {
+    balanceDom.accountSelectedLabel.textContent = selectedAccount ? selectedAccount.name : "-";
+    balanceDom.accountSelectedLabel.hidden = !selectedAccount;
+  }
+  if (balanceDom.accountSelectedAmount) {
+    balanceDom.accountSelectedAmount.textContent = selectedAccount
+      ? formatBalanceKrw(getAccountAssetValue(selectedAccount.id))
       : "-";
-    balanceDom.accountSelectedValue.hidden = !selectedAccount;
+    balanceDom.accountSelectedAmount.hidden = !selectedAccount;
   }
   balanceDom.accountCountMeta.textContent = "아래에서 계좌를 선택하세요.";
   balanceDom.holdingCountValue.textContent = `${totalHoldingCount}개`;
@@ -194,18 +199,11 @@ function renderBalancePicker() {
 
   balanceDom.accountPickerList.innerHTML = balancePortfolioData.accounts
     .map((account) => {
-      const accountHoldings = getAccountHoldings(account.id);
       const activeClass = selectedAccount?.id === account.id ? "active" : "";
       return `
         <button type="button" class="account-picker-item ${activeClass}" data-account-id="${account.id}">
-          <div class="account-picker-copy">
-            <strong>${account.name}</strong>
-            <span>${accountHoldings.length}개 종목</span>
-          </div>
-          <div class="account-picker-values">
-            <strong>${formatBalanceKrw(getAccountAssetValue(account.id))}</strong>
-            <span>현금 ${formatBalanceKrw(getAccountCashValue(account.id))}</span>
-          </div>
+          <strong class="account-picker-name">${account.name}</strong>
+          <strong class="account-picker-amount">${formatBalanceKrw(getAccountAssetValue(account.id))}</strong>
         </button>
       `;
     })
