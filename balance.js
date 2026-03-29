@@ -97,6 +97,9 @@ const balanceUsdFormatter = new Intl.NumberFormat("en-US", {
 const balanceState = {
   selectedAccountId: balancePortfolioData.accounts[0]?.id || null,
   pickerOpen: false,
+  holdingFilterOpen: false,
+  tableScope: "account",
+  holdingFilter: "all",
 };
 
 const balanceDom = {};
@@ -112,6 +115,8 @@ function initBalancePage() {
 function cacheBalanceDom() {
   [
     "balanceTotalAssetValue",
+    "balanceTotalAssetMeta",
+    "totalAssetButton",
     "accountPickerButton",
     "accountCountValue",
     "accountSelectedLabel",
@@ -119,8 +124,10 @@ function cacheBalanceDom() {
     "accountCountMeta",
     "holdingCountValue",
     "holdingCountMeta",
+    "holdingFilterButton",
     "accountPickerPanel",
     "accountPickerList",
+    "holdingFilterPanel",
     "balanceSectionTitle",
     "balanceSectionAsset",
     "balanceSectionMeta",
@@ -134,7 +141,9 @@ function bindBalanceEvents() {
   if (balanceDom.accountPickerButton) {
     balanceDom.accountPickerButton.addEventListener("click", () => {
       balanceState.pickerOpen = !balanceState.pickerOpen;
+      balanceState.holdingFilterOpen = false;
       renderBalancePicker();
+      renderHoldingFilterPanel();
     });
   }
 
@@ -146,7 +155,42 @@ function bindBalanceEvents() {
       }
 
       balanceState.selectedAccountId = button.dataset.accountId;
+      balanceState.tableScope = "account";
+      balanceState.holdingFilter = "all";
       balanceState.pickerOpen = false;
+      renderBalancePage();
+    });
+  }
+
+  if (balanceDom.totalAssetButton) {
+    balanceDom.totalAssetButton.addEventListener("click", () => {
+      balanceState.tableScope = "all";
+      balanceState.holdingFilter = "all";
+      balanceState.pickerOpen = false;
+      balanceState.holdingFilterOpen = false;
+      renderBalancePage();
+    });
+  }
+
+  if (balanceDom.holdingFilterButton) {
+    balanceDom.holdingFilterButton.addEventListener("click", () => {
+      balanceState.holdingFilterOpen = !balanceState.holdingFilterOpen;
+      balanceState.pickerOpen = false;
+      renderBalancePicker();
+      renderHoldingFilterPanel();
+    });
+  }
+
+  if (balanceDom.holdingFilterPanel) {
+    balanceDom.holdingFilterPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-holding-filter]");
+      if (!button) {
+        return;
+      }
+
+      balanceState.tableScope = "all";
+      balanceState.holdingFilter = button.dataset.holdingFilter;
+      balanceState.holdingFilterOpen = false;
       renderBalancePage();
     });
   }
@@ -155,6 +199,7 @@ function bindBalanceEvents() {
 function renderBalancePage() {
   renderBalanceStats();
   renderBalancePicker();
+  renderHoldingFilterPanel();
   renderAccountHoldings();
 }
 
@@ -169,6 +214,9 @@ function renderBalanceStats() {
   const selectedAccount = getSelectedAccount();
 
   balanceDom.balanceTotalAssetValue.textContent = formatBalanceKrw(totalAsset);
+  if (balanceDom.balanceTotalAssetMeta) {
+    balanceDom.balanceTotalAssetMeta.textContent = getTotalAssetMetaLabel();
+  }
   balanceDom.accountCountValue.textContent = `${balancePortfolioData.accounts.length}개`;
   if (balanceDom.accountSelectedLabel) {
     balanceDom.accountSelectedLabel.textContent = selectedAccount ? selectedAccount.name : "-";
@@ -182,7 +230,12 @@ function renderBalanceStats() {
   }
   balanceDom.accountCountMeta.textContent = "아래에서 계좌를 선택하세요.";
   balanceDom.holdingCountValue.textContent = `${totalHoldingCount}개`;
-  balanceDom.holdingCountMeta.textContent = `국내 ${domesticCount}개 · 해외 ${foreignCount}개`;
+  balanceDom.holdingCountMeta.textContent =
+    balanceState.holdingFilter === "domestic"
+      ? `한국 주식 ${domesticCount}개`
+      : balanceState.holdingFilter === "foreign"
+        ? `미국주식 ${foreignCount}개`
+        : `국내 ${domesticCount}개 · 해외 ${foreignCount}개`;
 }
 
 function renderBalancePicker() {
@@ -210,27 +263,41 @@ function renderBalancePicker() {
     .join("");
 }
 
+function renderHoldingFilterPanel() {
+  if (balanceDom.holdingFilterButton) {
+    balanceDom.holdingFilterButton.setAttribute("aria-expanded", String(balanceState.holdingFilterOpen));
+  }
+
+  if (balanceDom.holdingFilterPanel) {
+    balanceDom.holdingFilterPanel.hidden = !balanceState.holdingFilterOpen;
+  }
+
+  if (!balanceDom.holdingFilterPanel) {
+    return;
+  }
+
+  balanceDom.holdingFilterPanel
+    .querySelectorAll("[data-holding-filter]")
+    .forEach((button) => {
+      button.classList.toggle("active", button.dataset.holdingFilter === balanceState.holdingFilter);
+    });
+}
+
 function renderAccountHoldings() {
   const selectedAccount = getSelectedAccount();
-  const holdings = selectedAccount ? getAccountHoldings(selectedAccount.id) : [];
+  const holdings = getVisibleHoldings();
 
   if (balanceDom.balanceSectionTitle) {
-    balanceDom.balanceSectionTitle.textContent = selectedAccount
-      ? `${selectedAccount.name} 잔고`
-      : "계좌별 잔고";
+    balanceDom.balanceSectionTitle.textContent = getBalanceSectionTitle(selectedAccount);
   }
 
   if (balanceDom.balanceSectionAsset) {
-    balanceDom.balanceSectionAsset.textContent = selectedAccount
-      ? `계좌 총 자산 ${formatBalanceKrw(getAccountAssetValue(selectedAccount.id))}`
-      : "-";
-    balanceDom.balanceSectionAsset.hidden = !selectedAccount;
+    balanceDom.balanceSectionAsset.textContent = getBalanceSectionAssetLabel(selectedAccount);
+    balanceDom.balanceSectionAsset.hidden = false;
   }
 
   if (balanceDom.balanceSectionMeta) {
-    balanceDom.balanceSectionMeta.textContent = selectedAccount
-      ? `선택한 계좌의 보유 종목만 바로 보여줍니다. 총 ${holdings.length}개 종목`
-      : "아래에서 계좌를 선택하면 해당 계좌 종목만 보여줍니다.";
+    balanceDom.balanceSectionMeta.textContent = getBalanceSectionMeta(selectedAccount, holdings.length);
   }
 
   if (!balanceDom.balanceHoldingsBody) {
@@ -259,6 +326,85 @@ function renderAccountHoldings() {
       `
     )
     .join("");
+}
+
+function getVisibleHoldings() {
+  let holdings =
+    balanceState.tableScope === "account" && balanceState.selectedAccountId
+      ? getAccountHoldings(balanceState.selectedAccountId)
+      : [...balancePortfolioData.holdings];
+
+  if (balanceState.holdingFilter === "domestic") {
+    holdings = holdings.filter((holding) => holding.currency === "KRW");
+  } else if (balanceState.holdingFilter === "foreign") {
+    holdings = holdings.filter((holding) => holding.currency === "USD");
+  }
+
+  return holdings;
+}
+
+function getVisibleHoldingsAssetValue() {
+  return getVisibleHoldings().reduce((sum, holding) => sum + getHoldingValueInKrw(holding), 0);
+}
+
+function getTotalAssetMetaLabel() {
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "all") {
+    return "전체 주식 보기";
+  }
+
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "domestic") {
+    return "한국 주식 보기";
+  }
+
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "foreign") {
+    return "미국주식 보기";
+  }
+
+  return "전체 계좌 합산";
+}
+
+function getBalanceSectionTitle(selectedAccount) {
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "domestic") {
+    return "한국 주식 잔고";
+  }
+
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "foreign") {
+    return "미국주식 잔고";
+  }
+
+  if (balanceState.tableScope === "all") {
+    return "전체 보유 종목";
+  }
+
+  return selectedAccount ? `${selectedAccount.name} 잔고` : "계좌별 잔고";
+}
+
+function getBalanceSectionAssetLabel(selectedAccount) {
+  if (balanceState.tableScope === "all") {
+    return `총 평가 ${formatBalanceKrw(getVisibleHoldingsAssetValue())}`;
+  }
+
+  return selectedAccount
+    ? `계좌 총 자산 ${formatBalanceKrw(getAccountAssetValue(selectedAccount.id))}`
+    : "-";
+}
+
+function getBalanceSectionMeta(selectedAccount, holdingCount) {
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "domestic") {
+    return `전체 계좌 기준 한국 주식만 보여줍니다. 총 ${holdingCount}개 종목`;
+  }
+
+  if (balanceState.tableScope === "all" && balanceState.holdingFilter === "foreign") {
+    return `전체 계좌 기준 미국주식만 보여줍니다. 총 ${holdingCount}개 종목`;
+  }
+
+  if (balanceState.tableScope === "all") {
+    return `전체 계좌의 보유 종목을 모두 보여줍니다. 총 ${holdingCount}개 종목`;
+  }
+
+  return selectedAccount
+    ? `선택한 계좌의 보유 종목만 바로 보여줍니다. 총 ${holdingCount}개 종목`
+    : "아래에서 계좌를 선택하면 해당 계좌 종목만 보여줍니다.";
 }
 
 function getSelectedAccount() {
