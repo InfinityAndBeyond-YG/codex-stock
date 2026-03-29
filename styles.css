@@ -608,6 +608,10 @@ button {
   z-index: 1;
 }
 
+.balance-page-grid {
+  grid-template-columns: minmax(0, 1.28fr) minmax(240px, 0.52fr);
+}
+
 .page-panel,
 .side-panel {
   padding: 20px;
