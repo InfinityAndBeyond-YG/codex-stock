@@ -126,11 +126,11 @@ function renderReportEditor() {
   }
 
   if (dom.reportPageTitle) {
-    dom.reportPageTitle.textContent = `${stock.name} 리포트`;
+    dom.reportPageTitle.textContent = `${stock.name} 거래 분석`;
   }
 
   if (dom.reportPageMeta) {
-    dom.reportPageMeta.textContent = `${stock.ticker} · ${stock.market === "kr" ? "한국주식" : "미국주식"} 분석 메모`;
+    dom.reportPageMeta.textContent = `${stock.ticker} · ${stock.market === "kr" ? "한국주식" : "미국주식"} 거래 분석 메모`;
   }
 
   if (dom.reportPageEditor) {

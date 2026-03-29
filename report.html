@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>주식 리포트 | Stock Flow</title>
+    <title>거래 분석 | Stock Flow</title>
     <meta
       name="description"
-      content="종목별 분석 메모를 정리하는 Stock Flow 주식 리포트 페이지"
+      content="종목별 거래 메모와 분석을 정리하는 Stock Flow 거래 분석 페이지"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260324-26" />
-    <script defer src="./report.js?v=20260324-01"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-02" />
+    <script defer src="./report.js?v=20260329-02"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -35,30 +35,30 @@
             </svg>
           </a>
           <a href="./market.html" class="header-action-button">주식현재가</a>
-          <a href="./report.html" class="header-action-button active" aria-current="page">주식 리포트</a>
           <a href="./balance.html" class="header-action-button">주식잔고</a>
+          <a href="./report.html" class="header-action-button active" aria-current="page">거래 분석</a>
           <a href="./upload.html" class="header-action-button">내 주식 올리기</a>
         </div>
       </header>
 
       <main class="page-stack">
         <section class="panel hero-panel">
-          <p class="section-kicker">Report Page</p>
-          <h1 class="market-page-title">주식 리포트</h1>
+          <p class="section-kicker">Analysis Page</p>
+          <h1 class="market-page-title">거래 분석</h1>
           <p class="hero-copy">
-            종목별 분석글과 투자 메모를 한 곳에서 정리하고 확인하는 페이지입니다.
+            종목별 거래 메모와 분석 포인트를 한 곳에서 정리하고 확인하는 페이지입니다.
           </p>
 
           <div class="quick-stats">
             <article class="quick-stat-card">
               <span>전체 종목</span>
               <strong id="reportTotalCount">-</strong>
-              <p>리포트 관리 대상 종목 수</p>
+              <p>분석 관리 대상 종목 수</p>
             </article>
             <article class="quick-stat-card">
-              <span>작성된 메모</span>
+              <span>작성된 분석</span>
               <strong id="reportSavedCount">-</strong>
-              <p>저장된 종목 리포트 수</p>
+              <p>저장된 종목 분석 수</p>
             </article>
             <article class="quick-stat-card">
               <span>시장 구성</span>
@@ -72,10 +72,10 @@
           <article class="panel page-panel">
             <div class="panel-head">
               <div>
-                <p class="section-kicker">Report List</p>
+                <p class="section-kicker">Analysis List</p>
                 <h2>종목 선택</h2>
               </div>
-              <p class="section-caption">종목을 누르면 오른쪽 리포트 편집창이 바뀝니다.</p>
+              <p class="section-caption">종목을 누르면 오른쪽 분석 편집창이 바뀝니다.</p>
             </div>
 
             <div id="reportStockList" class="selector-list"></div>
@@ -84,8 +84,8 @@
           <article class="panel page-panel">
             <div class="panel-head">
               <div>
-                <p class="section-kicker">Stock Report</p>
-                <h2 id="reportPageTitle">주식 리포트</h2>
+                <p class="section-kicker">Trade Analysis</p>
+                <h2 id="reportPageTitle">거래 분석</h2>
               </div>
               <p id="reportPageMeta" class="section-caption">-</p>
             </div>
