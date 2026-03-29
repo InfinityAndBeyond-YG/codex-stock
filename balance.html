@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-03" />
-    <script defer src="./balance.js?v=20260329-03"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260329-04" />
+    <script defer src="./balance.js?v=20260329-04"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -154,22 +154,16 @@
             </div>
 
             <div class="side-list">
-              <article class="side-list-item average-down-card">
-                <button
-                  type="button"
-                  class="average-down-toggle"
-                  id="averageDownToggle"
-                  aria-expanded="false"
-                  aria-controls="averageDownPanel"
-                >
+              <details class="side-list-item average-down-card average-down-accordion">
+                <summary class="average-down-toggle">
                   <div class="average-down-head">
                     <strong>물타기 계산기</strong>
                     <p>탭을 열면 새 평단을 바로 계산할 수 있습니다.</p>
                   </div>
                   <span class="average-down-chevron" aria-hidden="true">+</span>
-                </button>
+                </summary>
 
-                <div id="averageDownPanel" class="average-down-panel" hidden>
+                <div class="average-down-panel">
                   <div class="average-down-grid">
                     <label class="average-down-field">
                       <span>현재 보유수량</span>
@@ -202,7 +196,7 @@
 
                   <p class="average-down-note">수수료와 세금은 제외한 단순 계산입니다.</p>
                 </div>
-              </article>
+              </details>
               <article class="side-list-item">
                 <strong>평단과 현재가 비교</strong>
                 <p>같은 표 안에서 평균단가와 현재가를 붙여서 보는 구조로 잡았습니다.</p>

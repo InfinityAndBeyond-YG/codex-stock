@@ -858,6 +858,10 @@ button {
   gap: 14px;
 }
 
+.average-down-accordion[open] {
+  gap: 14px;
+}
+
 .average-down-toggle {
   width: 100%;
   display: flex;
@@ -870,6 +874,11 @@ button {
   color: inherit;
   text-align: left;
   cursor: pointer;
+  list-style: none;
+}
+
+.average-down-toggle::-webkit-details-marker {
+  display: none;
 }
 
 .average-down-head {
@@ -900,7 +909,7 @@ button {
   transition: transform 180ms ease, background 180ms ease, color 180ms ease;
 }
 
-.average-down-toggle.open .average-down-chevron {
+.average-down-accordion[open] .average-down-chevron {
   transform: rotate(45deg);
   background: rgba(12, 114, 222, 0.14);
 }
