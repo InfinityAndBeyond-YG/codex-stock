@@ -466,11 +466,14 @@ button {
   text-align: right;
 }
 
-#accountPickerButton #accountCountValue,
 #accountPickerButton > span,
 #accountPickerButton .account-count-selected,
 #accountPickerButton .account-count-subvalue {
   color: var(--text-soft) !important;
+}
+
+#accountPickerButton #accountCountValue {
+  color: var(--text-strong) !important;
 }
 
 .quick-stat-card p,
