@@ -856,6 +856,8 @@ button {
 .average-down-card {
   display: grid;
   gap: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 .average-down-accordion[open] {
@@ -868,7 +870,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 0;
+  padding: 1px 0;
   border: 0;
   background: transparent;
   color: inherit;
@@ -883,15 +885,17 @@ button {
 
 .average-down-head {
   display: grid;
-  gap: 3px;
+  gap: 2px;
 }
 
 .average-down-head strong {
   margin-top: 0;
+  line-height: 1.15;
 }
 
 .average-down-head p {
   margin: 0;
+  line-height: 1.35;
 }
 
 .average-down-chevron {
