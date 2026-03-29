@@ -155,42 +155,53 @@
 
             <div class="side-list">
               <article class="side-list-item average-down-card">
-                <div class="average-down-head">
-                  <strong>물타기 계산기</strong>
-                  <p>현재 보유수량, 현재 평단, 추가 매수 가격과 수량을 넣으면 새 평단을 바로 계산합니다.</p>
-                </div>
+                <button
+                  type="button"
+                  class="average-down-toggle"
+                  id="averageDownToggle"
+                  aria-expanded="false"
+                  aria-controls="averageDownPanel"
+                >
+                  <div class="average-down-head">
+                    <strong>물타기 계산기</strong>
+                    <p>탭을 열면 새 평단을 바로 계산할 수 있습니다.</p>
+                  </div>
+                  <span class="average-down-chevron" aria-hidden="true">+</span>
+                </button>
 
-                <div class="average-down-grid">
-                  <label class="average-down-field">
-                    <span>현재 보유수량</span>
-                    <input id="averageCurrentShares" type="number" min="0" step="0.01" placeholder="예: 10" />
-                  </label>
-                  <label class="average-down-field">
-                    <span>현재 평단</span>
-                    <input id="averageCurrentCost" type="number" min="0" step="0.01" placeholder="예: 71200" />
-                  </label>
-                  <label class="average-down-field">
-                    <span>추가 매수가</span>
-                    <input id="averageBuyPrice" type="number" min="0" step="0.01" placeholder="예: 68000" />
-                  </label>
-                  <label class="average-down-field">
-                    <span>추가 매수수량</span>
-                    <input id="averageBuyShares" type="number" min="0" step="0.01" placeholder="예: 5" />
-                  </label>
-                </div>
+                <div id="averageDownPanel" class="average-down-panel" hidden>
+                  <div class="average-down-grid">
+                    <label class="average-down-field">
+                      <span>현재 보유수량</span>
+                      <input id="averageCurrentShares" type="number" min="0" step="0.01" placeholder="예: 10" />
+                    </label>
+                    <label class="average-down-field">
+                      <span>현재 평단</span>
+                      <input id="averageCurrentCost" type="number" min="0" step="0.01" placeholder="예: 71200" />
+                    </label>
+                    <label class="average-down-field">
+                      <span>추가 매수가</span>
+                      <input id="averageBuyPrice" type="number" min="0" step="0.01" placeholder="예: 68000" />
+                    </label>
+                    <label class="average-down-field">
+                      <span>추가 매수수량</span>
+                      <input id="averageBuyShares" type="number" min="0" step="0.01" placeholder="예: 5" />
+                    </label>
+                  </div>
 
-                <div class="average-down-results">
-                  <article class="average-down-result">
-                    <span>새 평단</span>
-                    <strong id="averageNewCost">-</strong>
-                  </article>
-                  <article class="average-down-result">
-                    <span>총 보유수량</span>
-                    <strong id="averageTotalShares">-</strong>
-                  </article>
-                </div>
+                  <div class="average-down-results">
+                    <article class="average-down-result">
+                      <span>새 평단</span>
+                      <strong id="averageNewCost">-</strong>
+                    </article>
+                    <article class="average-down-result">
+                      <span>총 보유수량</span>
+                      <strong id="averageTotalShares">-</strong>
+                    </article>
+                  </div>
 
-                <p class="average-down-note">수수료와 세금은 제외한 단순 계산입니다.</p>
+                  <p class="average-down-note">수수료와 세금은 제외한 단순 계산입니다.</p>
+                </div>
               </article>
               <article class="side-list-item">
                 <strong>평단과 현재가 비교</strong>

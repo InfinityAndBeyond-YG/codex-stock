@@ -98,6 +98,7 @@ const balanceState = {
   selectedAccountId: balancePortfolioData.accounts[0]?.id || null,
   pickerOpen: false,
   holdingFilterOpen: false,
+  averageDownOpen: false,
   tableScope: "account",
   holdingFilter: "all",
 };
@@ -132,6 +133,8 @@ function cacheBalanceDom() {
     "balanceSectionAsset",
     "balanceSectionMeta",
     "balanceHoldingsBody",
+    "averageDownToggle",
+    "averageDownPanel",
     "averageCurrentShares",
     "averageCurrentCost",
     "averageBuyPrice",
@@ -201,6 +204,13 @@ function bindBalanceEvents() {
     });
   }
 
+  if (balanceDom.averageDownToggle) {
+    balanceDom.averageDownToggle.addEventListener("click", () => {
+      balanceState.averageDownOpen = !balanceState.averageDownOpen;
+      renderAverageDownToggle();
+    });
+  }
+
   [
     balanceDom.averageCurrentShares,
     balanceDom.averageCurrentCost,
@@ -217,6 +227,7 @@ function renderBalancePage() {
   renderBalancePicker();
   renderHoldingFilterPanel();
   renderAccountHoldings();
+  renderAverageDownToggle();
   renderAverageDownCalculator();
 }
 
@@ -543,4 +554,15 @@ function formatCalculatorNumber(value) {
   return new Intl.NumberFormat("ko-KR", {
     maximumFractionDigits: 2,
   }).format(value || 0);
+}
+
+function renderAverageDownToggle() {
+  if (balanceDom.averageDownToggle) {
+    balanceDom.averageDownToggle.setAttribute("aria-expanded", String(balanceState.averageDownOpen));
+    balanceDom.averageDownToggle.classList.toggle("open", balanceState.averageDownOpen);
+  }
+
+  if (balanceDom.averageDownPanel) {
+    balanceDom.averageDownPanel.hidden = !balanceState.averageDownOpen;
+  }
 }
