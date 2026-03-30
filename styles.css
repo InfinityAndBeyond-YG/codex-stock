@@ -1942,10 +1942,22 @@ button {
 
 .analysis-view-switch {
   margin-top: 18px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.analysis-view-switch::-webkit-scrollbar {
+  display: none;
 }
 
 .analysis-view-switch .mode-chip {
-  flex: 1 1 calc(16.66% - 8px);
+  flex: 0 0 auto;
+  min-width: 78px;
+  white-space: nowrap;
 }
 
 .analysis-main-panel {
