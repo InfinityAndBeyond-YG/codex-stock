@@ -1948,81 +1948,24 @@ button {
   flex: 1 1 calc(20% - 8px);
 }
 
-.analysis-summary-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.14fr) minmax(300px, 0.86fr);
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.analysis-feature-card {
-  border-radius: 28px;
-  border: 1px solid var(--line-soft);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-  padding: 20px 22px 18px;
-}
-
-.analysis-feature-card .section-kicker {
-  margin: 0;
-}
-
-.analysis-feature-copy {
-  margin-top: 8px;
-  grid-template-rows: auto auto;
-  min-width: 0;
-}
-
-.analysis-feature-copy span {
-  display: block;
-  color: var(--text-strong);
-  font-size: 0.88rem;
-  font-weight: 700;
-}
-
-.analysis-feature-value {
-  margin: 12px 0 0;
-  font-size: clamp(2.28rem, 4.4vw, 3.7rem);
-  line-height: 0.98;
-}
-
-.analysis-feature-meta {
-  margin-top: 8px;
-  font-size: 0.8rem;
-}
-
-.analysis-summary-grid .quick-stats {
-  margin-top: 0;
-}
-
-.analysis-quick-stats {
-  grid-template-columns: 1fr;
-  align-content: start;
-}
-
-.analysis-quick-stats .quick-stat-card {
-  min-height: 0;
-}
-
-.analysis-quick-stats .quick-stat-card strong {
-  font-size: 1.18rem;
-}
-
 .analysis-main-panel {
   display: grid;
   gap: 0;
+}
+
+.analysis-group-head {
+  margin-top: 16px;
 }
 
 .analysis-group-list {
   margin-top: 14px;
 }
 
-.analysis-quick-stats .quick-stat-card strong.positive,
 .analysis-profit-value.positive,
 .analysis-table-profit.positive {
   color: var(--blue);
 }
 
-.analysis-quick-stats .quick-stat-card strong.negative,
 .analysis-profit-value.negative,
 .analysis-table-profit.negative {
   color: var(--orange);
@@ -2756,13 +2699,6 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .analysis-summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .analysis-quick-stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 840px) {
@@ -2859,9 +2795,6 @@ button {
     overflow: visible;
   }
 
-  .analysis-quick-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 560px) {
@@ -3007,8 +2940,7 @@ button {
   .compound-grid,
   .compound-results,
   .growth-item-values,
-  .trade-form-grid,
-  .analysis-quick-stats {
+  .trade-form-grid {
     grid-template-columns: 1fr;
   }
 

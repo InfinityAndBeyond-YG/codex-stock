@@ -68,14 +68,6 @@ function initReportPage() {
 
 function cacheReportDom() {
   [
-    "analysisTradeCount",
-    "analysisTradeCountMeta",
-    "analysisYearProfit",
-    "analysisYearMeta",
-    "analysisRollingProfit",
-    "analysisRollingMeta",
-    "analysisQuarterProfit",
-    "analysisQuarterMeta",
     "analysisViewSwitch",
     "analysisGroupKicker",
     "analysisGroupTitle",
@@ -103,54 +95,10 @@ function renderReportPage() {
   const transactions = window.StockFlowLedger.getEnrichedTransactions();
   const analysis = window.StockFlowLedger.analyzeTransactions(transactions);
 
-  renderAnalysisQuickStats(analysis);
   renderAnalysisViewSwitch();
   renderAnalysisGroupHeader();
   renderAnalysisGroupList(analysis.realizedTrades);
   renderAnalysisTransactionsTable(analysis);
-}
-
-function renderAnalysisQuickStats(analysis) {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const quarter = getQuarterNumber(now);
-  const rollingStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 365);
-
-  const yearRealized = analysis.realizedTrades
-    .filter((trade) => window.StockFlowLedger.parseLocalDate(trade.date).getFullYear() === currentYear)
-    .reduce((sum, trade) => sum + trade.realizedProfit, 0);
-  const rollingRealized = analysis.realizedTrades
-    .filter((trade) => window.StockFlowLedger.parseLocalDate(trade.date) >= rollingStart)
-    .reduce((sum, trade) => sum + trade.realizedProfit, 0);
-  const quarterRealized = analysis.realizedTrades
-    .filter((trade) => {
-      const tradeDate = window.StockFlowLedger.parseLocalDate(trade.date);
-      return tradeDate.getFullYear() === currentYear && getQuarterNumber(tradeDate) === quarter;
-    })
-    .reduce((sum, trade) => sum + trade.realizedProfit, 0);
-
-  if (reportDom.analysisTradeCount) {
-    reportDom.analysisTradeCount.textContent = `${analysis.transactions.length}건`;
-  }
-
-  if (reportDom.analysisTradeCountMeta) {
-    reportDom.analysisTradeCountMeta.textContent = `매수 ${analysis.buyCount} · 매도 ${analysis.sellCount}`;
-  }
-
-  setSignedMetric(reportDom.analysisYearProfit, yearRealized);
-  if (reportDom.analysisYearMeta) {
-    reportDom.analysisYearMeta.textContent = `${currentYear}년 누적 실현손익`;
-  }
-
-  setSignedMetric(reportDom.analysisRollingProfit, rollingRealized);
-  if (reportDom.analysisRollingMeta) {
-    reportDom.analysisRollingMeta.textContent = "최근 12개월 실현손익";
-  }
-
-  setSignedMetric(reportDom.analysisQuarterProfit, quarterRealized);
-  if (reportDom.analysisQuarterMeta) {
-    reportDom.analysisQuarterMeta.textContent = `${currentYear}년 ${quarter}분기 기준`;
-  }
 }
 
 function renderAnalysisViewSwitch() {
@@ -391,22 +339,6 @@ function getPeriodDescriptor(dateString, mode) {
     label: `${year}년 ${quarter}분기`,
     sortValue: new Date(year, (quarter - 1) * 3, 1).getTime(),
   };
-}
-
-function setSignedMetric(element, value) {
-  if (!element) {
-    return;
-  }
-
-  element.textContent = formatSignedKrw(value);
-  element.classList.remove("positive", "negative", "neutral");
-  if (value > 0) {
-    element.classList.add("positive");
-  } else if (value < 0) {
-    element.classList.add("negative");
-  } else {
-    element.classList.add("neutral");
-  }
 }
 
 function getQuarterNumber(date) {
