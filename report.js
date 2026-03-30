@@ -1,6 +1,6 @@
 const reportDom = {};
 const reportState = {
-  periodMode: "quarter",
+  viewMode: "year",
 };
 
 const reportKrwFormatter = new Intl.NumberFormat("ko-KR", {
@@ -15,6 +15,44 @@ const reportUsdFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
+
+const analysisViewCopy = {
+  year: {
+    kicker: "Year View",
+    title: "연도별 실현손익",
+    caption: "한 해 단위로 매도 손익 흐름을 정리합니다.",
+    emptyTitle: "연도별 손익이 없습니다.",
+    emptyBody: "매도 거래가 들어오면 연도별 실현손익이 이곳에 정리됩니다.",
+  },
+  quarter: {
+    kicker: "Quarter View",
+    title: "분기별 실현손익",
+    caption: "분기 단위로 손익 흐름과 매도대금을 묶어봅니다.",
+    emptyTitle: "분기별 손익이 없습니다.",
+    emptyBody: "매도 거래가 들어오면 분기별 실현손익이 이곳에 정리됩니다.",
+  },
+  month: {
+    kicker: "Month View",
+    title: "월별 실현손익",
+    caption: "월별로 손익 흐름을 더 촘촘하게 살펴봅니다.",
+    emptyTitle: "월별 손익이 없습니다.",
+    emptyBody: "매도 거래가 들어오면 월별 실현손익이 이곳에 정리됩니다.",
+  },
+  account: {
+    kicker: "Account View",
+    title: "계좌별 실현손익",
+    caption: "어느 계좌에서 실현손익이 많이 났는지 바로 비교합니다.",
+    emptyTitle: "계좌별 손익이 없습니다.",
+    emptyBody: "매도 거래가 들어오면 계좌별 실현손익이 이곳에 정리됩니다.",
+  },
+  stock: {
+    kicker: "Stock View",
+    title: "종목별 실현손익",
+    caption: "종목별로 실현손익 기여도를 한눈에 비교합니다.",
+    emptyTitle: "종목별 손익이 없습니다.",
+    emptyBody: "매도 거래가 들어오면 종목별 실현손익이 이곳에 정리됩니다.",
+  },
+};
 
 document.addEventListener("DOMContentLoaded", initReportPage);
 
@@ -38,24 +76,25 @@ function cacheReportDom() {
     "analysisRollingMeta",
     "analysisQuarterProfit",
     "analysisQuarterMeta",
-    "analysisPeriodSwitch",
-    "analysisPeriodList",
+    "analysisViewSwitch",
+    "analysisGroupKicker",
+    "analysisGroupTitle",
+    "analysisGroupCaption",
+    "analysisGroupList",
     "analysisTransactionsBody",
-    "analysisStockRankList",
-    "analysisAccountRankList",
   ].forEach((id) => {
     reportDom[id] = document.getElementById(id);
   });
 }
 
 function bindReportEvents() {
-  reportDom.analysisPeriodSwitch?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-period-mode]");
+  reportDom.analysisViewSwitch?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-analysis-view]");
     if (!button) {
       return;
     }
 
-    reportState.periodMode = button.dataset.periodMode;
+    reportState.viewMode = button.dataset.analysisView;
     renderReportPage();
   });
 }
@@ -65,10 +104,10 @@ function renderReportPage() {
   const analysis = window.StockFlowLedger.analyzeTransactions(transactions);
 
   renderAnalysisQuickStats(analysis);
-  renderAnalysisPeriodSwitch();
-  renderAnalysisPeriodList(analysis.realizedTrades);
+  renderAnalysisViewSwitch();
+  renderAnalysisGroupHeader();
+  renderAnalysisGroupList(analysis.realizedTrades);
   renderAnalysisTransactionsTable(analysis);
-  renderAnalysisBreakdowns(analysis.realizedTrades);
 }
 
 function renderAnalysisQuickStats(analysis) {
@@ -86,10 +125,7 @@ function renderAnalysisQuickStats(analysis) {
   const quarterRealized = analysis.realizedTrades
     .filter((trade) => {
       const tradeDate = window.StockFlowLedger.parseLocalDate(trade.date);
-      return (
-        tradeDate.getFullYear() === currentYear &&
-        getQuarterNumber(tradeDate) === quarter
-      );
+      return tradeDate.getFullYear() === currentYear && getQuarterNumber(tradeDate) === quarter;
     })
     .reduce((sum, trade) => sum + trade.realizedProfit, 0);
 
@@ -103,7 +139,7 @@ function renderAnalysisQuickStats(analysis) {
 
   setSignedMetric(reportDom.analysisYearProfit, yearRealized);
   if (reportDom.analysisYearMeta) {
-    reportDom.analysisYearMeta.textContent = `${currentYear}년 실현손익`;
+    reportDom.analysisYearMeta.textContent = `${currentYear}년 누적 실현손익`;
   }
 
   setSignedMetric(reportDom.analysisRollingProfit, rollingRealized);
@@ -117,27 +153,45 @@ function renderAnalysisQuickStats(analysis) {
   }
 }
 
-function renderAnalysisPeriodSwitch() {
-  reportDom.analysisPeriodSwitch
-    ?.querySelectorAll("[data-period-mode]")
+function renderAnalysisViewSwitch() {
+  reportDom.analysisViewSwitch
+    ?.querySelectorAll("[data-analysis-view]")
     .forEach((button) => {
-      button.classList.toggle("active", button.dataset.periodMode === reportState.periodMode);
+      button.classList.toggle("active", button.dataset.analysisView === reportState.viewMode);
     });
 }
 
-function renderAnalysisPeriodList(realizedTrades) {
-  if (!reportDom.analysisPeriodList) {
+function renderAnalysisGroupHeader() {
+  const copy = analysisViewCopy[reportState.viewMode];
+
+  if (reportDom.analysisGroupKicker) {
+    reportDom.analysisGroupKicker.textContent = copy.kicker;
+  }
+
+  if (reportDom.analysisGroupTitle) {
+    reportDom.analysisGroupTitle.textContent = copy.title;
+  }
+
+  if (reportDom.analysisGroupCaption) {
+    reportDom.analysisGroupCaption.textContent = copy.caption;
+  }
+}
+
+function renderAnalysisGroupList(realizedTrades) {
+  if (!reportDom.analysisGroupList) {
     return;
   }
 
-  const groups = buildPeriodGroups(realizedTrades);
-  if (!groups.length) {
-    reportDom.analysisPeriodList.innerHTML = `
+  const copy = analysisViewCopy[reportState.viewMode];
+  const items = buildAnalysisGroupItems(realizedTrades);
+
+  if (!items.length) {
+    reportDom.analysisGroupList.innerHTML = `
       <article class="selector-item selector-item-readonly">
         <div class="selector-left">
           <div class="selector-label">
-            <strong>표시할 실현손익이 없습니다.</strong>
-            <span>매도 거래가 들어오면 기간별 손익이 이곳에 정리됩니다.</span>
+            <strong>${copy.emptyTitle}</strong>
+            <span>${copy.emptyBody}</span>
           </div>
         </div>
       </article>
@@ -145,29 +199,39 @@ function renderAnalysisPeriodList(realizedTrades) {
     return;
   }
 
-  reportDom.analysisPeriodList.innerHTML = groups
+  reportDom.analysisGroupList.innerHTML = items
     .map(
-      (group) => `
+      (item) => `
         <article class="selector-item selector-item-readonly">
           <div class="selector-left">
-            <span class="selector-dot" style="background:${
-              group.realizedProfit >= 0 ? "#0c72de" : "#ef8a26"
-            }"></span>
+            <span class="selector-dot" style="background:${item.realizedProfit >= 0 ? "#0c72de" : "#ef8a26"}"></span>
             <div class="selector-label">
-              <strong>${group.label}</strong>
-              <span>매도 ${group.count}건 · 평균 ${formatSignedKrw(group.realizedProfit / group.count)}</span>
+              <strong>${item.label}</strong>
+              <span>${item.meta}</span>
             </div>
           </div>
           <div class="selector-right">
-            <strong class="analysis-profit-value ${
-              group.realizedProfit >= 0 ? "positive" : "negative"
-            }">${formatSignedKrw(group.realizedProfit)}</strong>
-            <span class="selector-meta">매도대금 ${formatKrw(group.proceeds)}</span>
+            <strong class="analysis-profit-value ${item.realizedProfit >= 0 ? "positive" : "negative"}">${formatSignedKrw(
+              item.realizedProfit
+            )}</strong>
+            <span class="selector-meta">${item.sideMeta}</span>
           </div>
         </article>
       `
     )
     .join("");
+}
+
+function buildAnalysisGroupItems(realizedTrades) {
+  if (reportState.viewMode === "account") {
+    return buildAccountBreakdown(realizedTrades);
+  }
+
+  if (reportState.viewMode === "stock") {
+    return buildStockBreakdown(realizedTrades);
+  }
+
+  return buildPeriodGroups(realizedTrades, reportState.viewMode);
 }
 
 function renderAnalysisTransactionsTable(analysis) {
@@ -184,9 +248,7 @@ function renderAnalysisTransactionsTable(analysis) {
     return;
   }
 
-  const realizedMap = new Map(
-    analysis.realizedTrades.map((trade) => [trade.id, trade.realizedProfit])
-  );
+  const realizedMap = new Map(analysis.realizedTrades.map((trade) => [trade.id, trade.realizedProfit]));
 
   reportDom.analysisTransactionsBody.innerHTML = analysis.transactions
     .slice(0, 10)
@@ -220,68 +282,11 @@ function renderAnalysisTransactionsTable(analysis) {
     .join("");
 }
 
-function renderAnalysisBreakdowns(realizedTrades) {
-  renderAnalysisBreakdownList(
-    reportDom.analysisStockRankList,
-    buildStockBreakdown(realizedTrades),
-    "종목별"
-  );
-  renderAnalysisBreakdownList(
-    reportDom.analysisAccountRankList,
-    buildAccountBreakdown(realizedTrades),
-    "계좌별"
-  );
-}
-
-function renderAnalysisBreakdownList(target, items, typeLabel) {
-  if (!target) {
-    return;
-  }
-
-  if (!items.length) {
-    target.innerHTML = `
-      <article class="selector-item selector-item-readonly">
-        <div class="selector-left">
-          <div class="selector-label">
-            <strong>${typeLabel} 손익이 없습니다.</strong>
-            <span>매도 거래가 생기면 자동으로 정리됩니다.</span>
-          </div>
-        </div>
-      </article>
-    `;
-    return;
-  }
-
-  target.innerHTML = items
-    .map(
-      (item) => `
-        <article class="selector-item selector-item-readonly">
-          <div class="selector-left">
-            <span class="selector-dot" style="background:${
-              item.realizedProfit >= 0 ? "#0c72de" : "#ef8a26"
-            }"></span>
-            <div class="selector-label">
-              <strong>${item.label}</strong>
-              <span>${item.meta}</span>
-            </div>
-          </div>
-          <div class="selector-right">
-            <strong class="analysis-profit-value ${
-              item.realizedProfit >= 0 ? "positive" : "negative"
-            }">${formatSignedKrw(item.realizedProfit)}</strong>
-            <span class="selector-meta">매도 ${item.count}건</span>
-          </div>
-        </article>
-      `
-    )
-    .join("");
-}
-
-function buildPeriodGroups(realizedTrades) {
+function buildPeriodGroups(realizedTrades, mode) {
   const groups = new Map();
 
   realizedTrades.forEach((trade) => {
-    const descriptor = getPeriodDescriptor(trade.date);
+    const descriptor = getPeriodDescriptor(trade.date, mode);
     const current = groups.get(descriptor.key) || {
       key: descriptor.key,
       label: descriptor.label,
@@ -297,7 +302,14 @@ function buildPeriodGroups(realizedTrades) {
     groups.set(descriptor.key, current);
   });
 
-  return Array.from(groups.values()).sort((left, right) => right.sortValue - left.sortValue);
+  return Array.from(groups.values())
+    .sort((left, right) => right.sortValue - left.sortValue)
+    .map((group) => ({
+      label: group.label,
+      meta: `매도 ${group.count}건 · 평균 ${formatSignedKrw(group.realizedProfit / group.count)}`,
+      sideMeta: `매도대금 ${formatKrw(group.proceeds)}`,
+      realizedProfit: group.realizedProfit,
+    }));
 }
 
 function buildStockBreakdown(realizedTrades) {
@@ -316,9 +328,14 @@ function buildStockBreakdown(realizedTrades) {
     groups.set(trade.stockId, current);
   });
 
-  return Array.from(groups.values()).sort(
-    (left, right) => Math.abs(right.realizedProfit) - Math.abs(left.realizedProfit)
-  );
+  return Array.from(groups.values())
+    .sort((left, right) => Math.abs(right.realizedProfit) - Math.abs(left.realizedProfit))
+    .map((item) => ({
+      label: item.label,
+      meta: item.meta,
+      sideMeta: `매도 ${item.count}건`,
+      realizedProfit: item.realizedProfit,
+    }));
 }
 
 function buildAccountBreakdown(realizedTrades) {
@@ -337,17 +354,22 @@ function buildAccountBreakdown(realizedTrades) {
     groups.set(trade.accountId, current);
   });
 
-  return Array.from(groups.values()).sort(
-    (left, right) => Math.abs(right.realizedProfit) - Math.abs(left.realizedProfit)
-  );
+  return Array.from(groups.values())
+    .sort((left, right) => Math.abs(right.realizedProfit) - Math.abs(left.realizedProfit))
+    .map((item) => ({
+      label: item.label,
+      meta: item.meta,
+      sideMeta: `매도 ${item.count}건`,
+      realizedProfit: item.realizedProfit,
+    }));
 }
 
-function getPeriodDescriptor(dateString) {
+function getPeriodDescriptor(dateString, mode) {
   const date = window.StockFlowLedger.parseLocalDate(dateString);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
 
-  if (reportState.periodMode === "year") {
+  if (mode === "year") {
     return {
       key: String(year),
       label: `${year}년`,
@@ -355,7 +377,7 @@ function getPeriodDescriptor(dateString) {
     };
   }
 
-  if (reportState.periodMode === "month") {
+  if (mode === "month") {
     return {
       key: `${year}-${String(month).padStart(2, "0")}`,
       label: `${year}.${String(month).padStart(2, "0")}`,

@@ -1798,8 +1798,7 @@ button {
   box-shadow: 0 0 0 4px rgba(12, 114, 222, 0.08);
 }
 
-.upload-quick-stats,
-.analysis-quick-stats {
+.upload-quick-stats {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1936,13 +1935,85 @@ button {
   margin-top: 18px;
 }
 
-.analysis-grid {
-  grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
-  align-items: start;
+.analysis-page-title {
+  font-size: clamp(1.24rem, 2.2vw, 1.56rem);
+  letter-spacing: -0.05em;
+}
+
+.analysis-view-switch {
+  margin-top: 18px;
+}
+
+.analysis-view-switch .mode-chip {
+  flex: 1 1 calc(20% - 8px);
+}
+
+.analysis-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.14fr) minmax(300px, 0.86fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.analysis-feature-card {
+  border-radius: 28px;
+  border: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  padding: 20px 22px 18px;
+}
+
+.analysis-feature-card .section-kicker {
+  margin: 0;
+}
+
+.analysis-feature-copy {
+  margin-top: 8px;
+  grid-template-rows: auto auto;
+  min-width: 0;
+}
+
+.analysis-feature-copy span {
+  display: block;
+  color: var(--text-strong);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.analysis-feature-value {
+  margin: 12px 0 0;
+  font-size: clamp(2.28rem, 4.4vw, 3.7rem);
+  line-height: 0.98;
+}
+
+.analysis-feature-meta {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.analysis-summary-grid .quick-stats {
+  margin-top: 0;
 }
 
 .analysis-quick-stats {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 1fr;
+  align-content: start;
+}
+
+.analysis-quick-stats .quick-stat-card {
+  min-height: 0;
+}
+
+.analysis-quick-stats .quick-stat-card strong {
+  font-size: 1.18rem;
+}
+
+.analysis-main-panel {
+  display: grid;
+  gap: 0;
+}
+
+.analysis-group-list {
+  margin-top: 14px;
 }
 
 .analysis-quick-stats .quick-stat-card strong.positive,
@@ -1961,11 +2032,6 @@ button {
   height: 1px;
   margin: 18px 0;
   background: var(--line-soft);
-}
-
-.analysis-period-list,
-.analysis-side-list {
-  margin-top: 14px;
 }
 
 .analysis-profit-value,
@@ -2690,8 +2756,12 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .analysis-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
   .analysis-quick-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -2787,6 +2857,10 @@ button {
 
   .market-ranking-list {
     overflow: visible;
+  }
+
+  .analysis-quick-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

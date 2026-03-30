@@ -14,9 +14,9 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260329-09" />
+    <link rel="stylesheet" href="./styles.css?v=20260330-10" />
     <script defer src="./trade-ledger.js?v=20260329-01"></script>
-    <script defer src="./report.js?v=20260329-03"></script>
+    <script defer src="./report.js?v=20260330-04"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -43,106 +43,92 @@
       </header>
 
       <main class="page-stack">
-        <section class="panel hero-panel">
+        <section class="panel hero-panel analysis-hero-panel">
           <p class="section-kicker">Analysis Page</p>
-          <h1 class="market-page-title">거래 분석</h1>
+          <h1 class="market-page-title analysis-page-title">거래 분석</h1>
           <p class="hero-copy">
-            내 주식 올리기에서 저장한 거래 원장을 기준으로 연도·분기 실현손익과 종목별, 계좌별 손익 흐름을 정리합니다.
+            내 주식 올리기에서 저장한 거래 원장을 기준으로 연도·분기·월별, 계좌별, 종목별 손익 흐름을 한 화면에서 정리합니다.
           </p>
 
-          <div class="quick-stats analysis-quick-stats">
-            <article class="quick-stat-card">
-              <span>전체 거래 원장</span>
-              <strong id="analysisTradeCount">-</strong>
-              <p id="analysisTradeCountMeta">-</p>
+          <div id="analysisViewSwitch" class="mode-switch analysis-view-switch">
+            <button type="button" class="mode-chip active" data-analysis-view="year">연도별</button>
+            <button type="button" class="mode-chip" data-analysis-view="quarter">분기별</button>
+            <button type="button" class="mode-chip" data-analysis-view="month">월별</button>
+            <button type="button" class="mode-chip" data-analysis-view="account">계좌별</button>
+            <button type="button" class="mode-chip" data-analysis-view="stock">종목별</button>
+          </div>
+
+          <div class="analysis-summary-grid">
+            <article class="analysis-feature-card">
+              <p class="section-kicker">This Year</p>
+              <div class="summary-metric-block analysis-feature-copy">
+                <div class="summary-title-row summary-title-row-solo">
+                  <span>올해 실현손익</span>
+                </div>
+                <div class="summary-value-row">
+                  <strong id="analysisYearProfit" class="avg-value analysis-feature-value">-</strong>
+                </div>
+              </div>
+              <p id="analysisYearMeta" class="summary-meta analysis-feature-meta">매도 체결 기준</p>
             </article>
-            <article class="quick-stat-card">
-              <span>올해 실현손익</span>
-              <strong id="analysisYearProfit">-</strong>
-              <p id="analysisYearMeta">매도 체결 기준</p>
-            </article>
-            <article class="quick-stat-card">
-              <span>최근 1년 손익</span>
-              <strong id="analysisRollingProfit">-</strong>
-              <p id="analysisRollingMeta">최근 12개월 실현손익</p>
-            </article>
-            <article class="quick-stat-card">
-              <span>이번 분기 손익</span>
-              <strong id="analysisQuarterProfit">-</strong>
-              <p id="analysisQuarterMeta">현재 분기 기준</p>
-            </article>
+
+            <div class="quick-stats analysis-quick-stats">
+              <article class="quick-stat-card">
+                <span>전체 거래 원장</span>
+                <strong id="analysisTradeCount">-</strong>
+                <p id="analysisTradeCountMeta">-</p>
+              </article>
+              <article class="quick-stat-card">
+                <span>최근 1년 손익</span>
+                <strong id="analysisRollingProfit">-</strong>
+                <p id="analysisRollingMeta">최근 12개월 실현손익</p>
+              </article>
+              <article class="quick-stat-card">
+                <span>이번 분기 손익</span>
+                <strong id="analysisQuarterProfit">-</strong>
+                <p id="analysisQuarterMeta">현재 분기 기준</p>
+              </article>
+            </div>
           </div>
         </section>
 
-        <section class="page-grid-two analysis-grid">
-          <article class="panel page-panel">
-            <div class="panel-head">
-              <div>
-                <p class="section-kicker">P/L Timeline</p>
-                <h2>기간별 실현손익</h2>
-              </div>
-              <p class="section-caption">평균단가 기준으로 매도 손익을 계산합니다.</p>
+        <section class="panel page-panel analysis-main-panel">
+          <div class="panel-head">
+            <div>
+              <p id="analysisGroupKicker" class="section-kicker">Year View</p>
+              <h2 id="analysisGroupTitle">연도별 실현손익</h2>
             </div>
+            <p id="analysisGroupCaption" class="section-caption">연도 기준으로 매도 손익을 정리합니다.</p>
+          </div>
 
-            <div id="analysisPeriodSwitch" class="mode-switch">
-              <button type="button" class="mode-chip active" data-period-mode="quarter">분기별</button>
-              <button type="button" class="mode-chip" data-period-mode="year">연도별</button>
-              <button type="button" class="mode-chip" data-period-mode="month">월별</button>
+          <div id="analysisGroupList" class="selector-list analysis-group-list"></div>
+
+          <div class="analysis-divider"></div>
+
+          <div class="panel-head compact-panel-head">
+            <div>
+              <p class="section-kicker">Ledger Table</p>
+              <h2>최근 거래 원장</h2>
             </div>
+            <p class="section-caption">최근 저장된 거래부터 확인합니다.</p>
+          </div>
 
-            <div id="analysisPeriodList" class="selector-list analysis-period-list"></div>
-
-            <div class="analysis-divider"></div>
-
-            <div class="panel-head compact-panel-head">
-              <div>
-                <p class="section-kicker">Ledger Table</p>
-                <h2>최근 거래 원장</h2>
-              </div>
-              <p class="section-caption">최근 저장된 거래부터 확인합니다.</p>
-            </div>
-
-            <div class="analysis-table-shell">
-              <table class="stock-table analysis-table">
-                <thead>
-                  <tr>
-                    <th>날짜</th>
-                    <th>계좌</th>
-                    <th>종목</th>
-                    <th>구분</th>
-                    <th>수량</th>
-                    <th>체결가</th>
-                    <th>실현손익</th>
-                  </tr>
-                </thead>
-                <tbody id="analysisTransactionsBody"></tbody>
-              </table>
-            </div>
-          </article>
-
-          <article class="panel side-panel market-side-panel">
-            <div class="analysis-side-stack">
-              <section>
-                <div class="panel-head panel-head-tight">
-                  <div>
-                    <p class="section-kicker">By Stock</p>
-                    <h2>종목별 손익</h2>
-                  </div>
-                </div>
-                <div id="analysisStockRankList" class="selector-list analysis-side-list"></div>
-              </section>
-
-              <section>
-                <div class="panel-head panel-head-tight">
-                  <div>
-                    <p class="section-kicker">By Account</p>
-                    <h2>계좌별 손익</h2>
-                  </div>
-                </div>
-                <div id="analysisAccountRankList" class="selector-list analysis-side-list"></div>
-              </section>
-            </div>
-          </article>
+          <div class="analysis-table-shell">
+            <table class="stock-table analysis-table">
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>계좌</th>
+                  <th>종목</th>
+                  <th>구분</th>
+                  <th>수량</th>
+                  <th>체결가</th>
+                  <th>실현손익</th>
+                </tr>
+              </thead>
+              <tbody id="analysisTransactionsBody"></tbody>
+            </table>
+          </div>
         </section>
       </main>
     </div>
