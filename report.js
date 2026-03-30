@@ -19,7 +19,7 @@ const reportUsdFormatter = new Intl.NumberFormat("en-US", {
 const analysisViewCopy = {
   ledger: {
     kicker: "Trade View",
-    title: "최근 거래 원장",
+    title: "최근 거래 내역",
     caption: "최근 저장된 거래 내역을 바로 확인합니다.",
     emptyTitle: "거래 내역이 없습니다.",
     emptyBody: "내 주식 올리기에서 거래를 저장하면 이곳에 최근 거래가 정리됩니다.",
@@ -220,7 +220,7 @@ function renderAnalysisTransactionsTable(analysis) {
   if (!analysis.transactions.length) {
     reportDom.analysisTransactionsBody.innerHTML = `
       <tr>
-        <td colspan="7" class="stock-table-empty">거래 원장이 아직 없습니다.</td>
+        <td colspan="7" class="stock-table-empty">거래 내역이 아직 없습니다.</td>
       </tr>
     `;
     return;
