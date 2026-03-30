@@ -1956,7 +1956,9 @@ button {
 
 .analysis-view-switch .mode-chip {
   flex: 0 0 auto;
-  min-width: 78px;
+  min-width: 58px;
+  padding: 8px 12px;
+  font-size: 0.76rem;
   white-space: nowrap;
 }
 
