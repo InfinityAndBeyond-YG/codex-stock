@@ -1945,12 +1945,16 @@ button {
 }
 
 .analysis-view-switch .mode-chip {
-  flex: 1 1 calc(20% - 8px);
+  flex: 1 1 calc(16.66% - 8px);
 }
 
 .analysis-main-panel {
   display: grid;
   gap: 0;
+}
+
+.analysis-panel-section-hidden {
+  display: none;
 }
 
 .analysis-group-head {

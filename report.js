@@ -17,6 +17,13 @@ const reportUsdFormatter = new Intl.NumberFormat("en-US", {
 });
 
 const analysisViewCopy = {
+  ledger: {
+    kicker: "Trade View",
+    title: "최근 거래 원장",
+    caption: "최근 저장된 거래 내역을 바로 확인합니다.",
+    emptyTitle: "거래 내역이 없습니다.",
+    emptyBody: "내 주식 올리기에서 거래를 저장하면 이곳에 최근 거래가 정리됩니다.",
+  },
   year: {
     kicker: "Year View",
     title: "연도별 실현손익",
@@ -73,6 +80,8 @@ function cacheReportDom() {
     "analysisGroupTitle",
     "analysisGroupCaption",
     "analysisGroupList",
+    "analysisGroupSection",
+    "analysisLedgerSection",
     "analysisTransactionsBody",
   ].forEach((id) => {
     reportDom[id] = document.getElementById(id);
@@ -96,6 +105,7 @@ function renderReportPage() {
   const analysis = window.StockFlowLedger.analyzeTransactions(transactions);
 
   renderAnalysisViewSwitch();
+  renderAnalysisContentVisibility();
   renderAnalysisGroupHeader();
   renderAnalysisGroupList(analysis.realizedTrades);
   renderAnalysisTransactionsTable(analysis);
@@ -109,7 +119,18 @@ function renderAnalysisViewSwitch() {
     });
 }
 
+function renderAnalysisContentVisibility() {
+  const showingLedger = reportState.viewMode === "ledger";
+
+  reportDom.analysisGroupSection?.classList.toggle("analysis-panel-section-hidden", showingLedger);
+  reportDom.analysisLedgerSection?.classList.toggle("analysis-panel-section-hidden", !showingLedger);
+}
+
 function renderAnalysisGroupHeader() {
+  if (reportState.viewMode === "ledger") {
+    return;
+  }
+
   const copy = analysisViewCopy[reportState.viewMode];
 
   if (reportDom.analysisGroupKicker) {
@@ -127,6 +148,11 @@ function renderAnalysisGroupHeader() {
 
 function renderAnalysisGroupList(realizedTrades) {
   if (!reportDom.analysisGroupList) {
+    return;
+  }
+
+  if (reportState.viewMode === "ledger") {
+    reportDom.analysisGroupList.innerHTML = "";
     return;
   }
 
@@ -171,6 +197,10 @@ function renderAnalysisGroupList(realizedTrades) {
 }
 
 function buildAnalysisGroupItems(realizedTrades) {
+  if (reportState.viewMode === "ledger") {
+    return [];
+  }
+
   if (reportState.viewMode === "account") {
     return buildAccountBreakdown(realizedTrades);
   }
