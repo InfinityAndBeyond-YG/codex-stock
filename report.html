@@ -14,9 +14,9 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260330-11" />
+    <link rel="stylesheet" href="./styles.css?v=20260330-12" />
     <script defer src="./trade-ledger.js?v=20260329-01"></script>
-    <script defer src="./report.js?v=20260330-05"></script>
+    <script defer src="./report.js?v=20260330-06"></script>
   </head>
   <body>
     <div class="page-glow page-glow-one"></div>
@@ -49,9 +49,29 @@
           <p class="hero-copy">
             내 주식 올리기에서 저장한 거래 원장을 기준으로 연도·분기·월별, 계좌별, 종목별 손익 흐름을 한 화면에서 정리합니다.
           </p>
+
+          <div id="analysisViewSwitch" class="mode-switch analysis-view-switch">
+            <button type="button" class="mode-chip active" data-analysis-view="year">연도별</button>
+            <button type="button" class="mode-chip" data-analysis-view="quarter">분기별</button>
+            <button type="button" class="mode-chip" data-analysis-view="month">월별</button>
+            <button type="button" class="mode-chip" data-analysis-view="account">계좌별</button>
+            <button type="button" class="mode-chip" data-analysis-view="stock">종목별</button>
+          </div>
         </section>
 
         <section class="panel page-panel analysis-main-panel">
+          <div class="panel-head compact-panel-head analysis-group-head">
+            <div>
+              <p id="analysisGroupKicker" class="section-kicker">Year View</p>
+              <h2 id="analysisGroupTitle">연도별 실현손익</h2>
+            </div>
+            <p id="analysisGroupCaption" class="section-caption">연도 기준으로 매도 손익을 정리합니다.</p>
+          </div>
+
+          <div id="analysisGroupList" class="selector-list analysis-group-list"></div>
+
+          <div class="analysis-divider"></div>
+
           <div class="panel-head compact-panel-head">
             <div>
               <p class="section-kicker">Ledger Table</p>
@@ -76,26 +96,6 @@
               <tbody id="analysisTransactionsBody"></tbody>
             </table>
           </div>
-
-          <div class="analysis-divider"></div>
-
-          <div id="analysisViewSwitch" class="mode-switch analysis-view-switch">
-            <button type="button" class="mode-chip active" data-analysis-view="year">연도별</button>
-            <button type="button" class="mode-chip" data-analysis-view="quarter">분기별</button>
-            <button type="button" class="mode-chip" data-analysis-view="month">월별</button>
-            <button type="button" class="mode-chip" data-analysis-view="account">계좌별</button>
-            <button type="button" class="mode-chip" data-analysis-view="stock">종목별</button>
-          </div>
-
-          <div class="panel-head compact-panel-head analysis-group-head">
-            <div>
-              <p id="analysisGroupKicker" class="section-kicker">Year View</p>
-              <h2 id="analysisGroupTitle">연도별 실현손익</h2>
-            </div>
-            <p id="analysisGroupCaption" class="section-caption">연도 기준으로 매도 손익을 정리합니다.</p>
-          </div>
-
-          <div id="analysisGroupList" class="selector-list analysis-group-list"></div>
         </section>
       </main>
     </div>
