@@ -1942,18 +1942,10 @@ button {
 
 .analysis-view-switch {
   margin-top: 18px;
-  display: inline-flex;
-  width: fit-content;
-  max-width: 100%;
-  gap: 4px;
   flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 4px;
-  border: 1px solid var(--line-soft);
-  border-radius: 20px;
-  background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
-  box-shadow: 0 10px 20px rgba(16, 39, 72, 0.04);
+  padding-bottom: 4px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -1964,22 +1956,14 @@ button {
 
 .analysis-view-switch .mode-chip {
   flex: 0 0 auto;
-  min-width: 52px;
-  border: 0;
-  border-radius: 14px;
-  padding: 7px 11px;
+  min-width: 58px;
+  padding: 8px 12px;
   font-size: 0.76rem;
-  background: transparent;
   white-space: nowrap;
 }
 
 .analysis-view-switch .mode-chip:hover {
-  transform: none;
-  background: rgba(12, 114, 222, 0.06);
-}
-
-.analysis-view-switch .mode-chip.active {
-  box-shadow: 0 8px 16px rgba(12, 114, 222, 0.12);
+  transform: translateY(-2px);
 }
 
 .analysis-main-panel {
